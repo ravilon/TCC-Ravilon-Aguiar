@@ -1,1 +1,52 @@
 Exemplos/*
+# Arquivos auxiliares
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.loa
+*.lol
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*.dvi
+*.xdv
+
+# Bibliografia: BibTeX / Biber
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+
+# Índices e glossários
+*.idx
+*.ilg
+*.ind
+*.ist
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.glsdefs
+
+# Beamer
+*.nav
+*.snm
+*.vrb
+
+# Arquivos temporários
+*.bak
+*.tmp
+*.swp
+*~
+_minted*/
+*.pyg
+
+# Diretórios de compilação
+/build/
+/out/

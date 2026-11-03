@@ -1,439 +1,462 @@
 \documentclass[tcc,capa]{texufpel}
-
-\usepackage[utf8]{inputenc} % acentuacao
-\usepackage{graphicx} % para inserir figuras
+\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-
-\hypersetup{
-    hidelinks, % Remove coloração e caixas
-    unicode=true,   %Permite acentuação no bookmark
-    linktoc=all %Habilita link no nome e página do sumário
-}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{xurl}
+\usepackage{array}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,shapes.geometric}
+\hypersetup{hidelinks,unicode=true,linktoc=all}
 
 \unidade{Centro de Desenvolvimento Tecnológico}
 \curso{Ciência da Computação}
 \nomecurso{Bacharelado em Ciência da Computação}
 \titulocurso{Bacharel em Ciência da Computação}
-
 \unidadeeng{Technology Development Center}
 \cursoeng{Computer Science}
-
-
-\title{Gerenciamento Multi-Estruturado de Dados Móveis Gamificados: Integrando Fontes Heterogêneas.}
-
+\title{Gerenciamento Multi-Estruturado de Dados Móveis Gamificados: Integrando Fontes Heterogêneas}
 \author{Santos}{Rávilon Aguiar dos}
 \advisor[Prof.~Dr.]{Fleischmann}{Ana Marilza Pernas}
-
-%Palavras-chave em PT_BR
-%use letras minúsculas seguidas por ;
-%a última terminada por .
-\keyword{Banco de Dados Não Relacional;}
-\keyword{Integração com dispositivos Móveis;}
-\keyword{Fontes Heterogêneas;}
-\keyword{Gerenciamento de Banco de Dados.}
-
-%Palavras-chave em EN_US
-\keywordeng{Non-Relational Database;}
-\keywordeng{Integration with Mobile Devices;}
-\keywordeng{Heterogeneous Sources;}
-\keywordeng{Database Management.}
+\keyword{Internet das Coisas;} \keyword{Telemetria;} \keyword{Persistência Poliglota;} \keyword{Gamificação;} \keyword{Eficiência Energética.}
+\keywordeng{Internet of Things;} \keywordeng{Telemetry;} \keywordeng{Polyglot Persistence;} \keywordeng{Gamification;} \keywordeng{Energy Efficiency.}
 
 \begin{document}
-
-%\renewcommand{\advisorname}{Orientadora}           %descomente caso tenhas orientadora
-%\renewcommand{\coadvisorname}{Coorientadora}      %descomente caso tenhas coorientadora
-
-\maketitle 
-
+\renewcommand{\advisorname}{Orientadora}
+\maketitle
 \sloppy
+% Substituir por \includepdf{ficha.pdf} após a emissão da ficha no Cobalto.
 
-\fichacatalografica
-
-%\folhadeaprovacao
-
-%Composição da Banca Examinadora
-
-%Resumo em Portugues (no maximo 500 palavras)
 \begin{abstract}
-Este Trabalho de Conclusão de Curso, intitulado "Gerenciamento Multi-Estruturado de Dados Móveis Gamificados: Integrando Fontes Heterogêneas", propõe o desenvolvimento de um modelo e arquitetura de bancos de dados para a gestão eficiente de dados provenientes de fontes heterogêneas. O objetivo principal é suportar uma aplicação que incentiva a redução do consumo energético através da gamificação, focando no usuário desse ambiente.
-
-A proposta utiliza bancos de dados NoSQL para capturar e armazenar dados de forma periódica em uma edificação pública, processando essas informações com princípios de gamificação. O trabalho aborda a modelagem da estrutura dos dados provenientes de diferentes fontes, como usuários, sensores em salas e corredores, e tecnologias disponíveis. A estrutura multi-modelo é apresentada como a mais adequada para cenários de gamificação devido à necessidade de integrar e adaptar dados de diversas origens.
-
-O estudo considera cenários e requisitos específicos de uma aplicação de gamificação, com base em casos de estudo do projeto "Validação de sistema de gamificação, gestão e automação na nuvem para eficiência energética de edificações públicas com foco inicial em universidades". Este projeto, realizado na Universidade Federal de Pelotas (UFPel), visa identificar o impacto da gamificação na economia de energia e no Desempenho Energético Operacional (DEO) de uma edificação, utilizando como objeto de estudo o prédio do Centro de Artes da UFPel.
+Edificações inteligentes produzem dados contínuos e heterogêneos, sujeitos a duplicação, atraso e evolução de formato. Para apoiar análises e mecanismos de gamificação da eficiência energética, é necessário preservar temporariamente a evidência original, normalizar medições e manter rastreabilidade entre eventos e recompensas. Este trabalho apresenta o projeto e a implementação da arquitetura de dados da plataforma PROCEL, desenvolvida no contexto de uma iniciativa da Universidade Federal de Pelotas. No título, dados móveis designam os registros que pessoas, atuando como sensores, produzirão ao participar do sistema por meio da futura aplicação de gamificação; o recorte deste trabalho é o backend que receberá, integrará e relacionará esses registros à telemetria ambiental. A pesquisa seguiu a Ciência do Projeto, relacionando problema, objetivos, desenvolvimento, demonstração e avaliação do artefato. A solução adota persistência poliglota: eventos brutos recebidos por REST ou MQTT são armazenados no MongoDB, enquanto o domínio canônico, agregados e gamificação são persistidos no PostgreSQL. Um serviço de telemetria implementa retenção configurável, idempotência e reprocessamento; uma API executa canonicalização, agregação por janelas, avaliação de missões e concessão idempotente de experiência; e um console web apoia a operação. A avaliação foi delimitada a uma versão identificada do código e examinou cenários automatizados de duplicação, conflito, concorrência, recuperação e fronteiras temporais, além de um benchmark JMH. Um relatório anterior de testes de sanidade (\textit{smoke tests}) foi usado apenas como evidência operacional complementar. A aplicação móvel não foi implementada nem avaliada neste TCC. Nos cenários inspecionados, restrições e testes exercitam as propriedades centrais, enquanto o benchmark favorece o motor simples nas regras instantâneas medidas. Não foram realizados ensaios com ocupantes, carga de produção ou falhas distribuídas de longa duração; portanto, não se afirma economia de energia nem garantia geral de desempenho ou disponibilidade.
 \end{abstract}
 
-%Resumo em Inglês (no maximo 500 palavras)
-\begin{englishabstract}{Multi-Structured Gamified Mobile Data Management: Integrating Heterogeneous Sources}
-This Thesis, titled "Multi-Structured Management of Gamified Mobile Data: Integrating Heterogeneous Sources," proposes the development of a model and database architecture for the efficient management of data from heterogeneous sources. The main goal is to support an application that encourages energy consumption reduction through gamification, focusing on the user of this environment.
-
-The proposal uses NoSQL databases to periodically capture and store data in a public building, processing this information with gamification principles. The work addresses the modeling of data structures from different sources, such as users, sensors in rooms and corridors, and available technologies. The multi-model structure is presented as the most suitable for gamification scenarios due to the need to integrate and adapt data from various sources.
-
-The study considers specific scenarios and requirements for a gamification application, based on case studies from the project "Validation of a gamification system, management, and cloud automation for energy efficiency in public buildings with an initial focus on universities." This project, carried out at the Federal University of Pelotas (UFPel), aims to identify the impact of gamification on energy savings and Operational Energy Performance (OEP) of a building, using the UFPel Arts Center as the study object.
+\begin{englishabstract}{Multi-Structured Management of Gamified Mobile Data: Integrating Heterogeneous Sources}
+Smart buildings produce heterogeneous data that may be duplicated, delayed, or changed in format. This work presents the design and implementation of the PROCEL data architecture, developed within an energy-efficiency initiative at the Federal University of Pelotas. In the title, mobile data denotes records that people, acting as sensors, will produce through the future gamification application; this work is limited to the backend that will receive, integrate, and relate those records to environmental telemetry. Following Design Science, the solution adopts polyglot persistence: raw REST or MQTT events are stored in MongoDB, whereas the canonical domain, analytical aggregates, and gamification data are stored in PostgreSQL. A telemetry service provides configurable retention, idempotency, and reprocessing; a domain API performs canonicalization, windowed aggregation, mission evaluation, and idempotent experience grants; and a web console supports operation. Evaluation was bounded to an identified code revision and examined automated scenarios for duplication, conflicts, concurrency, recovery, and temporal boundaries, as well as a JMH benchmark. An earlier smoke-test report was treated only as supplementary operational evidence. The mobile application was neither implemented nor evaluated in this thesis. The inspected constraints and tests exercise the core properties, and the benchmark favors the simple engine in the measured instantaneous-rule scenarios. No user study, production-load test, or long-running distributed-failure experiment was conducted; therefore, the work does not claim energy savings or general performance and availability guarantees.
 \end{englishabstract}
 
-%Lista de Figuras
 \listoffigures
-
-%Lista de Tabelas
 \listoftables
-
-%lista de abreviaturas e siglas
-\begin{listofabbrv}{NoSQL}%coloque aqui a maior sigla para ajustar a distância
-        \item[\textbf{IoT}] Internet of Things (Internet das coisas)
-        \item [\textbf{NoSQL}] Não relacional
-  
+\begin{listofabbrv}{PROCEL}
+\item[\textbf{API}] Application Programming Interface
+\item[\textbf{DSR}] Design Science Research
+\item[\textbf{IoT}] Internet of Things
+\item[\textbf{JWT}] JSON Web Token
+\item[\textbf{MQTT}] Message Queuing Telemetry Transport
+\item[\textbf{QoS}] Quality of Service
+\item[\textbf{REST}] Representational State Transfer
+\item[\textbf{TTL}] Time to Live
+\item[\textbf{XP}] Experience Points
 \end{listofabbrv}
-
-%Sumario
 \tableofcontents
 
 \chapter{Introdução}
+\section{Contexto e motivação}
+A Internet das Coisas (IoT) amplia a observação do mundo físico, mas exige arquiteturas capazes de transportar, armazenar e interpretar fluxos heterogêneos \cite{gubbi2013,alfuqaha2015}. Em edificações, leituras de energia, temperatura, umidade, qualidade do ar e presença diferem em protocolo, frequência, unidade e formato. Além do valor, identidade, instante, localização, origem e qualidade alteram a interpretação da observação \cite{sagl2015}.
 
-\section{Motivação}
+O projeto ``Validação de sistema de gamificação, gestão e automação na nuvem para eficiência energética de edificações públicas com foco inicial em universidades'', conduzido na UFPel, demanda uma base capaz de transformar telemetria em informação útil. Estudos indicam que medição real, feedback, metas e elementos lúdicos podem influenciar consumo \cite{orland2014,oppong2020,iria2020}; contudo, os efeitos dependem do contexto, dos usuários e do desenho da intervenção \cite{hamari2014,morganti2017,beck2019}.
 
-A gamificação tem se mostrado uma ferramenta poderosa para aumentar o engajamento e motivação dos usuários em diversos contextos, desde a educação até a gestão de saúde. Gamificação, conforme descrito por Werbach e Hunter (2012), é "a aplicação de elementos de jogos e técnicas de design de jogos em contextos que não são jogos" ~\cite{werbach2012}. Segundo os mesmos autores, objetiva-se com a gamificação aplicar mecânicas de jogo e design de experiências para envolver digitalmente os usuários e motivá-los na obtenção de seus objetivos.
+O título sintetiza três dimensões desse contexto. ``Multi-estruturado'' refere-se à combinação de eventos documentais, entidades relacionais, agregados e estruturas de gamificação. ``Fontes heterogêneas'' abrange sensores e produtores que diferem em protocolo, formato e semântica. ``Dados móveis gamificados'' corresponde aos registros produzidos pela participação ativa das pessoas, tratadas como sensores contextuais, por meio da aplicação de gamificação que consumirá o backend \cite{sagl2015}. Essa aplicação cliente integra o contexto do projeto, mas sua implementação e sua avaliação estão fora do recorte deste TCC.
 
-No caso do projeto “Validação de sistema de gamificação, gestão e automação na nuvem para eficiência energética de edificações públicas com foco inicial em universidades”, alvo deste trabalho, busca-se demonstrar que técnicas de gamificação têm o potencial de incentivar comportamentos sustentáveis e reduzir o consumo de energia por meio de um sistema de recompensas e feedback contínuo. A proposta dos autores é criar um sistema que estimule os servidores públicos a adotarem posturas de sustentabilidade, contribuir para uma gestão mais efetiva e consequente redução do consumo energético de edificações públicas. Para isso, serão implementados sistemas de medição e verificação do consumo energético no prédio do Centro de Artes da UFPel, envolvendo software e hardware de gestão de energia.
+Antes de avaliar o efeito comportamental, uma mensagem duplicada não pode gerar duas medições ou recompensas; falhas não devem eliminar a evidência original; e mudanças externas não devem contaminar o domínio. Essas necessidades motivaram a evolução da proposta inicial para a plataforma PROCEL implementada.
 
-Visando contribuir para este projeto, o presente Trabalho de Conclusão de Curso foca nos aspectos relacionados a modelagem dos dados sensorados nestes ambientes, assim como seu correto armazenamento e manipulação viabilizando posteriores desenvolvimentos de aplicações a partir deste.
+\section{Problema e objetivos}
+O problema investigado é: \emph{como projetar e implementar uma arquitetura que integre telemetria heterogênea e dados de participação dos usuários, preserve rastreabilidade e forneça dados confiáveis para análise e gamificação da eficiência energética?}
 
-Neste aspecto, a integração de sensores em ambientes diversos, como edifícios, cidades e dispositivos móveis, é foco de pesquisa devido ao desafio de se gerenciar, de maneira eficiente, uma vasta quantidade de dados heterogêneos.
+O objetivo geral é projetar, implementar e avaliar essa arquitetura de backend. Os objetivos específicos são: identificar requisitos; definir persistência para eventos brutos e dados canônicos; implementar REST e MQTT com idempotência e reprocessamento; transformar formatos externos; oferecer API e console; integrar medições, participação, missões e XP sem duplicação; e avaliar o artefato por testes e experimento de desempenho. A futura aplicação de gamificação é consumidora prevista da API, não um produto desenvolvido neste trabalho.
 
-Tradicionalmente, os bancos de dados relacionais eram a principal solução para armazenamento e processamento de dados. No entanto, a rigidez de seu modelo de dados e a dificuldade de escalar horizontalmente tornaram-se limitações significativas no contexto de aplicações mais modernas, como Big Data ou Internet das Coisas, onde os dados são altamente variados e crescem rapidamente. Nesse cenário, destacam-se os bancos de dados NoSQL, que oferecem maior flexibilidade e escalabilidade para lidar com grandes volumes de dados não estruturados e semi-estruturados \cite{Stonebraker2005, Grolinger2013}.
+\section{Contribuições e organização}
+As contribuições são uma arquitetura que separa bruto, canônico, análise e gamificação; idempotência em múltiplas fronteiras; catálogo configurável de integrações; processamento recuperável por \emph{claim}, \emph{lease} e repetição; e evidências funcionais e de desempenho. Os capítulos seguintes apresentam fundamentação, trabalhos relacionados, método, implementação, avaliação e conclusão.
 
-De acordo com Sadalage e Fowler (2012), NoSQL é "uma abordagem moderna para o gerenciamento de dados que adota uma estrutura de dados mais flexível e escalável do que a oferecida pelos bancos de dados relacionais tradicionais" \cite{Sadalage2012}. Os bancos de dados NoSQL permitem armazenar e processar dados de maneira eficiente, suportando a integração de fontes heterogêneas de informação. De acordo com Sadalage e Fowler (2012, p. 12), "a escolha de uma solução NoSQL deve ser baseada em uma compreensão clara das necessidades específicas da aplicação" \cite{Sadalage2012}. Esta flexibilidade é crucial para o gerenciamento de dados de sensores, onde os formatos de dados podem variar amplamente.
+\chapter{Fundamentação Teórica}
+\section{IoT, heterogeneidade e canonicalização}
+IoT combina sensoriamento, comunicação e computação distribuída \cite{gubbi2013}. MQTT usa publicação--assinatura e níveis de qualidade de serviço. No QoS 1, a entrega é ``pelo menos uma vez'', de modo que duplicatas podem ocorrer; o \texttt{PUBACK} transfere ao receptor a responsabilidade pela mensagem, mas não comprova que canonicalização, agregação ou concessão de XP tenham terminado \cite{oasisMqtt2019}. Por isso, a identidade idempotente da aplicação não pode depender apenas do identificador de pacote MQTT. Fontes também podem expressar a mesma grandeza com nomes e estruturas distintas. Um modelo canônico desacopla produtores dos consumidores, enquanto a retenção bruta temporária sustenta auditoria e reprocessamento dentro do prazo configurado \cite{procelMongo2026}.
 
-A combinação dessas duas abordagens – a gestão de dados por bancos de dados NoSQL e sua disponibilidade para fins de gamificação – fundamenta a proposta deste Trabalho de Conclusão de Curso. Este projeto visa desenvolver um modelo e uma arquitetura de banco de dados que suporte a coleta e o processamento eficiente de dados, integrando princípios de gamificação para incentivar a redução do consumo energético em um edifício específico. Em relação aos dados, é necessário tratar três tipos principais de informações \cite{Sagl2015}:
+\section{Persistência poliglota}
+Bancos relacionais oferecem esquema, integridade referencial e transações. Bancos de documentos acomodam estruturas variáveis. A literatura recomenda escolher mecanismos conforme acesso, consistência e evolução, em vez de assumir uma tecnologia universal \cite{stonebraker2005,grolinger2013,gessert2017}. No PROCEL, MongoDB preserva o evento bruto e PostgreSQL mantém domínio, agregados e gamificação.
 
-\begin{enumerate}
-    \item Dados de Sensores Ambientais (Environmental Sensing): Esses dados são coletados por sensores instalados no edifício que monitoram o ambiente interno, fornecendo informações cruciais sobre fatores como temperatura, umidade e qualidade do ar, e consumo energético do ambiente.
-    \item Dados de Sensores Móveis (Mobile Sensors): Estes são dados provenientes da aplicação de gamificação, onde dispositivos móveis dos ocupantes do edifício registram atividades e comportamentos relacionados ao consumo energético.
-    \item Dados de Pessoas como Sensores (People as Sensors): Referem-se aos dados fornecidos diretamente pelos ocupantes do edifício, muitas vezes através de interações com a aplicação de gamificação, como feedback sobre o ambiente ou participação em desafios de economia de energia.
-\end{enumerate}
+\section{Fluxos, idempotência e janelas}
+Fluxos de sensores são ilimitados e podem chegar fora de ordem. O processamento deve explicitar tempo do evento, janelas e gatilhos \cite{akidau2015}. Intervalos semiabertos evitam dupla contagem nas fronteiras. Idempotência permite repetir operações sem multiplicar efeitos. Workers reservam itens atomicamente, usam \emph{lease} temporário e recuperam trabalho após falhas.
 
-Esses dados contextualizados são essenciais para criar um sistema inteligente capaz de interferir no funcionamento da cidade. A integração eficaz desses diversos tipos de dados permitirá não só a monitorização precisa do consumo energético, mas também a implementação de estratégias de gamificação que motivem comportamentos sustentáveis entre os ocupantes do edifício. Definir esses dados, no contexto de aplicação do projeto, consiste em uma das etapas do trabalho a ser desenvolvido.
+\section{Gamificação e energia}
+Gamificação emprega elementos de jogos em contextos não lúdicos \cite{deterding2011}. Pontos e rankings não bastam: autonomia, competência e relacionamento influenciam a motivação \cite{ryan2000}. Estudos empíricos são majoritariamente positivos, mas dependem do contexto \cite{hamari2014}. Para software gamificado, recomenda-se analisar contexto e usuários, definir objetivos, projetar e avaliar iterativamente \cite{morschheuser2018}. A plataforma oferece missões auditáveis, mas não presume que XP equivale a economia.
 
-Espera-se disponibilizar à aplicação de gamificação, para acesso e manipulação, os dados presentes na arquitetura por meio de uma Interface de Programa de Aplicação (do inglês, Application Program Interface - API). De acordo com Goodwin (2024), uma API consiste de um conjunto de regras ou protocolos que permite que aplicações de software comuniquem entre si para trocar dados, funcionalidades e recursos \cite{Goodwin2024}. APIs simplificam e aceleram o desenvolvimento de software, permitindo a integração de dados e serviços de outras aplicações sem a necessidade de desenvolvimento do zero, ademais não restringindo esses dados apenas a seu objetivo inicial, voltado ao suporte de uma aplicação para a redução do consumo energético.
+No contexto da plataforma, a pessoa também funciona como fonte de dados: sua participação na aplicação cliente poderá produzir registros de adesão a missões, atividades, feedback e progresso. Esses dados móveis complementam a observação dos sensores ambientais. O backend implementado modela identidades, ocorrências, atividades e lançamentos de XP necessários a essa integração, embora a interface móvel que originará parte das interações permaneça externa ao artefato avaliado.
 
-Essa proposta também se alinha com iniciativas globais de sustentabilidade e eficiência energética. A necessidade de reduzir o consumo de energia e promover práticas sustentáveis está em destaque em agendas de políticas públicas e privadas. Tal ênfase na urgência da redução de consumo energético é possível de ser notada por meio da Agenda 2030, das Nações Unidas no Brasil (2015) \cite{agenda2030} a qual cita a urgência de se investir em tecnologia para possibilitar a redução no consumo energético. O caso de uso específico, focado no prédio do Centro de Artes da Universidade Federal de Pelotas, é um exemplo concreto de como a tecnologia pode ser utilizada para atingir esses objetivos. A implementação de sensores para monitorar o consumo energético e a utilização de uma aplicação gamificada para incentivar a economia de energia pode servir de modelo para outras instituições e edificações públicas.
+\section{Segurança e observabilidade}
+IoT amplia desafios de autenticação, autorização, integridade e privacidade \cite{roman2013}. A plataforma usa JWT e papéis; o serviço de telemetria não acessa o PostgreSQL. Correlação, estados e métricas permitem observar pipelines assíncronos, sem registrar segredos, dados pessoais ou payloads integrais \cite{procelSeguranca2026,procelObservabilidade2026}.
 
-Distinguindo-se de outros trabalhos já realizados, este projeto se destaca pela sua abordagem integrada que combina a flexibilidade e escalabilidade dos bancos de dados NoSQL com a capacidade de engajamento da gamificação. Conforme Sadalage e Fowler (2012), "os sistemas NoSQL são particularmente eficazes para aplicações que necessitam de alta disponibilidade e escalabilidade horizontal" \cite{Sadalage2012}. Enquanto muitos projetos focam apenas em um desses aspectos, a integração proposta oferece uma solução holística que aborda tanto a gestão eficiente de dados quanto a motivação dos usuários para comportamentos sustentáveis. Isso representa um grau de inovação significativo, com potencial para influenciar futuras pesquisas e práticas em gestão de dados e sustentabilidade.
+\chapter{Trabalhos Relacionados}
+Orland et al. \cite{orland2014} conectaram cargas de tomada monitoradas a um jogo em escritório e relataram redução média de 13\% em relação à linha de base dessas cargas. Morganti et al. \cite{morganti2017} incluíram dez estudos em sua revisão e encontraram potencial, porém evidência ainda limitada. Oppong-Tawiah et al. \cite{oppong2020} aplicaram cinco ciclos de projeto a um aplicativo que monitorava equipamentos. Iria et al. \cite{iria2020} combinaram painéis, competição e mensagens; os resultados da demonstração indicaram economia de 20\%. Beck et al. \cite{beck2019}, analisando 57 aplicativos, observaram subutilização de teoria comportamental. Esses resultados justificam investigar a infraestrutura necessária à intervenção, mas não são transferidos como estimativa de economia para o PROCEL.
 
-Em conclusão, a proposta "Gerenciamento Multi-Estruturado de Dados Móveis Gamificados: Integrando Fontes Heterogêneas" não apenas responde às necessidades atuais de gestão eficiente de dados e redução de consumo energético, mas também propõe uma abordagem inovadora que pode ter impacto duradouro na academia e na comunidade.
+\begin{table}[htb]\centering\small
+\begin{tabular}{|p{2.6cm}|p{3.2cm}|p{3.2cm}|p{3.2cm}|}\hline
+\textbf{Trabalho} & \textbf{Objeto descrito} & \textbf{Mecanismos pertinentes} & \textbf{Limite da comparação} \\ \hline
+Orland et al. & Intervenção com jogo e cargas monitoradas & Medição, linha de base e retorno ao usuário & Avalia comportamento; não detalha uma arquitetura reproduzível de ingestão. \\ \hline
+Oppong-Tawiah et al. & Aplicativo sustentável desenvolvido em cinco ciclos & DSR, monitoramento de equipamentos e interação & Não permite determinar idempotência ou reprocessamento. \\ \hline
+Iria et al. & Plataforma de gamificação para escritório & Medição real, painéis, competição e mensagens & Proveniência e consistência distribuída não são o objeto da avaliação. \\ \hline
+Grolinger et al. & Levantamento de bancos NoSQL e NewSQL & Seleção por modelo, escalabilidade e consistência & Orienta a persistência, mas não propõe o pipeline PROCEL. \\ \hline
+Akidau et al. & Modelo de processamento de fluxos não limitados & Tempo do evento, janelas, gatilhos e atraso & Fundamenta a semântica temporal; não trata gamificação. \\ \hline
+\end{tabular}\caption{Síntese comportamental e arquitetural dos trabalhos relacionados}\label{tab:relacionados}\end{table}
 
-\chapter{Principais Conceitos}
-
-\section{O que é Gamificação}
-
-Gamificação refere-se ao uso de elementos e técnicas de design de jogos em contextos não lúdicos com o objetivo de engajar usuários e resolver problemas do mundo real. Segundo Deterding et al. e discutido por Kim \cite{kim2015gamification}, a gamificação se distingue dos jogos completos pelo seu foco em aplicar mecânicas de jogo fora de um ambiente puramente lúdico. Zichermann e Cunningham definem gamificação como "o processo de usar o pensamento de jogos e mecânicas de jogos para engajar usuários e resolver problemas."
-
-Aplicações práticas de gamificação incluem o Nike+, que usa elementos de jogo para motivar a prática de exercícios físicos, e o Chore Wars, que transforma tarefas domésticas em desafios para aumentar a produtividade. Esses exemplos demonstram a eficácia da gamificação na mudança de comportamento e na resolução de problemas específicos.
-
-Deterding et al. também discutem a distinção entre gamificação e design lúdico. Enquanto a gamificação utiliza elementos de jogos estruturados para resolver problemas reais, o design lúdico emprega um uso mais expressivo e improvisacional de comportamentos, sem regras rígidas ou competição direta. Em contraste com jogos tradicionais, onde o objetivo é alcançar metas fictícias, a gamificação busca resolver problemas reais e promover comportamentos desejados.
-
-Em resumo, a gamificação é uma abordagem que utiliza características dos jogos para incentivar a participação ativa, motivar comportamentos desejados e resolver problemas reais, diferenciando-se tanto dos jogos quanto do design lúdico na aplicação de seus elementos \cite{kim2015gamification}.
-
-\section{Metodologias de Gamificação}
-
-\subsection{Elementos e Mecânicas de Jogos}
-
-Metodologias de gamificação frequentemente aplicam elementos de jogos, como pontos, medalhas, rankings e desafios, em contextos não relacionados a jogos. Werbach e Hunter destacam a importância do design estratégico e da incorporação desses elementos para atingir objetivos específicos, como aumentar a participação ou melhorar os resultados de aprendizagem \cite{werbach2012for}.
-
-\subsection{Design Motivacional}
-
-A compreensão das motivações intrínsecas e extrínsecas é fundamental na gamificação. Estudos ressaltam a importância de adaptar as mecânicas de jogos para aprimorar a motivação intrínseca, promovendo um senso de autonomia, domínio e propósito, em vez de depender exclusivamente de recompensas externas, como pontos \cite{ryan2000intrinsic}.
-
-\subsection{Contextos Educacionais}
-
-A gamificação tem sido amplamente estudada em ambientes educacionais, envolvendo o uso de técnicas de aprendizagem baseadas em jogos (GBL) para melhorar o engajamento, desempenho e motivação dos estudantes. Além disso, diferentes metodologias exploram como a gamificação pode desenvolver habilidades interpessoais e uma mentalidade empreendedora entre os alunos \cite{kapp2012gamification}.
-
-\subsection{Adaptação ao Contexto}
-
-Metodologias eficazes de gamificação consideram o contexto em que são aplicadas. Por exemplo, durante a pandemia de COVID-19, educadores utilizaram a gamificação para ajudar os alunos a se adaptarem ao ensino online. A integração da gamificação na educação de liderança e no treinamento vocacional demonstra como a adaptação contextual dos elementos de jogos pode gerar melhores resultados \cite{deterding2011game}.
-
-\subsection{Desafios e Limitações}
-
-As metodologias de gamificação devem também abordar desafios como a necessidade de recursos adequados, o risco de experiências mal projetadas e a dificuldade de manter o engajamento ao longo do tempo \cite{deterding2011game}.
-
-\section{Definição dos Dados do Usuário - Contexto da Aplicação}
-
-Neste capítulo, detalhamos os diferentes tipos de dados gerados pelos usuários e sua relação com a aplicação de gamificação voltada para a eficiência energética em edificações públicas. Compreender esses dados é essencial para desenvolver um sistema que não apenas monitore e analise o consumo de energia, mas também engaje os usuários em comportamentos sustentáveis. A seguir, são discutidos os principais tipos de dados a serem considerados.
-
-\subsection{Dados de Sensores Ambientais}
-
-\textbf{Descrição:} Dados coletados através de sensores instalados no ambiente, como no prédio do Centro de Artes da UFPel. Esses sensores monitoram variáveis ambientais essenciais para a gestão eficiente da energia.
-
-\textbf{Exemplos de Dados:}
-\begin{itemize}
-    \item Temperatura interna do ambiente
-    \item Umidade relativa
-    \item Qualidade do ar
-    \item Consumo energético do ambiente
-\end{itemize}
-
-\textbf{Relevância para a Aplicação:} Esses dados fornecem uma visão detalhada das condições ambientais e do consumo energético, permitindo identificar padrões e anomalias. Informações precisas são fundamentais para o feedback fornecido aos usuários e para a implementação de estratégias de economia de energia.
-
-\subsection{Dados de Sensores Móveis}
-
-\textbf{Descrição:} Dados provenientes dos dispositivos móveis dos usuários coletados através da aplicação de gamificação. Incluem informações sobre atividades e comportamentos dos usuários em relação ao consumo de energia.
-
-\textbf{Exemplos de Dados:}
-\begin{itemize}
-    \item Atividades registradas pelos dispositivos móveis
-    \item Comportamentos relacionados ao consumo energético
-    \item Interações com desafios e recompensas na aplicação
-\end{itemize}
-
-\textbf{Relevância para a Aplicação:} Esses dados ajudam a entender como os comportamentos dos usuários impactam o consumo de energia e a ajustar as mecânicas de gamificação para promover práticas mais sustentáveis. A análise desses dados também personaliza o feedback e as recompensas oferecidas.
-
-\subsection{Dados de Pessoas como Sensores}
-
-\textbf{Descrição:} Dados fornecidos diretamente pelos usuários através da aplicação de gamificação. Incluem feedback sobre o ambiente e participação em atividades de economia de energia.
-
-\textbf{Exemplos de Dados:}
-\begin{itemize}
-    \item Feedback sobre condições ambientais e sugestões de melhorias
-    \item Participação em desafios e campanhas de economia de energia
-    \item Respostas a pesquisas e questionários sobre práticas de consumo energético
-\end{itemize}
-
-\textbf{Relevância para a Aplicação:} Esses dados capturam a percepção dos usuários sobre o ambiente e as iniciativas de gamificação. A interação direta com os usuários permite ajustar a aplicação e as estratégias de gamificação, aumentando a eficácia das ações voltadas para a redução do consumo energético.
-
-\subsection{Integração e Análise dos Dados}
-
-\textbf{Descrição:} A integração dos diferentes tipos de dados é crucial para criar um sistema inteligente que analise e utilize essas informações de forma coesa. A análise dos dados permitirá identificar padrões, medir o impacto das estratégias de gamificação e fazer ajustes conforme necessário.
-
-\textbf{Abordagem:}
-\begin{itemize}
-    \item Coleta e armazenamento dos dados em um banco de dados NoSQL para garantir flexibilidade e escalabilidade
-    \item Processamento e análise dos dados para gerar insights sobre o consumo energético e o engajamento dos usuários
-    \item Desenvolvimento de relatórios e dashboards para visualização dos dados e acompanhamento das métricas de desempenho
-\end{itemize}
-
-\textbf{Relevância para a Aplicação:} A integração e análise dos dados permitirão uma visão abrangente do impacto das ações de gamificação e da eficiência energética no prédio. Isso facilitará a implementação de melhorias contínuas e a adaptação das estratégias para maximizar os resultados.
-
-\section{Bancos de Dados Voltados para Gamificação}
-
-\subsection{Natureza dos Dados a Serem Armazenados}
-
-Em aplicações de gamificação, a natureza dos dados pode variar amplamente, refletindo a complexidade e a diversidade dos elementos do jogo e do comportamento do usuário. Os dados a serem armazenados geralmente incluem:
-
-\begin{itemize}
-    \item \textbf{Dados de Usuários:} Informações sobre perfis de usuários, histórico de atividades, conquistas e progresso.
-    \item \textbf{Dados de Atividades:} Registros de interações dos usuários com o sistema de gamificação, como pontuações, desafios concluídos e recompensas.
-    \item \textbf{Dados de Feedback:} Comentários e sugestões fornecidos pelos usuários, bem como suas respostas a questionários e pesquisas.
-    \item \textbf{Dados Ambientais:} Informações contextuais, como dados de sensores em ambientes físicos que podem impactar ou ser impactados pela gamificação.
-\end{itemize}
-
-Esses dados devem ser gerenciados de forma eficiente para suportar a escalabilidade e a flexibilidade necessárias em sistemas de gamificação.
-
-\subsection{Modelos de Bancos de Dados NoSQL para Gamificação}
-
-Os bancos de dados NoSQL são frequentemente escolhidos para aplicações de gamificação devido à sua capacidade de lidar com grandes volumes de dados não estruturados e semi-estruturados, bem como sua escalabilidade. Abaixo estão os principais modelos de bancos de dados NoSQL e suas adequações para gamificação:
-
-\subsubsection{1. Document Stores}
-
-\textbf{Descrição:} Bancos de dados document stores, como MongoDB e CouchDB, armazenam dados em formatos de documentos JSON ou BSON. Eles são altamente flexíveis e permitem o armazenamento de dados semi-estruturados.
-
-\textbf{Vantagens:}
-\begin{itemize}
-    \item \textbf{Flexibilidade:} Adequado para armazenar dados de usuários e atividades que podem ter estruturas variadas.
-    \item \textbf{Escalabilidade Horizontal:} Facilita a adição de novos nós ao cluster para lidar com o aumento de dados.
-\end{itemize}
-
-\textbf{Referência:} MongoDB oferece flexibilidade e escalabilidade que são benéficas para aplicações de gamificação onde os dados podem evoluir com o tempo \cite{chodorow2013mongodb}.
-
-\subsubsection{2. Key-Value Stores}
-
-\textbf{Descrição:} Bancos de dados key-value, como Redis e Riak, armazenam dados em pares de chave-valor. Eles são ideais para operações rápidas e simples, como armazenar estados de jogo e pontuações.
-
-\textbf{Vantagens:}
-\begin{itemize}
-    \item \textbf{Desempenho:} Oferece alto desempenho para operações de leitura e escrita.
-    \item \textbf{Simplicidade:} Ideal para armazenar e recuperar rapidamente dados simples como pontuações e rankings.
-\end{itemize}
-
-\textbf{Referência:} Redis é amplamente utilizado em cenários que exigem alta performance para manipulação de dados em tempo real, o que é essencial para a gamificação \cite{antirez2013redis}.
-
-\subsubsection{3. Column-Family Stores}
-
-\textbf{Descrição:} Bancos de dados column-family, como Apache Cassandra e HBase, organizam dados em colunas em vez de linhas. São adequados para dados de larga escala e consultas analíticas.
-
-\textbf{Vantagens:}
-\begin{itemize}
-    \item \textbf{Escalabilidade:} Suporta grandes volumes de dados distribuídos através de múltiplos nós.
-    \item \textbf{Desempenho em Consultas Analíticas:} Adequado para análises complexas e relatórios de dados de gamificação.
-\end{itemize}
-
-\textbf{Referência:} Cassandra é eficaz para aplicações que necessitam de alta disponibilidade e escalabilidade para grandes volumes de dados \cite{london2011cassandra}.
-
-\subsection{Estratégias e Paradigmas NoSQL Mais Adequados para Gamificação}
-
-Para escolher o banco de dados NoSQL mais adequado para uma aplicação de gamificação, considere as seguintes estratégias:
-
-\begin{itemize}
-    \item \textbf{Análise das Necessidades de Dados:} Identificar se a aplicação requer alta flexibilidade (document stores), desempenho em tempo real (key-value stores), ou escalabilidade e processamento analítico (column-family stores).
-    \item \textbf{Escalabilidade e Performance:} Escolher um banco de dados que possa escalar horizontalmente para acomodar o crescimento de dados e usuários.
-    \item \textbf{Modelagem de Dados:} Adaptar o modelo de dados ao tipo de banco escolhido, aproveitando suas características para otimizar a performance e a eficiência do sistema de gamificação.
-\end{itemize}
-
-\textbf{Referência:} Para uma visão mais detalhada sobre a aplicação de diferentes paradigmas NoSQL em gamificação, verifique o estudo de Xie et al. (2020) que discute como os bancos de dados NoSQL podem ser otimizados para diferentes cenários de aplicação \cite{xie2020nosql}.
-
-\chapter{Estado da Arte}
-
-\section{Trabalhos Relacionados a Desenvolvimento de Aplicações de Gamificação Voltadas para Eficiência Energética}
-
-A combinação de gamificação com a eficiência energética tem sido um campo de crescente interesse, com várias abordagens sendo exploradas para incentivar comportamentos mais sustentáveis. Este capítulo revisa os principais trabalhos e estudos que abordam o desenvolvimento de aplicações de gamificação com foco na eficiência energética.
-
-\section{Revisão de Literatura}
-
-\subsection{Gamificação para Eficiência Energética}
-
-A gamificação tem sido utilizada para motivar indivíduos e organizações a adotarem práticas de eficiência energética. Estudos recentes demonstram que a incorporação de elementos de jogos em sistemas de gestão de energia pode melhorar o engajamento e incentivar a redução do consumo energético. Um exemplo notável é o trabalho de \cite{del2022gamification}, que explora como a gamificação pode ser integrada em sistemas de monitoramento de energia para promover comportamentos sustentáveis.
-
-\subsection{Estudos de Caso e Aplicações Reais}
-
-Vários estudos de caso destacam a aplicação prática da gamificação em projetos de eficiência energética. O estudo de \cite{jones2021energy} apresenta um sistema de gamificação implementado em um ambiente corporativo, onde a competição entre equipes e recompensas foram usadas para reduzir o consumo de energia. Outro exemplo é o trabalho de \cite{smith2023smart}, que analisou a eficácia de um aplicativo de gamificação para consumidores residenciais, destacando a importância de personalizar desafios e recompensas para maximizar o impacto.
-
-\subsection{Desafios e Limitações}
-
-Apesar dos avanços, a implementação de gamificação para eficiência energética enfrenta vários desafios. \cite{brown2021challenges} discute as dificuldades na adaptação de elementos de jogos a contextos energéticos e os riscos de criar soluções que não sejam sustentáveis a longo prazo. A pesquisa também destaca a necessidade de equilibrar a complexidade do jogo com a facilidade de uso para garantir que as soluções sejam eficazes e adotadas amplamente.
-
-\section{Tendências Emergentes}
-
-\subsection{Integração com Tecnologias Emergentes}
-
-A integração de gamificação com tecnologias emergentes, como a Internet das Coisas (IoT) e a inteligência artificial (IA), está moldando o futuro das aplicações de eficiência energética. \cite{williams2023iot} investiga como dispositivos IoT podem ser usados para fornecer feedback em tempo real e criar uma experiência de jogo mais imersiva e motivadora. Além disso, \cite{miller2024ai} explora como algoritmos de IA podem personalizar desafios e recompensas com base no comportamento do usuário, melhorando a eficácia das estratégias de gamificação.
-
-\subsection{Personalização e Contextualização}
-
-A personalização da experiência de gamificação para diferentes contextos e perfis de usuários é uma tendência crescente. \cite{taylor2023personalization} analisa métodos para adaptar jogos e desafios às preferências individuais e condições específicas, garantindo que a gamificação seja relevante e envolvente para cada usuário.
-
-\section{Conclusão}
-
-A aplicação de gamificação na eficiência energética está em constante evolução, com novas abordagens e tecnologias ampliando suas possibilidades. A revisão de trabalhos recentes destaca o potencial da gamificação para transformar comportamentos e práticas energéticas, enquanto também aponta para os desafios e oportunidades futuras. O avanço contínuo nesse campo dependerá da capacidade de integrar de forma eficaz elementos de jogos com as necessidades e contextos específicos da eficiência energética.
-
-
-
-\chapter{Objetivo}
-
-O objetivo geral deste trabalho é propor um modelo e uma arquitetura de dados eficiente
-para a gestão de dados heterogêneos, servindo de base para uma aplicação de
-gamificação. Este modelo irá integrar dados de diversas fontes, sendo identificadas:
-usuários; tecnologias e sensores.
-Espera-se fornecer à aplicação uma API para acesso aos serviços fornecidos pela
-arquitetura proposta.
-Este objetivo geral entende a realização das seguintes metas:
-\begin{enumerate}
-    \item Estudar e analisar as características dos bancos de dados NoSQL:
-o Pesquisar e analisar os diferentes paradigmas de bancos de dados NoSQL
-(baseado em documentos, chave-valor, colunar e de grafos) para identificar
-o mais adequado às necessidades do projeto.
-    \item Definir e implementar um modelo de dados para sensores heterogêneos:
-o Desenvolver um modelo de dados flexível que possa acomodar os
-diferentes formatos de dados provenientes de sensores diversos.
-o Integrar princípios de gamificação na modelagem dos dados para incentivar
-a redução do consumo energético.
-    \item Desenvolver a interface de aplicação (API) para dispositivos móveis:
-o Criar uma API baseada em nuvem que permita a comunicação entre os
-dispositivos móveis e o banco de dados NoSQL.
-o Garantir a segurança e a eficiência na transmissão e manipulação dos
-dados pela API.
-\end{enumerate}
+A Tabela \ref{tab:relacionados} separa mecanismo descrito, mecanismo avaliado e aspecto que a fonte não permite determinar. Essa distinção evita interpretar ausência de descrição como ausência de implementação. A lacuna explorada pelo TCC está na combinação, em um artefato, de retenção bruta delimitada, canonicalização configurável, agregação recuperável e efeitos idempotentes entre evidência, interpretação, evento e recompensa. A contribuição é de engenharia de dados; a efetividade comportamental permanece uma pergunta experimental posterior.
 
 \chapter{Metodologia}
+O trabalho adota Ciência do Projeto, na qual conhecimento é produzido pela construção e avaliação de artefatos relevantes \cite{hevner2004,gregor2013}. O processo foi organizado pelas seis atividades de Peffers et al. \cite{peffers2007}. A Tabela \ref{tab:dsr-execucao} explicita como essas atividades ocorreram, evitando apresentar o método apenas como uma sequência abstrata.
 
-A metodologia adotada neste projeto de Trabalho de Conclusão de Curso será
-baseada em uma abordagem progressiva e interligada, que envolve uma série de
-atividades contínuas e complementares. Inicialmente, será realizada uma revisão
-bibliográfica abrangente para compreender as nuances e categorias dos bancos de dados
-NoSQL, seguida de uma análise comparativa para determinar a melhor opção para o
-contexto do projeto. Em paralelo, serão identificados os requisitos dos dados provenientes
-dos sensores heterogêneos, e será projetado um modelo de dados flexível e escalável
-para acomodar esses requisitos, sempre considerando os cenários de implantação que
-serão levantados ao longo do projeto “Validação de sistema de gamificação, gestão e
-automação na nuvem para eficiência energética de edificações públicas com foco inicial
-em universidades” com a colaboração dos envolvidos. Aspectos relacionados à aplicação
-de gamificação, projetada por alunos de mestrado atuantes no projeto, que utilizará esses
-dados serão também levantados nesse momento e a implementação desse modelo será
-acompanhada por testes de validação para garantir sua eficácia.
-Para realizar a comunicação entre o que será implementado neste projeto de
-conclusão e a aplicação de gamificação do projeto, será desenvolvida uma interface de
-aplicação (API) para dispositivos móveis, com foco na definição de endpoints e protocolos
-de comunicação que garantam a segurança e a integridade dos dados. A integração das
-técnicas de gamificação será cuidadosamente incorporada à modelagem da aplicação
-que gerenciará esses dados e distribuirá por meio da API, identificando pontos de
-interação do usuário e implementando elementos como sistemas de recompensa e
-desafios. A validação dessas técnicas será realizada por meio de testes de usabilidade e
-feedback dos usuários reais.
-Para validar a arquitetura e a aplicação desenvolvida, serão conduzidos testes
-abrangentes de desempenho, segurança e escalabilidade. Paralelamente, será elaborada
-uma documentação detalhada, incluindo relatórios técnicos que descrevem as atividades
-realizadas e os resultados obtidos.
+\begin{table}[htb]\centering\small
+\begin{tabular}{|p{2.7cm}|p{5.2cm}|p{5.0cm}|}\hline
+\textbf{Atividade DSR} & \textbf{Execução no projeto} & \textbf{Evidência produzida} \\ \hline
+Identificação do problema & Análise do objetivo institucional e dos riscos de integrar sensores heterogêneos a missões: duplicação, perda da origem, evolução de formato e efeitos repetidos. & Questão de pesquisa e requisitos arquiteturais. \\ \hline
+Definição dos objetivos & Conversão dos riscos em propriedades observáveis: preservação delimitada, canonicalização, idempotência, recuperabilidade, rastreabilidade e autorização. & Objetivos da Seção 1.2 e critérios da avaliação. \\ \hline
+Projeto e desenvolvimento & Construção incremental dos módulos Telemetry, API e Admin, das migrations e dos contratos REST/MQTT. & Código, esquema, documentação e diagramas. \\ \hline
+Demonstração & Exercício dos fluxos de ingestão, consulta, missão e operação por testes automatizados e roteiro HTTP. & Classes de teste, relatório de testes de sanidade e exemplos de fluxo. \\ \hline
+Avaliação & Inspeção de restrições e cenários automatizados; análise do relatório operacional; benchmark dos motores de regras. & Matriz propriedade--evidência e resultados do Capítulo 6. \\ \hline
+Comunicação & Consolidação das decisões, limitações e instruções de reprodução. & Este TCC e documentos técnicos versionados. \\ \hline
+\end{tabular}\caption{Correspondência entre a DSR e as atividades executadas}\label{tab:dsr-execucao}\end{table}
 
-\chapter{Cronograma}
+Os requisitos não foram obtidos por entrevistas ou por um protocolo formal com usuários finais. Eles foram reconstruídos a partir do objetivo do projeto institucional, da evolução do artefato e de falhas plausíveis do pipeline. Consequentemente, a avaliação responde se a arquitetura implementa propriedades técnicas selecionadas; ela não valida usabilidade, motivação ou redução de consumo. Os ciclos foram incrementais: a separação entre bruto e canônico antecedeu a inclusão de perfis versionados; em seguida foram introduzidos processamento com \emph{claim}/\emph{lease}, agregação e, por fim, ocorrências, atividades e ledger de XP. O histórico Git e as migrations registram essa evolução, mas não foi mantido um diário experimental que permita atribuir cada mudança a uma sessão formal de avaliação.
 
-\section{Definir e implementar um modelo de dados para sensores heterogêneos}
+A revisão de literatura foi narrativa, orientada por aderência ao problema, publicações revisadas por pares, DOI e fontes primárias para normas. O Qualis foi consultado apenas como informação auxiliar sobre veículos, pois sua unidade de avaliação, ciclo e critérios não substituem relevância temática nem constituem um protocolo reproduzível de busca \cite{capesQualis2023}. Assim, este trabalho não reivindica revisão sistemática nem exaustividade.
 
-Após a conclusão da análise das características dos bancos de dados NoSQL e a seleção do mais adequado para o projeto, o foco será na definição e implementação de um modelo de dados que possa acomodar os diferentes formatos de dados provenientes de sensores diversos. Isso incluiria:
+\section{Delimitação do artefato e protocolo de avaliação}\label{sec:protocolo-avaliacao}
+A versão de referência do artefato técnico é o commit \texttt{141db8ccbf63cf3896344fbb90197dfae3618691}, de 2 de novembro de 2026, do repositório \texttt{PROCEL-Back-End}. Evidências posteriores ou oriundas de alterações locais não integram a avaliação. Para cada propriedade, foram procurados quatro tipos de evidência: restrição de armazenamento, cenário automatizado com oráculo explícito, relatório de execução e observação operacional. A presença de código ou de uma anotação \texttt{@Test}, isoladamente, não foi tratada como resultado.
 
-\subsection{Identificação dos formatos de dados dos sensores}
-Realizar uma análise detalhada dos diferentes tipos de dados que serão coletados pelos sensores, considerando suas variações e especificidades.
+Os módulos Java podem ser exercitados, a partir da raiz do repositório técnico, com \path{.\Procel-API\mvnw.cmd -f Procel-API/pom.xml test} e \path{.\Procel-Telemetry\mvnw.cmd -f Procel-Telemetry/pom.xml test}; os testes de integração usam Testcontainers para PostgreSQL, MongoDB e HiveMQ. O roteiro de testes de sanidade é executado separadamente contra um ambiente implantado. O benchmark usa o perfil \texttt{drools-benchmark}, com o comando registrado no documento de decisão técnica.
 
-\subsection{Design do modelo de dados}
-Desenvolver um modelo de dados flexível e escalável que possa acomodar os diversos formatos de dados dos sensores. Isso envolveria a definição de estruturas de dados adequadas, relacionamentos entre entidades e atributos necessários para armazenar as informações dos sensores.
+O equipamento informado como utilizado nas execuções locais foi inspecionado em 2 de novembro de 2026: Windows 11 Pro de 64 bits, versão 10.0.26300 (build 26300); processador Intel Core i5-11300H a 3,10 GHz, com quatro núcleos e oito processadores lógicos; e 16 GB de memória RAM. O ambiente do projeto aponta, por \texttt{JAVA\_HOME}, para OpenJDK Temurin 21.0.10+7 de 64 bits; o Docker Engine identificado é a versão 28.5.2. Como o executável \texttt{java} disponível primeiro no \texttt{PATH} pertence ao Java 8, a reprodução deve conferir \texttt{JAVA\_HOME} e a saída de \texttt{java -version} usada pelo Maven antes da execução. Versões de software observadas posteriormente podem diferir das presentes na data original de cada relatório.
 
-\subsection{Integração dos princípios de gamificação}
-Durante o processo de modelagem de dados, incorporar os princípios de gamificação para incentivar a redução do consumo energético. Isso pode envolver a definição de regras, pontos de interação e elementos de gamificação que serão integrados ao modelo de dados.
+A avaliação considerou correção funcional, integridade, interoperabilidade, recuperabilidade, segurança e desempenho. O relatório técnico do próprio projeto não constitui auditoria independente; o relatório de testes de sanidade antecede o commit de referência; e os testes automatizados não representam carga de produção, indisponibilidade prolongada ou todos os entrelaçamentos possíveis de concorrência.
 
-\section{Desenvolver a interface de aplicação (API) para dispositivos móveis}
+\chapter{Arquitetura e Desenvolvimento}
+\section{Visão geral}
+O \texttt{Procel-Telemetry} recebe REST/MQTT e é proprietário do MongoDB; o \texttt{Procel-API} mantém autenticação, domínio, análise e gamificação no PostgreSQL; e o \texttt{Procel-Admin} oferece console React \cite{procelReadme2026}.
 
-Simultaneamente ao desenvolvimento do modelo de dados, será iniciado o processo de criação da interface de aplicação (API) para dispositivos móveis. Isso incluiria:
+\begin{figure}[htb]\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+ component/.style={draw, rounded corners, align=center, minimum width=4.1cm, minimum height=1.25cm, font=\scriptsize},
+ store/.style={draw, cylinder, shape border rotate=90, aspect=0.25, align=center, minimum width=2.6cm, minimum height=1.25cm, font=\scriptsize},
+ actor/.style={draw, dashed, rounded corners, align=center, minimum width=2.8cm, minimum height=9mm, font=\scriptsize},
+ flow/.style={-{Stealth[length=2mm]}, thick},
+ bi/.style={{Stealth[length=2mm]}-{Stealth[length=2mm]}, thick},
+ note/.style={font=\tiny, align=center, fill=white, inner sep=1pt}
+]
+\node[actor] at (0,2.5) (devices) {sensores, gateways\\e produtores externos};
+\node[component] at (5,2.5) (telemetry) {\textbf{Procel-Telemetry}\\receber REST/MQTT; reter bruto;\\deduplicar, reprocessar e operar filas};
+\node[store] at (10,2.5) (mongo) {\textbf{MongoDB}\\eventos brutos\\e histórico};
 
-\subsection{Definição dos requisitos da API}
-Identificar os requisitos funcionais e não funcionais da API, considerando aspectos como segurança, eficiência e facilidade de uso.
+\node[actor] at (-4,0) (users) {administrador, operador,\\analista e usuário};
+\node[component] at (0,0) (admin) {\textbf{Procel-Admin}\\configurar, operar e consultar};
 
-\subsection{Design da API}
-Projetar a estrutura e os endpoints da API, determinando os métodos de comunicação e os tipos de dados que serão suportados.
+\node[actor] at (0,-2.5) (canonical) {clientes canônicos\\ADMIN/INGESTOR};
+\node[component] at (5,-2.5) (api) {\textbf{Procel-API}\\autenticar; canonicalizar; qualificar;\\agregar; avaliar missões e conceder XP};
+\node[store] at (10,-2.5) (pg) {\textbf{PostgreSQL}\\domínio, regras,\\análise e gamificação};
 
-\subsection{Implementação da API}
-Desenvolver a API baseada em nuvem, utilizando as melhores práticas de desenvolvimento para garantir sua eficiência e segurança.
+\draw[flow] (devices) -- (telemetry);
+\draw[flow] (telemetry) -- (mongo);
+\draw[flow] (users) -- (admin);
+\draw[bi] (admin.north east) -- (telemetry.south west);
+\draw[bi] (admin.south east) -- (api.north west);
+\draw[flow] (canonical) -- (api);
+\draw[flow] (api) -- (pg);
+\draw[flow] ([xshift=2mm]telemetry.south) -- ([xshift=2mm]api.north);
+\draw[flow] ([xshift=-2mm]api.north) -- ([xshift=-2mm]telemetry.south);
+\end{tikzpicture}}
+\caption{Arquitetura do PROCEL, objetivos dos componentes e relações}
+\label{fig:arquitetura-procel}
+\end{figure}
 
-\subsection{Testes e validação da API}
-Realizar testes de integração e validação da API para garantir seu funcionamento adequado e sua compatibilidade com o banco de dados NoSQL selecionado.
+A Figura \ref{fig:arquitetura-procel} explicita quatro relações principais. Primeiro, produtores enviam mensagens ao \texttt{Procel-Telemetry}, cujo objetivo é aceitar heterogeneidade sem perder a evidência original; a gravação no MongoDB antecede o ACK sempre que o protocolo exige confirmação. Segundo, o worker recupera eventos, consulta na API o snapshot dos perfis e parsers e envia o resultado para a rota interna com JWT curto de \texttt{TELEMETRY\_SERVICE}. Terceiro, o \texttt{Procel-API} transforma a entrada em medições canônicas, aplica regras, produz agregados e relaciona eventos de missão a atividades e XP, persistindo o estado transacional no PostgreSQL. Quarto, pessoas operam o sistema por meio do \texttt{Procel-Admin}, que consome as duas APIs com o JWT do usuário; clientes autorizados também podem enviar dados já canônicos diretamente à API. A futura aplicação móvel ocupará essa fronteira de cliente: consumirá missões e recompensas e enviará interações das pessoas como sensores, sem acesso direto aos bancos.
 
-Após a conclusão dessas etapas, os próximos passos envolveriam a conclusão do desenvolvimento da API, a realização de testes de validação e ajustes na arquitetura como parte da Meta 4, e finalmente a documentação dos resultados do projeto e sua disseminação conforme a Meta 5.
+O limite de propriedade é deliberado: \texttt{Procel-Telemetry} não acessa o PostgreSQL, e \texttt{Procel-API} não altera o documento bruto. MongoDB responde por preservação e reprocessamento; PostgreSQL, por integridade referencial e efeitos de domínio. Essa separação permite repetir a transformação sem reescrever a evidência e impede que uma retransmissão técnica gere uma segunda medição ou recompensa.
 
-\section{Cronograma das Atividades}
+\section{Console de administração}
 
-\begin{table}[h!]
+O \texttt{Procel-Admin} materializa a camada operacional da arquitetura. As Figuras~\ref{fig:console-medicoes}--\ref{fig:console-missao} apresentam três exemplos do ambiente implantado: inspeção de medições e sua qualificação, configuração das regras aplicadas aos parâmetros dos sensores e definição de uma missão com recompensa. As capturas demonstram a correspondência entre a interface e os elementos do modelo, mas não substituem os testes funcionais discutidos no Capítulo 6 nem constituem uma avaliação de usabilidade.
+
+\begin{figure}[htb]
 \centering
-\small  % or \scriptsize
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-\hline
-Atividades & Jan & Fev & Mar & Abr & Mai & Jun & Jul & Ago & Set & Out & Nov & Dez \\ \hline
-1.1 & X &   &   &   &   &   &   &   &   &   &   &   \\ \hline
-1.2 & X & X &   &   &   &   &   &   &   &   &   &   \\ \hline
-1.3 & X & X & X &   &   &   &   &   &   &   &   &   \\ \hline
-1.4 & X & X & X & X &   &   &   &   &   &   &   &   \\ \hline
-2.1 &   &   & X & X & X &   &   &   &   &   &   &   \\ \hline
-2.2 &   &   &   & X & X & X &   &   &   &   &   &   \\ \hline
-2.3 &   &   &   &   & X & X & X &   &   &   &   &   \\ \hline
-3.1 &   &   &   &   &   & X & X & X &   &   &   &   \\ \hline
-3.2 &   &   &   &   &   &   & X & X & X &   &   &   \\ \hline
-3.3 &   &   &   &   &   &   &   & X & X & X &   &   \\ \hline
-3.4 &   &   &   &   &   &   &   &   & X & X & X &   \\ \hline
-4   &   &   &   &   &   &   &   &   &   & X & X & X \\ \hline
-5   &   &   &   &   &   &   &   &   &   &   & X & X \\ \hline
+\includegraphics[width=\textwidth,trim=0 0 0 75,clip]{imagens/screenshots-do-PROCEL/Screenshot_2.png}
+\caption{Console de administração: medições recebidas por MQTT e resultados de qualificação}
+\label{fig:console-medicoes}
+\end{figure}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=\textwidth]{imagens/screenshots-do-PROCEL/Screenshot_4.png}
+\caption{Console de administração: definição de grupos e regras de qualificação}
+\label{fig:console-regras}
+\end{figure}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=\textwidth]{imagens/screenshots-do-PROCEL/Screenshot_7.png}
+\caption{Console de administração: edição de missão e recompensa em XP}
+\label{fig:console-missao}
+\end{figure}
+
+\clearpage
+
+\section{Perfis de usuário e controle de acesso}
+
+O controle de acesso segue o modelo RBAC (\emph{Role-Based Access Control}). A entidade \texttt{pessoa} concentra identidade, nome, e-mail, senha armazenada como \emph{hash}, telefone, matrícula e vínculo opcional com curso. Os papéis não são gravados como uma única coluna: a relação \texttt{pessoa} 1:N \texttt{pessoa\_role} permite que a mesma pessoa acumule responsabilidades, por exemplo \texttt{OPERADOR} e \texttt{ANALISTA}. Após a autenticação, esses papéis são incluídos no JWT e verificados nas rotas da API.
+
+\begin{table}[htb]\centering\small
+\begin{tabular}{|p{2.7cm}|p{3.0cm}|p{6.8cm}|}\hline
+\textbf{Papel} & \textbf{Natureza} & \textbf{Responsabilidades principais} \\ \hline
+ADMIN & usuário humano & Administração ampla: pessoas e papéis, integrações, contextos compartilhados, catálogo, telemetria, missões, eventos, regras e jobs analíticos. Também consulta métricas operacionais. \\ \hline
+OPERADOR & usuário humano & Operação cotidiana: cadastro e vínculo de sensores, sincronização de salas, grupos de regras, missões e criação ou acompanhamento de jobs, sem administrar credenciais e papéis globais. \\ \hline
+ANALISTA & usuário humano & Consulta de medições, agregados, jobs, missões e informações operacionais necessárias à análise, sem alterar configurações sensíveis. \\ \hline
+USUARIO & usuário humano & Funcionalidades de participante: autenticação, consulta do catálogo e de missões permitidas, atividades individuais, saldo e lançamentos de XP. \\ \hline
+INGESTOR & identidade técnica & Envio de medições canônicas ou por perfil de integração. Seu escopo reduzido evita conceder privilégios administrativos a produtores de dados. \\ \hline
+\texttt{TELEMETRY\_}\newline\texttt{SERVICE} & identidade técnica & Comunicação interna do \texttt{Procel-Telemetry} com o \texttt{Procel-API}, por JWT de curta duração, para canonicalizar eventos brutos previamente persistidos. \\ \hline
 \end{tabular}
-\caption{Cronograma das Atividades}
+\caption{Perfis e identidades técnicas do controle de acesso}
+\label{tab:perfis-usuario}
 \end{table}
 
+A separação aplica o princípio do menor privilégio. O \texttt{USUARIO} participa da camada de gamificação, enquanto \texttt{ANALISTA} observa dados sem administrar o sistema; \texttt{OPERADOR} modifica configurações operacionais; e \texttt{ADMIN} mantém ações de maior impacto. As identidades técnicas não representam pessoas e não devem ser usadas para acesso interativo. Rotas públicas limitam-se à autenticação, cadastro habilitado, documentação e saúde; as demais combinam autenticação e autorização por papel. No domínio, uma pessoa pode relacionar-se a curso, disciplinas, presenças, atividades e lançamentos de XP, mas seu papel de segurança permanece independente desses vínculos acadêmicos. Assim, ser aluno ou beneficiário de uma missão não concede automaticamente privilégio administrativo.
+
+\begin{figure}[htb]
+\centering
+\resizebox{0.92\textwidth}{!}{%
+\begin{tikzpicture}[
+  entity/.style={draw, rounded corners, align=left, inner sep=5pt, font=\scriptsize, minimum width=3.3cm},
+  rel/.style={-{Stealth[length=2mm]}, thick},
+  lbl/.style={font=\scriptsize, fill=white, inner sep=1pt}
+]
+\node[entity] (curso) {\textbf{CURSO}\\\underline{id} (PK)\\nome};
+\node[entity, right=1.4cm of curso] (pessoa) {\textbf{PESSOA}\\\underline{id} (PK)\\curso\_id (FK)\\nome, email, matricula\\password, created\_at};
+\node[entity, above right=0.6cm and 1.5cm of pessoa] (role) {\textbf{PESSOA\_ROLE}\\\underline{pessoa\_id + role} (PK)\\pessoa\_id (FK)\\role};
+\node[entity, right=1.5cm of pessoa] (atividade) {\textbf{ATIVIDADE}\\\underline{id} (PK)\\pessoa\_id (FK)\\missao\_id (FK)\\status, chave\_ciclo};
+\node[entity, below=1.1cm of atividade] (xp) {\textbf{XP\_LANCAMENTO}\\\underline{id} (PK)\\pessoa\_id (FK)\\atividade\_id (FK)\\quantidade, created\_at};
+\node[entity, below=1.1cm of pessoa] (presenca) {\textbf{PRESENCA}\\\underline{id} (PK)\\pessoa\_id (FK)\\compartimento\_id (FK)\\checkin/checkout\_at};
+
+\draw[rel] (curso) -- node[lbl]{1:N} (pessoa);
+\draw[rel] (pessoa) -- node[lbl]{1:N} (role);
+\draw[rel] (pessoa) -- node[lbl]{1:N} (atividade);
+\draw[rel] (pessoa) -- node[lbl]{1:N} (xp);
+\draw[rel] (pessoa) -- node[lbl]{1:N} (presenca);
+\draw[rel] (atividade) -- node[lbl]{1:N} (xp);
+\end{tikzpicture}}
+\caption{Relações entre identidade, autorização e gamificação}
+\label{fig:der-usuarios}
+\end{figure}
+
+A Figura \ref{fig:der-usuarios} mostra por que papel, contexto e recompensa são conceitos distintos. \texttt{pessoa\_role} autoriza operações; \texttt{curso} e \texttt{presenca} contextualizam a pessoa; \texttt{atividade} registra sua participação em uma missão; e \texttt{xp\_lancamento} forma o histórico imutável da recompensa, ligado simultaneamente à pessoa e à atividade que o originou.
+
+\section{Modelagem relacional do domínio de sensores}
+
+O modelo relacional foi organizado para separar três conceitos que, em mensagens de dispositivos, frequentemente aparecem misturados: o \emph{tipo} de equipamento, a \emph{observação} realizada em um instante e a \emph{interpretação} dessa observação. A Figura \ref{fig:der-sensores} apresenta esse núcleo. Ela foi reconstruída a partir das entidades JPA e das migrations Flyway atuais; campos secundários foram omitidos para preservar a legibilidade.
+
+\begin{figure}[htb]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+  entity/.style={draw, rounded corners, align=left, inner sep=5pt, font=\scriptsize, minimum width=3.4cm},
+  rel/.style={-{Stealth[length=2mm]}, thick}
+]
+\node[entity] at (0,4) (tipo) {\textbf{TIPO\_DE\_SENSOR}\\\underline{nome} (PK)};
+\node[entity] at (0,2) (sensor) {\textbf{SENSOR}\\\underline{external\_id} (PK)\\nome, ativo\\tipo\_nome (FK)\\compartimento\_id (FK)\\contexto\_compartilhado\_id (FK)};
+\node[entity] at (0,0) (sgr) {\textbf{SENSOR\_GRUPO\_REGRA}\\\underline{id} (PK)\\sensor\_external\_id (FK)\\grupo\_regra\_id (FK)\\status, valido\_de/ate};
+
+\node[entity] at (4.5,4) (pdef) {\textbf{PARAMETRO\_DEF}\\\underline{id} (PK)\\tipo\_nome (FK)\\nome, data\_type\\numeric\_unit, ativo};
+\node[entity] at (4.5,2) (med) {\textbf{MEDICAO}\\\underline{id} (PK)\\sensor\_external\_id (FK)\\timestamp, recebido\_em\\source};
+\node[entity] at (4.5,0) (grupo) {\textbf{GRUPO\_REGRA}\\\underline{id} (PK)\\nome, descricao, ativo};
+
+\node[entity] at (9,2) (pval) {\textbf{PARAMETRO\_VALOR}\\\underline{id} (PK)\\medicao\_id (FK)\\parametro\_def\_id (FK)\\numeric/boolean/text\_value};
+\node[entity] at (9,0) (regra) {\textbf{REGRA\_PARAMETRO}\\\underline{id} (PK)\\grupo\_regra\_id (FK)\\parametro\_def\_id (FK)\\operador, limiares\\resultado, severidade};
+\node[entity] at (13.5,0) (aval) {\textbf{AVALIACAO\_PARAMETRO\_VALOR}\\\underline{id} (PK)\\parametro\_valor\_id (FK)\\regra\_parametro\_id (FK)\\resultado, severidade\\mensagem, avaliado\_em};
+
+\draw[rel] (tipo) -- (sensor);
+\draw[rel] (tipo) -- (pdef);
+\draw[rel] (sensor) -- (med);
+\draw[rel] (med) -- (pval);
+\draw[rel] (pdef) -- (pval);
+\draw[rel] (sensor) -- (sgr);
+\draw[rel] (grupo) -- (sgr);
+\draw[rel] (grupo) -- (regra);
+\draw[rel] (pdef.north) -- ++(0,0.6) -| (11.1,0.7) -- (regra.north east);
+\draw[rel] (pval) -- (aval);
+\draw[rel] (regra) -- (aval);
+\end{tikzpicture}}
+\caption{DER do núcleo de sensores, regras e qualificação; todas as relações indicadas são 1:N}
+\label{fig:der-sensores}
+\end{figure}
+
+Os diagramas são deliberadamente divididos por domínio para manter as relações legíveis; eles não devem ser interpretados como inventários isolados de todo o banco. A inspeção das 32 migrations identificou 44 tabelas no PostgreSQL. Destas, 36 possuem classe JPA anotada com \texttt{@Entity}; as demais são tabelas associativas ou estruturas operadas diretamente por JDBC e coleções JPA. O MongoDB acrescenta a coleção documental \texttt{raw\_telemetry\_events}. A Tabela \ref{tab:catalogo-entidades} resume o inventário; nomes, chaves, retenção e produtores de cada estrutura constam no \emph{Catálogo de Dados} versionado \cite{procelCatalogo2026}.
+
+\begin{table}[htb]\centering\small
+\begin{tabular}{|p{3.2cm}|r|p{7.5cm}|}\hline
+\textbf{Domínio} & \textbf{Estruturas} & \textbf{Objetivo} \\ \hline
+Espacial e acadêmico & 11 & Localizar sensores e relacionar pessoas, turmas, aulas e ocupação. \\ \hline
+Sensores, valores e regras & 10 & Representar observações canônicas, idempotência e qualificação. \\ \hline
+Perfis de integração & 4 & Converter formatos externos de maneira versionada e configurável. \\ \hline
+Análise & 3 & Planejar janelas recuperáveis e armazenar agregados numéricos. \\ \hline
+Missões e gamificação & 11 & Transformar evidências em ocorrências, progresso e recompensas auditáveis. \\ \hline
+Contextos compartilhados & 5 & Reutilizar observações externas e controlar coleta, fonte e vigência. \\ \hline
+Telemetria bruta (MongoDB) & 1 & Reter payload, identidade, hash, estados, tentativas e histórico de reprocessamento. \\ \hline
+\end{tabular}
+\caption{Resumo das estruturas persistentes identificadas}
+\label{tab:catalogo-entidades}
+\end{table}
+
+\subsection{Tipo, instância e localização do sensor}
+
+\texttt{tipo\_de\_sensor} funciona como um catálogo de capacidades. Uma instância física ou lógica é representada por \texttt{sensor}, cuja chave \texttt{external\_id} corresponde ao identificador reconhecido fora do banco, como serial, MAC ou identificador do gateway. Assim, vários sensores do tipo \texttt{SII\_SMART} compartilham definições de parâmetros, mas mantêm identidade e histórico independentes.
+
+Cada sensor referencia exatamente um tipo. Quanto ao escopo espacial, a restrição \texttt{ck\_sensor\_exactly\_one\_scope} exige exatamente uma das alternativas: um \texttt{compartimento} interno ou um \texttt{contexto\_compartilhado}, usado por observações externas, como condições meteorológicas comuns a várias salas. Essa exclusão evita associar simultaneamente o mesmo sensor a uma sala e a um contexto global.
+
+\subsection{Definição e valor de parâmetros}
+
+\texttt{parametro\_def} descreve o contrato do dado: nome canônico, descrição, tipo \texttt{NUMERIC}, \texttt{BOOLEAN} ou \texttt{TEXT}, unidade e estado ativo. A unicidade de \texttt{tipo\_nome + nome} impede duas definições com o mesmo significado dentro de um tipo de sensor. Uma definição possível é \texttt{temperatura}, numérica, medida em $^{\circ}$C; outra é \texttt{presenca}, booleana e sem unidade.
+
+\texttt{medicao} representa o envelope temporal produzido por um sensor. Uma medição pode conter vários \texttt{parametro\_valor}; por exemplo, temperatura, umidade e presença observadas no mesmo instante. O par \texttt{medicao\_id + parametro\_def\_id} é único, logo uma mesma medição não pode conter duas temperaturas canônicas.
+
+O valor usa três colunas mutuamente interpretadas segundo \texttt{data\_type}: \texttt{numeric\_value}, \texttt{boolean\_value} ou \texttt{text\_value}. Esse modelo evita converter todos os valores para texto, preserva comparações numéricas e permite validar a compatibilidade entre definição, regra e valor.
+
+\begin{table}[htb]\centering\small
+\begin{tabular}{|p{3.1cm}|p{3.0cm}|p{2.5cm}|p{4.1cm}|}\hline
+\textbf{Definição} & \textbf{Tipo/unidade} & \textbf{Coluna usada} & \textbf{Exemplos} \\ \hline
+temperatura & NUMERIC / $^{\circ}$C & numeric\_value & 22,5; 29,1 \\ \hline
+presenca & BOOLEAN & boolean\_value & verdadeiro; falso \\ \hline
+estado\_porta & TEXT & text\_value & ABERTA; FECHADA \\ \hline
+\end{tabular}
+\caption{Exemplos de parâmetros tipados no modelo canônico}
+\label{tab:parametros-tipados}
+\end{table}
+
+\section{Modelagem das regras de qualificação}
+
+Uma regra não é ligada diretamente ao sensor. \texttt{grupo\_regra} reúne uma política coerente, como ``Conforto térmico de salas de aula''. A entidade associativa \texttt{sensor\_grupo\_regra} cria a relação muitos-para-muitos entre sensores e grupos, acrescentando estado e intervalo de validade. Essa modelagem permite ativar a mesma política em vários sensores, substituir uma política ao longo do tempo e manter vínculos em rascunho sem aplicá-los.
+
+Cada \texttt{regra\_parametro} pertence a um grupo e referencia exatamente uma \texttt{parametro\_def}. Ela contém operador, limiar(es), resultado, severidade, prioridade e estado. Os operadores implementados são \texttt{GT}, \texttt{GTE}, \texttt{LT}, \texttt{LTE}, \texttt{EQ}, \texttt{NEQ}, \texttt{BETWEEN}, \texttt{OUTSIDE} e \texttt{CONTAINS}. A compatibilidade depende do tipo: números aceitam comparações e intervalos; booleanos, igualdade ou diferença; textos, igualdade, diferença ou contenção.
+
+O processo de qualificação é mostrado na Figura \ref{fig:fluxo-qualificacao}. Para cada valor persistido, o serviço procura grupos do sensor com status \texttt{ATIVO} e vigentes no instante da medição. Em cada grupo, seleciona regras ativas da mesma definição de parâmetro. Toda regra satisfeita gera uma linha em \texttt{avaliacao\_parametro\_valor}.
+
+\begin{figure}[htb]\centering
+\resizebox{0.96\textwidth}{!}{%
+\begin{tikzpicture}[node distance=7mm and 8mm,
+ box/.style={draw, rounded corners, align=center, font=\scriptsize, minimum height=9mm, minimum width=2.8cm},
+ flow/.style={-{Stealth[length=2mm]}, thick}]
+\node[box] (raw) {payload externo\\22,5 $^{\circ}$C};
+\node[box, right=of raw] (parser) {perfil + parser\\mapeiam campos};
+\node[box, right=of parser] (canon) {medição e valor\\canônicos};
+\node[box, right=of canon] (groups) {grupos ativos\\e vigentes};
+\node[box, right=of groups] (rules) {regras do mesmo\\parâmetro};
+\node[box, right=of rules] (eval) {avaliações\\persistidas};
+\draw[flow] (raw)--(parser); \draw[flow] (parser)--(canon); \draw[flow] (canon)--(groups); \draw[flow] (groups)--(rules); \draw[flow] (rules)--(eval);
+\end{tikzpicture}}
+\caption{Fluxo de canonicalização e qualificação de um valor}
+\label{fig:fluxo-qualificacao}
+\end{figure}
+
+\subsection{Exemplo completo de qualificação}
+
+Considere o sensor \texttt{SII-002}, do tipo \texttt{SII\_SMART}, associado à sala 393. O tipo declara o parâmetro \texttt{temperatura} como numérico em $^{\circ}$C. O sensor possui vínculo ativo com o grupo ``Conforto térmico'', contendo as regras da Tabela \ref{tab:exemplo-regras}.
+
+\begin{table}[htb]\centering\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{|p{3.3cm}|p{2.0cm}|p{2.5cm}|p{2.0cm}|p{1.5cm}|}\hline
+\textbf{Regra} & \textbf{Operador} & \textbf{Limiares} & \textbf{Resultado} & \textbf{Nível} \\ \hline
+Faixa confortável & BETWEEN & 20,0 e 24,0 & IDEAL & 0 \\ \hline
+Calor moderado & GT & 24,0 & ALERTA & 1 \\ \hline
+Temperatura extrema & OUTSIDE & 16,0 e 28,0 & CRITICO & 3 \\ \hline
+\end{tabular}
+\caption{Exemplo de regras para o parâmetro temperatura}
+\label{tab:exemplo-regras}
+\end{table}
+
+Se o payload externo contiver \texttt{"temp": 22.5}, o parser converte \texttt{temp} para a definição canônica \texttt{temperatura}; cria uma medição e um \texttt{parametro\_valor} com \texttt{numeric\_value = 22.5}. Apenas \texttt{BETWEEN 20.0 24.0} é satisfeita, produzindo uma avaliação \texttt{IDEAL}. Para 29,1, as regras ``Calor moderado'' e ``Temperatura extrema'' são ambas verdadeiras, produzindo \texttt{ALERTA} e \texttt{CRITICO} separados.
+
+Esse comportamento é deliberadamente não exclusivo: o avaliador percorre todas as regras e não interrompe no primeiro acerto. A restrição única \texttt{parametro\_valor\_id + regra\_parametro\_id} impede repetir a mesma avaliação, mas não impede resultados diferentes para o mesmo valor. A coluna \texttt{prioridade} existe no modelo, porém o serviço atual não a utiliza para escolher um único resultado. Caso a interface necessite de uma qualificação consolidada, deve adotar uma política explícita, por exemplo maior severidade, e preservá-la separadamente das avaliações elementares.
+
+\subsection{Relação entre qualificação e missões}
+
+Uma condição de evento pode operar de duas formas. Em \texttt{PARAMETRO\_VALOR}, compara diretamente o dado canônico; em \texttt{AVALIACAO\_REGRA}, referencia uma regra e o resultado esperado. Assim, a missão pode depender de uma política de domínio sem copiar seus limiares. Por exemplo, ``Luz na Medida'' pode exigir que luminosidade tenha avaliação \texttt{IDEAL} e presença seja verdadeira durante uma janela. A evidência da ocorrência mantém referência à avaliação que justificou a decisão, formando a cadeia mostrada na Figura \ref{fig:rastreabilidade-modelo}.
+
+\begin{figure}[htb]\centering
+\begin{tikzpicture}[node distance=5mm,
+ box/.style={draw, rounded corners, align=center, font=\scriptsize, minimum width=6.5cm, minimum height=7mm},
+ flow/.style={-{Stealth[length=2mm]}, thick}]
+\node[box] (a) {evento bruto MongoDB: payload, hash e identidade};
+\node[box, below=of a] (b) {medição $\rightarrow$ parâmetro valor canônico};
+\node[box, below=of b] (c) {avaliação do valor pela regra aplicável};
+\node[box, below=of c] (d) {evidência $\rightarrow$ ocorrência do evento de missão};
+\node[box, below=of d] (e) {progresso da atividade $\rightarrow$ lançamento de XP};
+\draw[flow] (a)--(b); \draw[flow] (b)--(c); \draw[flow] (c)--(d); \draw[flow] (d)--(e);
+\end{tikzpicture}
+\caption{Rastreabilidade do dado bruto ao efeito de gamificação}
+\label{fig:rastreabilidade-modelo}
+\end{figure}
+
+Essa cadeia não depende apenas da proximidade conceitual das entidades. O documento MongoDB guarda \texttt{processing.canonicalMeasurementId}; no sentido inverso, \texttt{medicao\_ingestao\_metadata} registra \texttt{raw\_telemetry\_event\_id}, produtor, mensagem, perfil e versão de parser. No PostgreSQL, chaves estrangeiras conectam medição a valores, evidências a ocorrências, ocorrências a atividades e lançamentos de XP. A ligação MongoDB--PostgreSQL é lógica, não uma chave estrangeira distribuída; sua consistência depende da gravação dos identificadores pelos dois serviços.
+
+Há ainda um limite histórico. Ocorrências de missão preservam um \emph{snapshot} de contexto e referências às evidências, e versões de parser deixam de ser editáveis após ativação. As regras de qualificação, entretanto, podem ser alteradas sem que todos os seus limiares sejam copiados para a avaliação já persistida. Logo, a implementação permite explicar qual evidência e qual regra foram usadas, mas não garante reconstrução integral da política histórica em todos os casos. Versionar ou copiar os critérios de cada regra para a avaliação é trabalho futuro.
+
+\section{Telemetria bruta e MQTT}
+\texttt{raw\_telemetry\_events} registra produtor, origem, mensagem, sensor, instantes, payload, hash, estado e tentativas. A chave \texttt{producerId + source + messageId} implementa idempotência. Conteúdo divergente sob a mesma identidade gera conflito \cite{procelMongo2026}.
+
+O ciclo vai de \texttt{RECEIVED} a \texttt{PROCESSING} e então a aceito, duplicado, conflito, falho ou descartado. O worker usa \emph{claim} e \emph{lease}; falhas transitórias recebem repetição. O reprocessamento preserva payload, identidade e hash, mas seleciona a versão ativa do parser no novo processamento. Portanto, ele é uma \emph{reinterpretação auditada}, não a reprodução garantida da transformação original. A entrada anterior, inclusive a versão de parser, permanece no histórico; se a nova interpretação colidir com a identidade canônica já persistida, a API deve responder como duplicata equivalente ou conflito, sem sobrescrita silenciosa.
+
+Eventos brutos possuem TTL configurável: o padrão geral é 30 dias e o perfil de \emph{staging} usa 7 dias, salvo configuração externa. Medições canônicas, metadados e buckets não têm expiração automática nesta etapa. Após o TTL, permanecem a medição e seu contexto de ingestão no PostgreSQL, mas o payload integral deixa de estar disponível para nova interpretação. Assim, ``preservação'' neste trabalho significa preservação durante a janela de retenção, e não arquivo permanente.
+
+No MQTT, o produtor vem do tópico. O ACK manual ocorre após persistência ou decisão permanente; falha transitória do MongoDB fica sem ACK para permitir nova entrega \cite{procelMqtt2026,oasisMqtt2019}. Essa confirmação encerra a responsabilidade da etapa MQTT, não de todo o pipeline até o XP. Como o tópico participa da identidade, autenticidade depende de TLS, credenciais e ACL do broker que restrinja cada cliente ao próprio \texttt{producerId}. A aplicação documenta essa ACL, mas não consegue garanti-la quando o broker é implantado com configuração diferente \cite{procelSeguranca2026}.
+
+\section{Domínio canônico e análise}
+No PostgreSQL, sensores, tipos, parâmetros, medições e valores formam o núcleo. Valores numéricos, booleanos e textuais são tipados. Metadados guardam contexto e idempotência. Perfis, versões de parser, mapeamentos e bindings transformam fontes sem ambiguidade \cite{procelCatalogo2026}.
+
+Jobs analíticos dividem períodos em janelas semiabertas $[t_i,t_f)$ e recuperáveis. Buckets armazenam média, mínimo, máximo e número de amostras por sensor, parâmetro, intervalo e versão. A média é aritmética por amostra; ao combinar buckets, ela é ponderada pela quantidade de amostras, não pela duração representada por cada leitura. Sensores com frequências diferentes, portanto, não devem ter suas amostras interpretadas como observações temporalmente equivalentes sem tratamento adicional. Mensagens atrasadas incluídas no intervalo podem ser incorporadas por recomputação explícita; não há \emph{watermark} nem recálculo automático de bucket já encerrado. A API oferece consultas filtradas e paginadas; a cobertura visual do Admin não é usada como evidência da semântica de agregação.
+
+\section{Missões e XP}
+Eventos configuráveis referenciam parâmetros canônicos. Solicitações, ocorrências e evidências persistem a decisão. Janelas temporais usam intervalos semiabertos, lacuna máxima configurável e estados persistentes para duração, transição e encerramento. Ocorrências progridem atividades de modo idempotente. XP é um ledger append-only, cujo saldo é calculado por soma. O motor simples é padrão; Drools é opt-in, isolado da persistência e mantido experimental atrás de configuração \cite{procelDrools2026}.
+
+\chapter{Avaliação e Discussão}
+\section{Critérios e resultados funcionais}
+A avaliação foi organizada pelas propriedades derivadas do problema de pesquisa, não pelo tamanho do código. Contagens de 32 migrations, 30 controladores e 358 anotações JUnit descrevem a extensão do artefato, mas não são usadas como prova de correção ou cobertura. A Tabela \ref{tab:matriz-avaliacao} apresenta os cenários encontrados e o alcance efetivo da evidência.
+
+\begin{table}[htb]\centering\scriptsize
+\begin{tabular}{|p{2.2cm}|p{4.0cm}|p{4.2cm}|p{2.5cm}|}\hline
+\textbf{Propriedade} & \textbf{Cenário e oráculo} & \textbf{Evidência observada} & \textbf{Conclusão delimitada} \\ \hline
+Idempotência bruta e de XP & Ingestões concorrentes equivalentes devem criar um vencedor; conteúdo divergente deve conflitar; repetição de recompensa deve manter um lançamento. & \path{TelemetryMongoIntegrationTest} exercita concorrência e conflito; \path{XpRewardServiceIntegrationTest} exercita repetição, concorrência e conteúdo divergente. & Sustentada nos componentes testados; falta ensaio único de ponta a ponta até XP. \\ \hline
+Recuperabilidade & Dois workers não devem reclamar o mesmo item; lease expirado deve permitir retomada; rollback não deve deixar janela parcial. & Testes de telemetria e \path{EventoJanelaAvaliacaoServiceTest} cobrem claim concorrente, lease, repetição, reinício simulado e rollback. & Sustentada no nível de serviço e banco; não equivale a teste de queda real dos processos. \\ \hline
+Consistência entre serviços & Falha após o commit da API e antes da atualização do MongoDB deve resultar em repetição reconhecida, sem nova medição. & A fronteira transacional e as respostas \texttt{CREATED}/\texttt{DUPLICATE}/\texttt{CONFLICT} têm testes separados. Não foi localizado um teste que interrompa exatamente entre os dois commits. & Parcial; o cenário distribuído permanece experimento necessário. \\ \hline
+Integração de formatos & Formatos externos diferentes para a mesma grandeza devem produzir valores canônicos equivalentes. & Há testes de seleção de perfil, mapeamento, tipo e versão de parser, mas não uma matriz publicada de fabricantes e payloads equivalentes. & Parcial; valida o mecanismo, não ampla interoperabilidade. \\ \hline
+Janelas e agregação & Início deve ser incluído, fim excluído; repetição não deve duplicar buckets; atraso deve seguir política conhecida. & \path{NumericBucketAggregationTest} cobre intervalo semiaberto, precisão, recomputação, concorrência e rollback; janelas de missão cobrem lacuna e estados. & Sustentada para os casos testados; atraso exige recomputação explícita. \\ \hline
+Autorização & Papéis permitidos devem obter sucesso e papéis proibidos, HTTP 403. & Testes de controladores exercitam ADMIN, ANALISTA, OPERADOR e USUARIO; o teste de sanidade confirma acesso do usuário às próprias atividades e rejeição de atividade alheia. & Sustentada nas rotas exercitadas, não como auditoria completa de segurança. \\ \hline
+\end{tabular}\caption{Matriz de propriedades, cenários e alcance das evidências}\label{tab:matriz-avaliacao}\end{table}
+
+Os relatórios Surefire correspondentes aos cinco conjuntos destacados registram 40 casos sem falhas: 8 de telemetria bruta, 10 de XP, 2 de fronteira transacional da ingestão, 9 de agregação e 11 de janelas de missão. Eles foram gerados em execuções distintas entre setembro e novembro de 2026, e não em uma única execução limpa e arquivada do commit de referência. Por isso, sustentam os cenários específicos, mas não autorizam afirmar que toda a suíte da versão foi aprovada.
+
+\section{Relatório de testes de sanidade}
+O relatório de 17 de setembro de 2026 registra 112 verificações aprovadas, cinco avisos e zero falhas em 71,6 segundos contra o ambiente identificado como produção \cite{procelSmoke2026}. Os avisos foram: timeout de 45,2 segundos na sincronização de salas; HTTP 401 ao consultar o status do job de horários; verificação de persistência desse job ignorada em consequência; HTTP 409 ao tentar recriar um usuário já existente; e HTTP 404 na limpeza de uma presença que já não estava aberta. Os dois últimos eram estados tolerados pelo roteiro; os três primeiros revelam uma lacuna real na sincronização assíncrona e na renovação ou propagação do token.
+
+Esse relatório antecede o commit avaliado e não contém o hash da versão implantada. Ele demonstra que um conjunto de rotas respondeu conforme o roteiro naquele ambiente e instante, mas não valida automaticamente a versão de novembro. O tempo total também não é medida de desempenho: mais de 60\% dele corresponde ao timeout de uma única operação, e as etapas misturam rede, autenticação, persistência e verificações locais.
+
+\section{Experimento dos motores de regras}
+O benchmark JMH foi executado no equipamento descrito na Seção~\ref{sec:protocolo-avaliacao}, com Windows 11, OpenJDK 21.0.10, processador Intel Core i5-11300H de quatro núcleos e oito processadores lógicos e 16 GB de RAM. A configuração empregou dois forks, cinco iterações de aquecimento, dez de medição, um segundo por iteração, uma thread nos resultados principais e o \emph{profiler} de coleta de lixo. Foram usados os modos \texttt{SampleTime} e \texttt{Throughput}; os percentis vieram das amostras do primeiro. A persistência, a rede e os workers não participam da medição \cite{procelDrools2026}.
+
+Os cenários instantâneos usam a mesma definição simples e o mesmo conjunto de fatos. ``Drools frio'' cria um novo motor por operação e inclui geração/compilação da regra, construção da \texttt{KieBase} e avaliação; ``Drools quente'' reutiliza a base em cache, mas cria uma \texttt{KieSession} por avaliação. Cada operação avalia um lote completo, não um único fato. Com 1000 fatos, o motor simples teve média de 0,016 ms e p99 de 0,049 ms; Drools frio, 44,619 ms e 97,750 ms; Drools quente, 1,502 ms e 3,011 ms. O resultado sustenta apenas que o motor simples apresentou menor latência para as regras instantâneas medidas.
+
+No cenário de duração, Drools processou 5000 fatos com média de 6,907 ms e p99 de 11,026 ms. Não existe resultado equivalente do motor simples para esse cenário; portanto, esse número demonstra viabilidade local, não superioridade. A decisão de manter Drools opcional decorre de sua expressividade temporal, combinada com limites, cache e isolamento, e permanece condicionada a benchmark em hardware representativo e a um SLO definido.
+
+\section{Discussão e ameaças à validade}
+A combinação entre documento bruto, metadados canônicos, evidências, atividades e ledger torna a cadeia tecnicamente inspecionável durante a retenção do bruto. Restrições únicas e transações locais reduzem duplicação, enquanto estados persistidos e leases permitem retomada. Essas observações apoiam a viabilidade da arquitetura, mas não provam disponibilidade, correção universal ou adequação sob carga real.
+
+As principais ameaças à validade interna são relatórios produzidos pela própria equipe, execuções não consolidadas em um pacote imutável e ausência do cenário exato de falha entre os dois bancos. O benchmark foi executado em um único computador de uso geral; processos concorrentes, políticas de energia e variações térmicas não foram registrados, o que limita sua comparação externa. Para validade externa, foram avaliados poucos formatos de dispositivos, um único contexto institucional e nenhuma carga representativa de uma edificação ocupada. Para validade de construto, sucesso técnico, XP e economia de energia são conceitos distintos: o estudo mede propriedades do software, não mudança comportamental nem consumo evitado. Permanecem pendentes backup e restauração ensaiados, rate limiting, carga contínua, caos, auditoria independente de segurança e estudo com usuários.
+
+\chapter{Conclusão}
+Este trabalho materializou a proposta inicial em uma arquitetura com três aplicações e dois modelos de persistência. O armazenamento bruto retém eventos REST/MQTT por prazo configurável; o modelo canônico estabiliza sensores e medições; perfis desacoplam produtores; janelas apoiam análise recuperável; e missões relacionam evidências, atividades e XP com mecanismos de idempotência. Assim, o backend integra estruturas documentais e relacionais, fontes ambientais heterogêneas e os registros de participação que a futura aplicação móvel produzirá com pessoas atuando como sensores.
+
+As evidências sustentam propriedades específicas nos cenários automatizados inspecionados e justificam o motor simples como padrão nas regras instantâneas medidas. Elas não constituem prova de ausência de defeitos, consistência sob toda falha distribuída ou desempenho de produção. A contribuição central é integrar evidência bruta, interpretação canônica e efeitos de gamificação rastreáveis; não afirmar economia já alcançada.
+
+Trabalhos futuros incluem executar e arquivar a matriz completa em um commit limpo; interromper o pipeline entre os commits MongoDB/PostgreSQL; versionar integralmente políticas históricas; validar novos fabricantes; testar carga, caos, backup e restauração; definir SLOs e alertas; repetir o benchmark em infraestrutura representativa; desenvolver e integrar a aplicação móvel prevista; e realizar estudo de campo com linha de base e grupo de comparação.
+
+\chapter{Artefatos técnicos consultados}
+Foram consultados, no commit \texttt{141db8ccbf63cf3896344fbb90197dfae3618691}, o README do projeto e os documentos \texttt{Catalogo-Dados.md}, \texttt{Modelo-Telemetria-MongoDB.md}, \texttt{MQTT.md}, \texttt{Seguranca-e-Operacao.md}, \texttt{Observabilidade.md}, \texttt{Decisao-Drools-POC.md} e \texttt{ApiSmokeReport-latest.md}, além de código, migrations, contratos HTTP, classes de teste e relatórios Surefire locais. A autoria ``Santos (2026a--h)'' nas referências designa o autor deste TCC como responsável pela documentação técnica do artefato; os títulos e o hash distinguem cada item. Para preservação de longo prazo, a versão entregue deve receber uma tag ou arquivo permanente contendo código, relatórios e resultados brutos do benchmark.
 
 \bibliographystyle{abnt}
-\bibliography{bibliografia} 
-
-
+\bibliography{bibliografia}
 
 \end{document}
-
