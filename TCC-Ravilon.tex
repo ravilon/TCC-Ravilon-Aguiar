@@ -314,7 +314,7 @@ O desafio arquitetural é atribuir uma responsabilidade clara a cada representa�
 
 
 \subsection{Tecnologias e responsabilidades na arquitetura}
-A implementação utiliza Java com Spring Boot nos dois serviços. Essa base reúne os pontos de entrada HTTP, as rotinas de processamento e os mecanismos de autenticação. Spring Security controla o acesso às operações, com tokens no formato \emph{JSON Web Token} (JWT). O acesso relacional utiliza Spring Data JPA, baseado em \emph{Jakarta Persistence API} (JPA), especificação que relaciona objetos da aplicação às entidades persistidas. Na coleta bruta, Spring Data MongoDB faz a integração com o armazenamento documental. A divisão mantém o código de recebimento e preservação separado das operações que dependem das relações do domínio \cite{probenAtual2026}.
+A implementação utiliza Java com Spring Boot nos dois serviços. Essa base reúne os pontos de entrada HTTP, as rotinas de processamento e os mecanismos de autenticação. Spring Security controla o acesso às operações, com tokens no formato \emph{JSON Web Token} (JWT). O acesso relacional utiliza Spring Data JPA, baseado em \emph{Jakarta Persistence API} (JPA), especificação que relaciona objetos da aplicação às entidades persistidas. Na coleta bruta, Spring Data MongoDB faz a integração com o armazenamento documental. A divisão mantém o código de recebimento e preservação separado das operações que dependem das relações do domínio.
 
 A comunicação MQTT é realizada pelo cliente Eclipse Paho. No ambiente descrito pelos arquivos de composição, Eclipse Mosquitto exerce a função de intermediário de mensagens. A interface de administração utiliza React e TypeScript: React organiza a interface em componentes, enquanto TypeScript permite declarar tipos no código do cliente. Material UI fornece componentes visuais e Vite organiza a construção da aplicação web. A Tabela~\ref{tab:tecnologias} relaciona essas escolhas às responsabilidades que viabilizam.
 
@@ -333,19 +333,19 @@ React e TypeScript;\newline Material UI & Interface para configurar integraçõe
 Vite e Docker Compose & Construção do cliente web e descrição da composição dos serviços e bancos. \\
 Micrometer e\newline Spring Boot Actuator & Exposição de métricas e condições operacionais para observar o processamento. \\\bottomrule
 \end{tabularx}
-\caption*{Fonte: arquivos de dependências, configuração e composição do sistema \cite{probenAtual2026}.}
+\caption*{Fonte: elaboração do autor, a partir dos arquivos de dependências e configuração do sistema.}
 \end{table}
 
 Essas tecnologias materializam responsabilidades da arquitetura; a contribuição da pesquisa decorre da forma como são articuladas para preservar, interpretar e relacionar informação. O motor simples e a alternativa Drools são discutidos na etapa de avaliação de condições, em que sua função se torna necessária ao argumento. A identificação técnica das dependências encontra-se no Apêndice~\ref{ap:evidencias}.
 
 \subsection{Distribuição das representações entre MongoDB e PostgreSQL}
-O MongoDB mantém a coleção \texttt{raw\_telemetry\_events}. Cada documento reúne o conteúdo recebido, a identidade do produtor e da mensagem, os instantes e o estado de processamento. O conteúdo pode variar entre fabricantes, mas os campos de controle permitem localizar, distinguir e retomar as entradas. A unicidade da combinação entre produtor, origem e identificador impede registrar uma retransmissão equivalente como novo evento bruto \cite{probenAtual2026}.
+O MongoDB mantém a coleção \texttt{raw\_telemetry\_events}. Cada documento reúne o conteúdo recebido, a identidade do produtor e da mensagem, os instantes e o estado de processamento. O conteúdo pode variar entre fabricantes, mas os campos de controle permitem localizar, distinguir e retomar as entradas. A unicidade da combinação entre produtor, origem e identificador impede registrar uma retransmissão equivalente como novo evento bruto.
 
 O ciclo de vida dessa coleção é temporário. O campo de expiração permite aplicar um índice de \emph{Time to Live} (TTL), ou tempo de vida, mecanismo do MongoDB para remoção automática de documentos após sua validade \cite{mongoTtl2026}. A política atende à inspeção e à reinterpretação durante a retenção, enquanto evita tomar o armazenamento bruto como um arquivo permanente de todas as observações. Sua expiração não remove, por consequência, a medição já construída no banco relacional.
 
 O PostgreSQL organiza o significado utilizado pela aplicação. Uma medição referencia um sensor e reúne valores relacionados às definições de parâmetro; salas se relacionam a prédios e unidades; pessoas se relacionam a presenças, vínculos acadêmicos e atividades. Agregados, execuções de regras e lançamentos de pontos também permanecem nesse banco. Embora denominado banco analítico na documentação do projeto, ele sustenta tanto consultas e resumos quanto operações transacionais do domínio; não corresponde apenas a um repositório separado de análise.
 
-A distinção entre bancos tampouco elimina dados documentais no PostgreSQL. As regras de ambiente preservam configurações e evidências em campos \texttt{jsonb}, associados às identidades relacionais de sala, regra e execução. O recurso permite conservar uma estrutura de configuração junto do registro que a utilizou. Portanto, a arquitetura combina modelos também no interior do banco relacional: a escolha entre documento e relação depende da informação representada, e não de uma classificação rígida dos produtos \cite{postgresJson2026,probenAtual2026}.
+A distinção entre bancos tampouco elimina dados documentais no PostgreSQL. As regras de ambiente preservam configurações e evidências em campos \texttt{jsonb}, associados às identidades relacionais de sala, regra e execução. O recurso permite conservar uma estrutura de configuração junto do registro que a utilizou. Portanto, a arquitetura combina modelos também no interior do banco relacional: a escolha entre documento e relação depende da informação representada, e não de uma classificação rígida dos produtos \cite{postgresJson2026}.
 
 No exemplo da temperatura, o documento bruto conserva o campo externo; a medição relacional conserva o valor associado ao sensor, ao parâmetro e ao instante. A referência ao identificador da medição no documento e os metadados da ingestão no PostgreSQL conectam essas representações. Trata-se de um vínculo lógico entre bancos, enquanto as relações internas do modelo relacional são verificadas por suas próprias restrições. Essa organização explica tanto a possibilidade de seguir a observação ao longo do processamento quanto a necessidade de recuperação diante de falhas parciais.
 
@@ -366,7 +366,7 @@ A Figura~\ref{fig:der-medicoes} explicita o modelo que sustenta essa separação
 \par\vspace{5mm}
 \input{imagens/diagramas/der-medicoes.tex}
 \par\vspace{3mm}
-\caption*{Fonte: elaboração do autor, adaptada do DER do banco analítico \cite{probenDer2026}. Relações e atributos selecionados; 1 e N indicam cardinalidades máximas, sem detalhar a obrigatoriedade dos vínculos.}
+\caption*{Fonte: elaboração do autor, a partir do modelo de dados desenvolvido para o sistema. Relações e atributos selecionados; 1 e N indicam cardinalidades máximas, sem detalhar a obrigatoriedade dos vínculos.}
 \end{figure}
 
 
@@ -384,7 +384,7 @@ A Figura~\ref{fig:der-academico} mostra como o espaço conecta essas fontes. O c
 \par\vspace{5mm}
 \input{imagens/diagramas/der-contexto-academico.tex}
 \par\vspace{3mm}
-\caption*{Fonte: elaboração do autor, adaptada do DER do banco analítico \cite{probenDer2026}. Relações e atributos selecionados; 1 e N indicam cardinalidades máximas, sem detalhar a obrigatoriedade dos vínculos.}
+\caption*{Fonte: elaboração do autor, a partir do modelo de dados desenvolvido para o sistema. Relações e atributos selecionados; 1 e N indicam cardinalidades máximas, sem detalhar a obrigatoriedade dos vínculos.}
 \end{figure}
 
 
@@ -485,7 +485,7 @@ A Figura~\ref{fig:der-analitico} relaciona a solicitação de análise ao result
 \par\vspace{5mm}
 \input{imagens/diagramas/der-analise-temporal.tex}
 \par\vspace{3mm}
-\caption*{Fonte: elaboração do autor, adaptada do DER do banco analítico \cite{probenDer2026}. Relações e atributos selecionados; 1 e N indicam cardinalidades máximas, sem detalhar a obrigatoriedade dos vínculos.}
+\caption*{Fonte: elaboração do autor, a partir do modelo de dados desenvolvido para o sistema. Relações e atributos selecionados; 1 e N indicam cardinalidades máximas, sem detalhar a obrigatoriedade dos vínculos.}
 \end{figure}
 
 
@@ -547,7 +547,7 @@ A Figura~\ref{fig:der-pontos} explicita as relações persistidas que sustentam 
 \par\vspace{5mm}
 \input{imagens/diagramas/der-participacao-pontos.tex}
 \par\vspace{3mm}
-\caption*{Fonte: elaboração do autor, adaptada do DER do banco analítico \cite{probenDer2026}. Relações e atributos selecionados; 1 e N indicam cardinalidades máximas, sem detalhar a obrigatoriedade dos vínculos.}
+\caption*{Fonte: elaboração do autor, a partir do modelo de dados desenvolvido para o sistema. Relações e atributos selecionados; 1 e N indicam cardinalidades máximas, sem detalhar a obrigatoriedade dos vínculos.}
 \end{figure}
 
 \section{Operação e proteção ao longo do percurso}
@@ -599,9 +599,9 @@ A rastreabilidade também depende das políticas de conservação. A retenção 
 \section{Escolhas de processamento e evidências de avaliação}
 O tratamento do tempo é necessário para distinguir uma condição momentânea de outra que precisa permanecer verdadeira durante um intervalo. A organização em janelas torna essa diferença explícita e permite relacionar leituras sucessivas a uma avaliação. Na análise de dados de sensores, essa preocupação se aproxima da distinção entre tempo do evento e processamento discutida por Akidau et al. \cite{akidau2015}.
 
-A comparação entre motores de regras oferece evidência específica para uma decisão nesse percurso. Para o cenário documentado com mil fatos instantâneos, o motor simples apresentou latência média de $0{,}016$ ms, enquanto Drools apresentou $44{,}619$ ms com compilação por operação e $1{,}502$ ms com reutilização da base. Esses resultados sustentam a escolha do mecanismo simples para o caso medido, preservando a possibilidade de utilizar um mecanismo mais expressivo em condições temporais \cite{probenDrools2026}.
+A comparação entre motores de regras oferece evidência específica para uma decisão nesse percurso. Para o cenário documentado com mil fatos instantâneos, o motor simples apresentou latência média de $0{,}016$ ms, enquanto Drools apresentou $44{,}619$ ms com compilação por operação e $1{,}502$ ms com reutilização da base. Esses resultados sustentam a escolha do mecanismo simples para o caso medido, preservando a possibilidade de utilizar um mecanismo mais expressivo em condições temporais.
 
-O interesse dessa comparação para a pesquisa está no compromisso entre expressividade e custo de processamento. Empregar um mecanismo mais geral em todas as condições acrescentaria custo mesmo quando uma comparação direta é suficiente. Separar avaliação e efeitos de domínio permite que a estratégia de processamento seja escolhida sem redefinir as relações entre evidências, atividades e pontos. O protocolo e a tabela detalhada do experimento são apresentados no material complementar.
+O interesse dessa comparação para a pesquisa está no compromisso entre expressividade e custo de processamento. Empregar um mecanismo mais geral em todas as condições acrescentaria custo mesmo quando uma comparação direta é suficiente. Separar avaliação e efeitos de domínio permite que a estratégia de processamento seja escolhida sem redefinir as relações entre evidências, atividades e pontos. O protocolo, a identificação do registro e a tabela detalhada do experimento são apresentados no Apêndice~\ref{ap:evidencias}.
 
 Os cenários automatizados de integração, temporalidade, seleção de fontes e repetição complementam essa análise ao explicitar condições sob as quais o comportamento esperado deve ser preservado. Seu papel é apoiar o exame das decisões do artefato. A identificação dos cenários e os registros de execução permanecem nos apêndices; os números de um experimento específico não são generalizados para o desempenho do sistema completo.
 
@@ -625,7 +625,7 @@ Como continuidade, a aplicação em diferentes espaços poderá investigar a ade
 
 \appendix
 \chapter{Fontes Técnicas e Evidências de Avaliação}\label{ap:evidencias}\label{ap:avaliacao-tecnica}
-Este apêndice identifica o material de implementação utilizado para fundamentar a descrição do sistema. Os caminhos são relativos ao repositório técnico e pertencem ao commit \path{b7192907eeb602a02cc3413f033bd2c4a7256397}. A lista organiza a conferência do percurso; não constitui um relatório de execução das suítes.
+Este apêndice identifica o material de implementação utilizado para fundamentar a descrição do sistema. Os caminhos são relativos ao repositório técnico e pertencem ao commit \path{b7192907eeb602a02cc3413f033bd2c4a7256397}. O repositório é identificado em sua referência de software \cite{probenAtual2026}. A lista organiza a conferência do percurso; não constitui um relatório de execução das suítes.
 
 \begin{longtable}{p{3.1cm}p{9.8cm}}
 \caption{Componentes utilizados na inspeção do fluxo atual}\label{tab:fontes-codigo}\\
@@ -640,38 +640,38 @@ Pontuação & \path{Proben-API/src/main/java/com/proben/api/service/missions/Pon
 Estrutura persistida & \path{Proben-API/src/main/resources/db/migration/}, especialmente V29 a V33 para contextos, coleta e regras de ambiente e V34 para a nomenclatura atual de pontos. \\
 Documentação & \path{README.md}; \path{Documentos/Catalogo-Dados.md}; \path{Documentos/Modelo-MongoDB/Modelo-Telemetria-MongoDB.md}; \path{Documentos/Organizacao-do-Codigo.md}. \\\bottomrule
 \end{longtable}
-{\footnotesize Fonte: inspeção do repositório técnico pelo autor \cite{probenAtual2026}.\par}
+{\footnotesize Fonte: inspeção do repositório técnico pelo autor.\par}
 
 No diretório de testes de regras de ambiente foram examinados cenários de resolução, histórico, concorrência, integração acadêmica, fontes compartilhadas e conforto adaptativo. Em particular, \path{EnvironmentRuleResolutionIntegrationTest} trata precedência e reserva; \path{EnvironmentRuleSharedContextIntegrationTest} trata localização e cobertura; \path{EnvironmentRuleAdaptiveComfortIntegrationTest} trata limites e fatos obrigatórios. O conjunto de fontes compartilhadas também contém cenários de falha, posse de reserva e proteção da coleta. A presença de Testcontainers com opção de ignorar testes sem Docker exige registrar separadamente casos executados e ignorados em uma futura execução.
 
-A pontuação utiliza o registro relacional \texttt{pontos\_lancamento}, com o montante de cada movimentação no campo \texttt{pontos}; a recompensa configurada na missão também utiliza esse nome. As consultas atuais são \texttt{GET} \path|/api/pessoas/{pessoaId}/pontos| e \texttt{GET} \path|/api/pessoas/{pessoaId}/pontos/lancamentos|. O contrato de saldo apresenta \texttt{saldoTotalPontos}, \texttt{totalConcedidoPontos}, \texttt{totalEstornadoPontos} e \texttt{totalAjustadoPontos}. A migration V34 renomeia as estruturas e adapta as chaves de idempotência existentes, mantendo os registros de pontuação. Os cenários de \path{PessoaPontosControllerTest} e \path{PontosRewardServiceIntegrationTest} exercitam contratos, permissões, composição do saldo, repetição, conflito e concorrência \cite{probenAtual2026}.
+A pontuação utiliza o registro relacional \texttt{pontos\_lancamento}, com o montante de cada movimentação no campo \texttt{pontos}; a recompensa configurada na missão também utiliza esse nome. As consultas atuais são \texttt{GET} \path|/api/pessoas/{pessoaId}/pontos| e \texttt{GET} \path|/api/pessoas/{pessoaId}/pontos/lancamentos|. O contrato de saldo apresenta \texttt{saldoTotalPontos}, \texttt{totalConcedidoPontos}, \texttt{totalEstornadoPontos} e \texttt{totalAjustadoPontos}. A migration V34 renomeia as estruturas e adapta as chaves de idempotência existentes, mantendo os registros de pontuação. Os cenários de \path{PessoaPontosControllerTest} e \path{PontosRewardServiceIntegrationTest} exercitam contratos, permissões, composição do saldo, repetição, conflito e concorrência.
 
 Para reprodução da análise, deve-se obter o commit identificado e conferir os módulos \path{Proben-API}, \path{Proben-Telemetry} e \path{Proben-Admin}. Uma execução de testes pode utilizar \path{./Proben-API/mvnw -f Proben-API/pom.xml test} e \path{./Proben-API/mvnw -f Proben-Telemetry/pom.xml test}, com ambiente Java e Docker compatíveis; o console utiliza seus comandos definidos no arquivo de dependências. O benchmark é uma etapa separada, descrita em \path{Documentos/Decisao-Drools-POC.md}. Os resultados precisam registrar hash, ambiente, comando, falhas e casos ignorados.
 
 Os documentos históricos continuam identificados pelo commit antigo nas respectivas referências. Resultados locais sem arquivo preservado não são convertidos em evidência atual. Uma versão de entrega deverá arquivar relatórios e resultados brutos junto de uma identificação permanente do código correspondente.
 
 \section{Tecnologias e modelagem documental}
-Os arquivos de dependências registram Java 21 e Spring Boot 4.0.9 nos serviços. O cliente de administração declara React 19, TypeScript 5.9, Material UI 7 e Vite 7. Os arquivos de composição especificam as imagens PostgreSQL 16, MongoDB 7 e Eclipse Mosquitto 2. Essas identificações descrevem o ambiente declarado no repositório; a identificação de uma instalação particular depende de seus próprios registros \cite{probenAtual2026}.
+Os arquivos de dependências registram Java 21 e Spring Boot 4.0.9 nos serviços. O cliente de administração declara React 19, TypeScript 5.9, Material UI 7 e Vite 7. Os arquivos de composição especificam as imagens PostgreSQL 16, MongoDB 7 e Eclipse Mosquitto 2. Essas identificações descrevem o ambiente declarado no repositório; a identificação de uma instalação particular depende de seus próprios registros.
 
-O DER de origem encontra-se em \path{Documentos/DER-BancoAnalitico/DER-Salas.drawio}, com uma folha principal e uma folha de ampliação do modelo. Os recortes do Capítulo~\ref{cap:desenvolvimento} reorganizam relações selecionadas para leitura e as confrontam com as definições do esquema. O documento completo é preservado junto das figuras deste TCC, em \path{imagens/diagramas/DER-Salas-fonte.drawio}. O modelo documental e seus índices são descritos em \path{Documentos/Modelo-MongoDB/Modelo-Telemetria-MongoDB.md}. O primeiro representa entidades e vínculos do banco relacional; o segundo descreve documentos e estados da coleta de mensagens brutas. São perspectivas complementares da persistência, e não dois DERs relacionais equivalentes \cite{probenDer2026,probenAtual2026}.
+O DER de origem encontra-se em \path{Documentos/DER-BancoAnalitico/DER-Salas.drawio}, com uma folha principal e uma folha de ampliação do modelo \cite{probenDer2026}. Os recortes do Capítulo~\ref{cap:desenvolvimento} reorganizam relações selecionadas para leitura e as confrontam com as definições do esquema. O documento completo é preservado junto das figuras deste TCC, em \path{imagens/diagramas/DER-Salas-fonte.drawio}. O modelo documental e seus índices são descritos em \path{Documentos/Modelo-MongoDB/Modelo-Telemetria-MongoDB.md}. O primeiro representa entidades e vínculos do banco relacional; o segundo descreve documentos e estados da coleta de mensagens brutas. São perspectivas complementares da persistência, e não dois DERs relacionais equivalentes.
 
 \section{Evidências complementares de avaliação}
 Este apêndice reúne a identificação técnica dos materiais utilizados e os registros que complementam a análise do artefato. Sua finalidade é permitir conferência e reprodução dos procedimentos.
 
 \subsection{Identificação dos materiais}
-A descrição atual da arquitetura está vinculada ao commit \path{b7192907eeb602a02cc3413f033bd2c4a7256397}, consultado em 12 de novembro de 2026, do repositório \path{ravilon/PROCEL-Back-End}. Os módulos dessa versão são \path{Proben-API}, \path{Proben-Telemetry} e \path{Proben-Admin}, identificadores históricos que correspondem, respectivamente, ao serviço de integração, processamento e disponibilização de dados, ao serviço de coleta e persistência de dados brutos e à interface de administração e configuração. Essas denominações funcionais são empregadas ao longo do texto; os nomes de implementação permanecem onde a reprodução técnica os exige. Foram inspecionados código de serviços, cenários de testes, migrations de fontes compartilhadas e regras de ambiente, além dos documentos técnicos indicados no Apêndice~\ref{ap:evidencias} \cite{probenAtual2026}.
+A descrição atual da arquitetura está vinculada ao commit \path{b7192907eeb602a02cc3413f033bd2c4a7256397}, consultado em 12 de novembro de 2026, do repositório \path{ravilon/PROCEL-Back-End}. Os módulos dessa versão são \path{Proben-API}, \path{Proben-Telemetry} e \path{Proben-Admin}, identificadores históricos que correspondem, respectivamente, ao serviço de integração, processamento e disponibilização de dados, ao serviço de coleta e persistência de dados brutos e à interface de administração e configuração. Essas denominações funcionais são empregadas ao longo do texto; os nomes de implementação permanecem onde a reprodução técnica os exige. Foram inspecionados código de serviços, cenários de testes, migrations de fontes compartilhadas e regras de ambiente, além dos documentos técnicos indicados no Apêndice~\ref{ap:evidencias}.
 
-A inspeção examina o que está implementado e quais oráculos os testes expressam. A etapa atual de avaliação não inclui uma nova execução das suítes Java ou do console web. Portanto, a presença de um teste não é apresentada como aprovação do caso. O relatório operacional de setembro e os números do experimento de motores são tratados como evidências históricas, com o alcance de suas próprias fontes. A versão histórica anteriormente utilizada no TCC, \path{141db8ccbf63cf3896344fbb90197dfae3618691}, é mantida nas referências históricas e não substituída pelo hash atual \cite{probenReadme2026,probenSmoke2026,probenDrools2026}.
+A inspeção examina o que está implementado e quais oráculos os testes expressam. A etapa atual de avaliação não inclui uma nova execução das suítes Java ou do console web. Portanto, a presença de um teste não é apresentada como aprovação do caso. O relatório operacional de setembro e os números do experimento de motores são tratados como evidências históricas, com o alcance de suas próprias fontes. A versão histórica anteriormente utilizada no TCC, \path{141db8ccbf63cf3896344fbb90197dfae3618691}, é mantida na referência histórica do repositório \cite{probenReadme2026}.
 
 Essa separação é necessária porque atualizar o texto de uma funcionalidade não atualiza os resultados de seu teste. Contagens de classes, migrations ou anotações de teste também não demonstram correção. A análise utiliza a cadeia requisito--mecanismo--cenário--evidência, indicando onde existe apenas inspeção, onde há registro de execução anterior e onde permanece uma lacuna.
 
 \subsection{Registros históricos de verificação}
-O relatório de testes de sanidade de 17 de setembro de 2026 registra 112 verificações aprovadas, cinco avisos e zero falhas em 71,6 segundos, contra um ambiente identificado como produção. Entre os avisos estavam timeout na sincronização de salas, falha de autenticação ao consultar um processamento de horários e a verificação de persistência não realizada em consequência, além de estados tolerados de usuário já existente e presença já encerrada \cite{probenSmoke2026}.
+O relatório de testes de sanidade de 17 de setembro de 2026 \cite{probenSmoke2026} registra 112 verificações aprovadas, cinco avisos e zero falhas em 71,6 segundos, contra um ambiente identificado como produção. Entre os avisos estavam timeout na sincronização de salas, falha de autenticação ao consultar um processamento de horários e a verificação de persistência não realizada em consequência, além de estados tolerados de usuário já existente e presença já encerrada.
 
 O relatório é uma evidência operacional daquele roteiro e instante. Ele não identifica o hash implantado e antecede a versão atual; por isso, não valida as novas fontes externas ou as regras de ambiente. O tempo total mistura rede, espera e operações distintas e não é tratado como medida de desempenho da arquitetura.
 
 \subsection{Experimento histórico dos motores de regras}
-O documento de decisão sobre Drools registra um experimento com \emph{Java Microbenchmark Harness}, ferramenta para medição de operações Java em condições controladas. A configuração utilizou dois processos de execução independentes, cinco iterações de aquecimento e dez de medição, de um segundo cada, com OpenJDK 21.0.10 em Windows 11. O próprio documento informa que o hardware não foi identificado automaticamente. O registro não vincula de modo suficiente todos os resultados a um hash executado e a um ambiente dedicado; esses limites são preservados nesta análise \cite{probenDrools2026}.
+O documento de decisão sobre Drools \cite{probenDrools2026} registra um experimento com \emph{Java Microbenchmark Harness}, ferramenta para medição de operações Java em condições controladas. A configuração utilizou dois processos de execução independentes, cinco iterações de aquecimento e dez de medição, de um segundo cada, com OpenJDK 21.0.10 em Windows 11. O próprio documento informa que o hardware não foi identificado automaticamente. O registro não vincula de modo suficiente todos os resultados a um hash executado e a um ambiente dedicado; esses limites são preservados nesta análise.
 
 O experimento compara um motor simples com Drools em dois estados. Na operação fria, a criação e compilação da base de regras são incluídas. Na operação quente, a base compilada é reutilizada, mas uma sessão é criada para cada avaliação. Cada operação avalia um lote completo de fatos, sem rede, persistência e demais executores da aplicação. A Tabela~\ref{tab:benchmark} reproduz apenas os resultados do cenário instantâneo com mil fatos, para o qual existe comparação entre as três configurações.
 
@@ -683,7 +683,7 @@ Motor simples & 0,016 & 0,049 \\
 Drools com compilação por operação & 44,619 & 97,750 \\
 Drools com base reutilizada & 1,502 & 3,011 \\\bottomrule
 \end{tabularx}
-\caption*{Fonte: documento de decisão técnica do projeto \cite{probenDrools2026}.}
+\caption*{Fonte: documento de decisão técnica do projeto.}
 \end{table}
 
 O percentil 99 é o valor abaixo do qual se encontram aproximadamente 99\% das amostras de latência do cenário. Os números apoiam a escolha do motor simples para as regras instantâneas medidas. Não demonstram que ele seja superior em toda regra temporal nem representam tempo de resposta de uma missão completa. O documento também relata Drools em cenários de duração, mas sem resultado equivalente do motor simples; essa parte não sustenta uma comparação de superioridade.

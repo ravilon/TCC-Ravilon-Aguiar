@@ -18,6 +18,7 @@
 - Não excluir trabalhos fundadores em conferências ou livros apenas por não serem artigos de periódicos. Explicar sua função e complementar com artigos quando pertinente.
 - Conferir autoria, título, ano, DOI e trecho que sustenta cada afirmação. Não inventar citações, páginas ou resultados.
 - Documentação do próprio sistema comprova decisões e comportamento de implementação; não substitui literatura científica para fundamentar conceitos.
+- Evitar autocitações repetidas ao autor para descrever o sistema desenvolvido. Concentrar a identificação bibliográfica do repositório, DER e registros próprios no apêndice de reprodução; no corpo, usar remissão interna quando necessária. Nas figuras próprias, indicar elaboração do autor, preservando as citações científicas de conceitos e métodos.
 - Exemplo: persistência poliglota (polyglot persistence) exige definição bibliográfica e justificativa pelas necessidades dos dados; diferentes protocolos, isoladamente, não justificam bancos diferentes.
 - Não transformar objetivos de escalabilidade, conforto ou economia em resultados comprovados.
 
