@@ -1,0 +1,22 @@
+% Recorte do DER-Salas.drawio, conferido com as migrations do banco relacional.
+% Linhas representam relacionamentos; não representam transferência de dados.
+\begin{tikzpicture}[tcc diagram]
+\node[tcc data,minimum width=6.5cm,minimum height=1.5cm] (type) at (0,0)
+ {\textbf{TipoDeSensor}\\nome do tipo};
+\node[tcc data,minimum width=6.5cm,minimum height=1.5cm] (def) at (8,0)
+ {\textbf{ParametroDef}\\nome, tipo de dado e unidade};
+\node[tcc data,minimum width=6.5cm,minimum height=1.5cm] (sensor) at (0,-2.7)
+ {\textbf{Sensor}\\identificador externo e vínculo espacial};
+\node[tcc data,minimum width=6.5cm,minimum height=1.5cm] (m) at (0,-5.4)
+ {\textbf{Medicao}\\instante da observação e origem};
+\node[tcc data,minimum width=6.5cm,minimum height=1.5cm] (v) at (8,-5.4)
+ {\textbf{ParametroValor}\\valor numérico, booleano ou textual};
+\node[tcc data,minimum width=6.5cm,minimum height=1.5cm] (meta) at (0,-8.1)
+ {\textbf{MedicaoIngestaoMetadata}\\identidade da ingestão e interpretação};
+\draw[tcc relation] (type)--node[tcc cardinality,pos=.15,above]{1}node[tcc cardinality,pos=.85,above]{N}(def);
+\draw[tcc relation] (type)--node[tcc cardinality,pos=.15,left]{1}node[tcc cardinality,pos=.85,left]{N}(sensor);
+\draw[tcc relation] (sensor)--node[tcc cardinality,pos=.15,left]{1}node[tcc cardinality,pos=.85,left]{N}(m);
+\draw[tcc relation] (m)--node[tcc cardinality,pos=.15,above]{1}node[tcc cardinality,pos=.85,above]{N}(v);
+\draw[tcc relation] (def)--node[tcc cardinality,pos=.06,right]{1}node[tcc cardinality,pos=.94,right]{N}(v);
+\draw[tcc relation] (m)--node[tcc cardinality,pos=.15,left]{1}node[tcc cardinality,pos=.85,left]{1}(meta);
+\end{tikzpicture}

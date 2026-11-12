@@ -1,0 +1,20 @@
+\begin{tikzpicture}[tcc diagram]
+\node[tcc data,minimum width=6.5cm,minimum height=1.4cm] (mission) at (0,0)
+ {\textbf{Missao}\\objetivo e recompensa configurada};
+\node[tcc data,minimum width=6.5cm,minimum height=1.4cm] (person) at (8,0)
+ {\textbf{Pessoa}\\participante e beneficiário};
+\node[tcc data,minimum width=6.5cm,minimum height=1.4cm] (activity) at (0,-2.8)
+ {\textbf{Atividade}\\participação, ciclo e progresso};
+\node[tcc data,minimum width=6.5cm,minimum height=1.4cm] (points) at (8,-2.8)
+ {\textbf{PontosLancamento}\\pessoa, origem, tipo e pontos};
+\node[tcc data,minimum width=6.5cm,minimum height=1.4cm] (rule) at (0,-5.6)
+ {\textbf{regra\_ambiente}\\escopo e condições configuradas};
+\node[tcc data,minimum width=6.5cm,minimum height=1.4cm] (execution) at (8,-5.6)
+ {\textbf{regra\_ambiente\_execucao}\\instante, resultado e evidências};
+\draw[tcc relation] (mission)--node[tcc cardinality,pos=.15,left]{1}node[tcc cardinality,pos=.85,left]{N}(activity);
+\draw[tcc relation] (person)--node[tcc cardinality,pos=.15,right]{1}node[tcc cardinality,pos=.85,right]{N}(points);
+\draw[tcc relation] (person.south west)--node[tcc cardinality,pos=.15,above]{1}node[tcc cardinality,pos=.85,above]{N}(activity.north east);
+\draw[tcc relation] (activity)--node[tcc cardinality,pos=.15,above]{1}node[tcc cardinality,pos=.85,above]{N}(points);
+\draw[tcc relation] (rule)--node[tcc cardinality,pos=.15,above]{1}node[tcc cardinality,pos=.85,above]{N}(execution);
+\draw[tcc relation] (execution)--node[tcc cardinality,pos=.15,right]{1}node[tcc cardinality,pos=.85,right]{N}(points);
+\end{tikzpicture}

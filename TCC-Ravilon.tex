@@ -24,6 +24,8 @@
  tcc data/.style={tcc box,rounded corners=0pt,line width=.9pt,fill=white},
  tcc db/.style={draw=black!75,line width=.65pt,cylinder,shape border rotate=90,
    aspect=.22,fill=white},
+ tcc relation/.style={line width=.75pt,draw=black!80},
+ tcc cardinality/.style={font=\sffamily\fontsize{9}{11}\selectfont,fill=white,inner sep=1pt},
  tcc arrow/.style={-{Stealth[length=2.1mm,width=1.4mm]},line width=.75pt,draw=black!80},
  tcc both/.style={{Stealth[length=2.1mm,width=1.4mm]}-{Stealth[length=2.1mm,width=1.4mm]},
    line width=.75pt,draw=black!80},
@@ -51,6 +53,16 @@
 \sloppy
 % Substituir por \includepdf{ficha.pdf} após a emissão da ficha no Cobalto.
 
+
+\begin{dedicatoria}
+\thispagestyle{empty}
+Aos meus pais, Wanderley Alves e Maria de Fátima Aguiar, por sempre me incentivarem e me apoiarem no caminho da educação, mesmo sem terem tido a oportunidade de percorrê-lo da mesma forma.
+
+Ao meu irmão, Ramon Aguiar, por sempre acreditar em mim.
+
+À Sibele Rossales, por seu apoio constante e por ser minha família do outro lado do país.
+\end{dedicatoria}
+
 \begin{abstract}
 O projeto de gamificação do Programa de Bom Uso Energético da Universidade Federal de Pelotas busca incentivar mudanças voluntárias de conduta no uso da energia, considerando o conforto dos ocupantes. A previsão de sensores em salas do Centro de Artes e a participação das pessoas em missões exigem uma infraestrutura que integre dados de diferentes origens e mantenha relações entre observações, espaços, usuários e atividades. Este trabalho apresenta o projeto e a implementação da arquitetura de dados e dos serviços desenvolvidos para apoiar o sistema de gamificação associado ao programa. A pesquisa foi organizada segundo a Design Science Research, abordagem de construção e avaliação de artefatos voltados à solução de problemas. A arquitetura organiza o percurso dos dados: recebimento de mensagens de sensores, preservação temporária do conteúdo original, transformação em medições padronizadas, integração de fontes ambientais externas e contexto acadêmico, consulta de agregados e avaliação de condições associadas à gamificação. A solução combina armazenamento documental e relacional por meio de persistência poliglota, conciliando a variabilidade das mensagens com a integridade das relações de domínio. Perfis configuráveis permitem adaptar formatos de sensores, enquanto mecanismos de idempotência e recuperação procuram evitar efeitos repetidos e permitir a retomada do processamento. Fontes compartilhadas de temperatura externa e regras de ambiente relacionam medições locais, condições temporais e beneficiários. A análise do artefato evidencia como a separação entre recebimento, interpretação e uso dos dados permite acomodar a diversidade de fontes e conservar as relações necessárias à gamificação. A contribuição é uma base de integração rastreável de fontes heterogêneas, preparada para apoiar análises e futuras intervenções gamificadas no contexto institucional.
 \end{abstract}
@@ -63,9 +75,11 @@ The gamification project of the energy-use program at the Federal University of 
 \listoftables
 \begin{listofabbrv}{PROBEN}
 \item[\textbf{API}] Application Programming Interface
+\item[\textbf{DER}] Diagrama de entidade-relacionamento
 \item[\textbf{DSR}] Design Science Research
 \item[\textbf{HTTP}] Hypertext Transfer Protocol
 \item[\textbf{IoT}] Internet of Things
+\item[\textbf{JPA}] Jakarta Persistence API
 \item[\textbf{JSON}] JavaScript Object Notation
 \item[\textbf{JWT}] JSON Web Token
 \item[\textbf{MQTT}] MQTT --- protocolo de publicação e assinatura de mensagens
@@ -133,9 +147,26 @@ MQTT é um protocolo de mensageria baseado em publicação e assinatura. Um prod
 O formato dos dados constitui uma dimensão diferente do protocolo. \emph{JavaScript Object Notation} (JSON) é um formato textual de representação de dados \cite{json2017}. Dois produtores podem usar JSON e ainda assim representar temperatura em campos diferentes. A transformação para uma representação comum, denominada modelo canônico neste trabalho, procura estabilizar a interpretação usada pelas etapas seguintes. Sua realização depende de identificadores, tipos, unidades e mapeamentos explícitos, e não apenas da adoção do mesmo protocolo.
 
 \section{Persistência poliglota e integridade}
-\emph{Polyglot persistence}, ou persistência poliglota, corresponde ao uso de diferentes mecanismos de armazenamento para diferentes finalidades em uma mesma aplicação. Grolinger et al. \cite{grolinger2013} discutem explicitamente o conceito ao revisar bancos não relacionais e suas possibilidades de uso. Gessert et al. \cite{gessert2017} relacionam a escolha de armazenamento aos requisitos funcionais e não funcionais. Esses estudos permitem fundamentar a escolha pelos dados e operações esperados.
+\subsection{Modelos de dados e critérios de escolha}
+\emph{Polyglot persistence}, ou persistência poliglota, designa o uso de diferentes mecanismos de armazenamento para diferentes finalidades em uma mesma aplicação. \citet{grolinger2013} apresentam o conceito ao discutir a diversidade de bancos e modelos de dados. A escolha não se resume a combinar produtos: é necessário identificar quais representações, consultas e garantias cada parte da aplicação demanda.
 
-No problema deste TCC, mensagens originais podem ter estruturas variáveis e precisam permanecer disponíveis para inspeção e nova interpretação durante um período. Pessoas, salas, medições, regras e recompensas, por sua vez, estabelecem relações que exigem integridade. Essa diferença motiva a combinação entre armazenamento documental e relacional. Não decorre, entretanto, que um banco relacional seja incapaz de guardar documentos, nem que dois bancos sejam necessariamente superiores a um. A decisão introduz o custo adicional de coordenar estados e preservar referências entre os armazenamentos.
+No modelo documental, uma observação pode ser representada por um documento com campos e estruturas aninhadas. \citet{grolinger2013} relacionam esse modelo a entradas cuja organização pode variar entre documentos. No modelo relacional, a informação é organizada em relações, com identificadores e restrições que expressam vínculos entre registros. Essas organizações favorecem formas distintas de representar a informação; nenhuma delas elimina a necessidade de definir significado, identidade e regras de validade.
+
+\citet{gessert2017} propõem relacionar requisitos funcionais e não funcionais às características dos mecanismos de armazenamento. \citet{royhubara2022} também tratam a seleção de modelos como uma decisão orientada por requisitos dos dados e da aplicação. Esses trabalhos sustentam uma análise que parte das operações necessárias, em vez de atribuir superioridade geral a uma família de bancos.
+
+Nesta pesquisa, os critérios relevantes são a variabilidade das mensagens, a preservação da origem, os vínculos entre entidades, a repetição do processamento e o ciclo de vida de cada representação. A pergunta passa a ser qual informação precisa permanecer próxima de sua estrutura de origem e qual precisa estabelecer relações estáveis com o domínio. Essa distinção permite discutir a persistência como parte do percurso dos dados, e não como uma escolha isolada de infraestrutura.
+
+\subsection{Integridade local e coordenação entre representações}
+Uma mensagem original reúne conteúdo e metadados de recebimento. Uma medição interpretada reúne grandeza, dispositivo, instante e valores tipados. Embora ambas possam descrever a mesma observação, elas cumprem funções diferentes: a primeira permite inspecionar a entrada; a segunda permite consultar e relacionar o seu significado. Transformar não significa substituir a evidência original, mas construir outra representação com uma finalidade explícita.
+
+No modelo relacional adotado, chaves estrangeiras relacionam medições a sensores, valores a parâmetros e atividades a pessoas e missões. Restrições de unicidade expressam identidades que precisam permanecer estáveis diante da repetição. Já a preservação documental mantém o conteúdo recebido junto do estado de seu processamento. A flexibilidade está no conteúdo da mensagem, enquanto o envelope de identificação e controle permanece definido pela aplicação.
+
+A combinação introduz uma fronteira de coordenação. A gravação de uma medição no banco relacional e a atualização do estado da mensagem no banco documental não pertencem à mesma transação local. Se a primeira terminar e a confirmação se perder, a entrada poderá ser entregue novamente. A arquitetura precisa reconhecer o resultado persistido e reconciliar o processamento, em vez de interpretar a retransmissão como uma nova observação. A integridade interna de cada banco e a continuidade entre bancos são, portanto, problemas relacionados, mas distintos.
+
+\subsection{Alternativas e implicações da combinação}
+O uso de documentos não exige, por si só, um banco separado. O PostgreSQL oferece os tipos \texttt{json} e \texttt{jsonb}, que permitem combinar campos documentais e estruturas relacionais \cite{postgresJson2026}. Assim, concentrar as representações em um único mecanismo constitui uma alternativa tecnicamente possível. A comparação relevante envolve também a divisão de responsabilidades, os ciclos de retenção e o custo de manter dois serviços de persistência. Essa alternativa é discutida como contraponto arquitetural, sem pressupor um experimento comparativo que não foi realizado.
+
+Na solução desenvolvida, a combinação permite tratar a preservação temporária da mensagem e a construção das relações do domínio como responsabilidades explícitas. Em contrapartida, exige administrar referências lógicas, falhas parciais, retenção e recuperação em dois armazenamentos. A contribuição investigada está nessa organização das representações e dos mecanismos que as conectam; sua análise não depende de supor que a presença de dois bancos produza, automaticamente, maior desempenho ou escalabilidade.
 
 \section{Tempo, repetição e recuperação do processamento}
 O instante em que uma observação ocorre pode diferir daquele em que é recebida ou processada. Akidau et al. \cite{akidau2015} mostram a importância dessa distinção para fluxos não limitados e fora de ordem, relacionando tempo do evento, janelas e resultados. Neste trabalho, essas ideias fundamentam a necessidade de explicitar intervalos e políticas de atraso; não implicam adoção integral do modelo Dataflow.
@@ -167,7 +198,7 @@ Iria et al. \cite{iria2020} apresentam uma plataforma para eficiência energéti
 Esses trabalhos fundamentam a relevância de integrar medição e participação. Eles não fornecem, apenas pela descrição desses mecanismos, evidência de que o PROBEN evita duplicatas ou recupera uma tarefa interrompida. Essas propriedades precisam ser examinadas no artefato desenvolvido.
 
 \section{Representação e processamento dos dados}
-Grolinger et al. \cite{grolinger2013} fornecem uma visão das possibilidades e desafios de bancos com diferentes modelos. Gessert et al. \cite{gessert2017} apresentam orientação de seleção conforme requisitos. Sua contribuição ao TCC está em deslocar a decisão de armazenamento do nome da tecnologia para as operações necessárias. O artefato utiliza essa perspectiva para separar preservação documental e relações de domínio, assumindo o custo de integração entre elas.
+\citet{grolinger2013} fornecem uma visão das possibilidades e desafios de bancos com diferentes modelos. \citet{gessert2017} apresentam orientação de seleção conforme requisitos. Sua contribuição ao TCC está em deslocar a decisão de armazenamento do nome da tecnologia para as operações necessárias. O artefato utiliza essa perspectiva para separar preservação documental e relações de domínio, assumindo o custo de integração entre elas.
 
 Akidau et al. \cite{akidau2015} abordam o processamento de dados não limitados e fora de ordem, discutindo compromissos entre correção, latência e custo. A arquitetura desenvolvida emprega uma solução mais restrita: janelas persistidas, agregação de medições existentes e recomputação explícita. A comparação torna visíveis tanto a inspiração conceitual quanto a ausência de mecanismos mais amplos de atualização automática de resultados diante de atrasos.
 
@@ -269,6 +300,43 @@ O serviço de coleta e persistência de dados brutos recebe mensagens por HTTP o
 
 O desafio arquitetural é atribuir uma responsabilidade clara a cada representação. O documento original serve à inspeção e à reinterpretação temporária; a representação comum serve a consultas e relações de domínio. A separação admite evolução independente, mas exige coordenação: não há uma transação única que inclua MongoDB e PostgreSQL. Por isso, identidade, repetição e referências entre as etapas fazem parte da solução, e não apenas detalhes de transporte.
 
+
+\subsection{Tecnologias e responsabilidades na arquitetura}
+A implementação utiliza Java com Spring Boot nos dois serviços. Essa base reúne os pontos de entrada HTTP, as rotinas de processamento e os mecanismos de autenticação. Spring Security controla o acesso às operações, com tokens no formato \emph{JSON Web Token} (JWT). O acesso relacional utiliza Spring Data JPA, baseado em \emph{Jakarta Persistence API} (JPA), especificação que relaciona objetos da aplicação às entidades persistidas. Na coleta bruta, Spring Data MongoDB faz a integração com o armazenamento documental. A divisão mantém o código de recebimento e preservação separado das operações que dependem das relações do domínio \cite{probenAtual2026}.
+
+A comunicação MQTT é realizada pelo cliente Eclipse Paho. No ambiente descrito pelos arquivos de composição, Eclipse Mosquitto exerce a função de intermediário de mensagens. A interface de administração utiliza React e TypeScript: React organiza a interface em componentes, enquanto TypeScript permite declarar tipos no código do cliente. Material UI fornece componentes visuais e Vite organiza a construção da aplicação web. A Tabela~\ref{tab:tecnologias} relaciona essas escolhas às responsabilidades que viabilizam.
+
+\begin{table}[!htb]\centering\small
+\caption{Tecnologias empregadas e seu papel no percurso dos dados.}\label{tab:tecnologias}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.8cm}Y}\toprule
+Tecnologia & Responsabilidade na solução \\\midrule
+Java e Spring Boot & Implementação dos serviços de recebimento, integração, processamento e disponibilização. \\
+MongoDB e\newline Spring Data MongoDB & Preservação documental das mensagens originais, identidade e estado de processamento. \\
+PostgreSQL e\newline Spring Data JPA & Persistência das medições padronizadas e das relações acadêmicas, analíticas e de gamificação. \\
+Flyway & Evolução explícita do esquema relacional por alterações incrementais registradas. \\
+Eclipse Paho e\newline Eclipse Mosquitto & Cliente MQTT de coleta e intermediário de publicação e assinatura, respectivamente. \\
+Spring Security e JWT & Autenticação e autorização das operações de pessoas e serviços. \\
+React e TypeScript;\newline Material UI & Interface para configurar integrações e regras e consultar resultados. \\
+Vite e Docker Compose & Construção do cliente web e descrição da composição dos serviços e bancos. \\
+Micrometer e\newline Spring Boot Actuator & Exposição de métricas e condições operacionais para observar o processamento. \\\bottomrule
+\end{tabularx}
+\caption*{Fonte: arquivos de dependências, configuração e composição do sistema \cite{probenAtual2026}.}
+\end{table}
+
+Essas tecnologias materializam responsabilidades da arquitetura; a contribuição da pesquisa decorre da forma como são articuladas para preservar, interpretar e relacionar informação. O motor simples e a alternativa Drools são discutidos na etapa de avaliação de condições, em que sua função se torna necessária ao argumento. A identificação técnica das dependências encontra-se no Apêndice~\ref{ap:evidencias}.
+
+\subsection{Distribuição das representações entre MongoDB e PostgreSQL}
+O MongoDB mantém a coleção \texttt{raw\_telemetry\_events}. Cada documento reúne o conteúdo recebido, a identidade do produtor e da mensagem, os instantes e o estado de processamento. O conteúdo pode variar entre fabricantes, mas os campos de controle permitem localizar, distinguir e retomar as entradas. A unicidade da combinação entre produtor, origem e identificador impede registrar uma retransmissão equivalente como novo evento bruto \cite{probenAtual2026}.
+
+O ciclo de vida dessa coleção é temporário. O campo de expiração permite aplicar um índice de \emph{Time to Live} (TTL), ou tempo de vida, mecanismo do MongoDB para remoção automática de documentos após sua validade \cite{mongoTtl2026}. A política atende à inspeção e à reinterpretação durante a retenção, enquanto evita tomar o armazenamento bruto como um arquivo permanente de todas as observações. Sua expiração não remove, por consequência, a medição já construída no banco relacional.
+
+O PostgreSQL organiza o significado utilizado pela aplicação. Uma medição referencia um sensor e reúne valores relacionados às definições de parâmetro; salas se relacionam a prédios e unidades; pessoas se relacionam a presenças, vínculos acadêmicos e atividades. Agregados, execuções de regras e lançamentos de pontos também permanecem nesse banco. Embora denominado banco analítico na documentação do projeto, ele sustenta tanto consultas e resumos quanto operações transacionais do domínio; não corresponde apenas a um repositório separado de análise.
+
+A distinção entre bancos tampouco elimina dados documentais no PostgreSQL. As regras de ambiente preservam configurações e evidências em campos \texttt{jsonb}, associados às identidades relacionais de sala, regra e execução. O recurso permite conservar uma estrutura de configuração junto do registro que a utilizou. Portanto, a arquitetura combina modelos também no interior do banco relacional: a escolha entre documento e relação depende da informação representada, e não de uma classificação rígida dos produtos \cite{postgresJson2026,probenAtual2026}.
+
+No exemplo da temperatura, o documento bruto conserva o campo externo; a medição relacional conserva o valor associado ao sensor, ao parâmetro e ao instante. A referência ao identificador da medição no documento e os metadados da ingestão no PostgreSQL conectam essas representações. Trata-se de um vínculo lógico entre bancos, enquanto as relações internas do modelo relacional são verificadas por suas próprias restrições. Essa organização explica tanto a possibilidade de seguir a observação ao longo do processamento quanto a necessidade de recuperação diante de falhas parciais.
+
 \section{Identificar a origem: sensores, espaços e pessoas}
 \subsection{Modelagem de dispositivos e grandezas}
 O primeiro desafio é representar modelos de sensores sem construir uma tabela diferente para cada fabricante. A solução separa o tipo de sensor, os parâmetros que ele pode informar, o dispositivo concreto e as medições produzidas. Uma medição reúne valores numéricos, booleanos ou textuais associados a definições de parâmetro. Assim, temperatura, presença e estado de um equipamento mantêm tipos próprios, embora possam participar do mesmo fluxo de integração.
@@ -277,12 +345,34 @@ O identificador externo permite relacionar o dispositivo ao produtor que o conhe
 
 Considere, como exemplo hipotético, dois sensores de temperatura: um envia o campo \texttt{temp} e outro envia \texttt{ambient.temperature}. Se ambos expressarem graus Celsius, mapeamentos distintos podem conduzir ao mesmo parâmetro do domínio. Se uma das fontes informar outra unidade, será necessária uma transformação explicitamente suportada e validada; mudar o nome do campo não constitui conversão física. O exemplo acompanhará as etapas seguintes, sem representar uma medição de campo realizada no Centro de Artes.
 
+A Figura~\ref{fig:der-medicoes} explicita o modelo que sustenta essa separação. O tipo de sensor define os parâmetros esperados, enquanto cada dispositivo pode produzir várias medições. Cada valor relaciona uma medição a uma definição de parâmetro, permitindo consultar a mesma grandeza sem depender do nome do campo externo. Os metadados acrescentam a identidade da ingestão e a interpretação utilizada. O diagrama de entidade-relacionamento (DER) foi reorganizado em recortes temáticos a partir do documento do projeto, preservando os nomes das entidades para permitir sua correspondência. Diferentemente das figuras de fluxo, suas linhas representam vínculos entre registros, e não deslocamento de mensagens.
+
+\begin{figure}[!htb]\centering
+\caption{Recorte do DER: dispositivos, grandezas e medições.}\label{fig:der-medicoes}
+\par\vspace{5mm}
+\input{imagens/diagramas/der-medicoes.tex}
+\par\vspace{3mm}
+\caption*{Fonte: elaboração do autor, adaptada do DER do banco analítico \cite{probenDer2026}. Relações e atributos selecionados; 1 e N indicam cardinalidades máximas, sem detalhar a obrigatoriedade dos vínculos.}
+\end{figure}
+
+
 \subsection{Contexto institucional e participação}
 Uma observação também precisa de referência espacial. A estrutura institucional relaciona campus, prédio, unidade e compartimento, enquanto horários de aula e vínculos de estudantes permitem resolver o uso acadêmico de uma sala em determinado instante. O sistema consulta esse contexto por data e intervalo de horário e rejeita ambiguidades, em vez de escolher silenciosamente uma aula entre sobreposições.
 
 O problema aqui é distinguir vínculo previsto de presença efetiva. Um estudante matriculado na turma pode ser elegível a uma atividade, mas isso não comprova que esteja fisicamente na sala. A modelagem distingue políticas diferentes para alunos vinculados ao uso agendado e para presença confirmada por registro de entrada e saída. Essa distinção permite que a política de beneficiários seja uma decisão explícita do domínio.
 
 Os dados de participação não são convertidos artificialmente em leituras de sensor. Eles permanecem relacionados a pessoas, presenças, missões e atividades. A integração ocorre na interpretação: uma condição ambiental e um registro humano podem contribuir para a mesma decisão, mantendo origens identificáveis. A infraestrutura implementada dá suporte a essa relação, enquanto a experiência de interação da futura aplicação móvel permanece uma etapa separada.
+
+A Figura~\ref{fig:der-academico} mostra como o espaço conecta essas fontes. O compartimento pertence à estrutura de prédios e unidades e se relaciona tanto a períodos de aula quanto a registros de presença. A disciplina participa do agendamento e dos vínculos de estudantes. Turma, período letivo e instante são necessários para utilizar essas relações na resolução do contexto; compartilhar uma referência à disciplina não torna matrícula e presença equivalentes.
+
+\begin{figure}[!htb]\centering
+\caption{Recorte do DER: espaços, contexto acadêmico e presença.}\label{fig:der-academico}
+\par\vspace{5mm}
+\input{imagens/diagramas/der-contexto-academico.tex}
+\par\vspace{3mm}
+\caption*{Fonte: elaboração do autor, adaptada do DER do banco analítico \cite{probenDer2026}. Relações e atributos selecionados; 1 e N indicam cardinalidades máximas, sem detalhar a obrigatoriedade dos vínculos.}
+\end{figure}
+
 
 \section{Receber mensagens e preservar sua identidade}
 \subsection{Três caminhos de entrada}
@@ -368,6 +458,17 @@ Os agregados numéricos armazenam média, mínimo, máximo e quantidade de amost
 
 As janelas de agregação também usam estados, reserva temporária e repetição. Uma medição atrasada pode exigir recomputação explícita de um resultado já encerrado. O sistema não é apresentado como um mecanismo completo de processamento contínuo que atualiza automaticamente todos os agregados diante de qualquer atraso. O console disponibiliza filtros e visualização de agregados, mas a interpretação dos resultados depende da semântica do cálculo.
 
+A Figura~\ref{fig:der-analitico} relaciona a solicitação de análise ao resultado disponibilizado. Um trabalho de agregação organiza várias janelas, e o agregado numérico identifica o sensor e a grandeza resumida. A média, os extremos e a quantidade de amostras são propriedades desse resultado, enquanto estado e tentativas pertencem ao processamento da janela. Essa distinção permite explicar o que foi calculado e acompanhar como a análise foi conduzida. Os nomes \texttt{AggregationJob}, \texttt{AggregationWindow} e \texttt{NumericBucket} correspondem, respectivamente, às tabelas de trabalho, janela e agregado numérico do esquema analítico.
+
+\begin{figure}[!htb]\centering
+\caption{Recorte do DER: trabalhos de agregação, janelas e resultados numéricos.}\label{fig:der-analitico}
+\par\vspace{5mm}
+\input{imagens/diagramas/der-analise-temporal.tex}
+\par\vspace{3mm}
+\caption*{Fonte: elaboração do autor, adaptada do DER do banco analítico \cite{probenDer2026}. Relações e atributos selecionados; 1 e N indicam cardinalidades máximas, sem detalhar a obrigatoriedade dos vínculos.}
+\end{figure}
+
+
 \section{Interpretar condições e relacioná-las às atividades}
 \subsection{Qualificação de valores e eventos de missão}
 O dado padronizado permite expressar condições sem depender do formato do fabricante. Uma regra de qualificação pode comparar uma temperatura a limites e registrar o resultado associado ao valor. Uma condição de evento de missão pode utilizar o valor diretamente ou uma avaliação de regra. Assim, a interpretação pode ser reutilizada, desde que a política aplicável permaneça identificável.
@@ -414,6 +515,18 @@ O último desafio do percurso é relacionar uma decisão a pessoas sem perder su
 A Figura~\ref{fig:rastreabilidade} mostra que missões e regras de ambiente mantêm caminhos próprios até o registro dos efeitos. Um ponto deve estar relacionado à decisão que o produziu, e a decisão aos dados que a sustentaram. A convergência no registro de pontos permite consultar o saldo e o extrato sem apagar essa diferença de origem. Na telemetria, identificadores relacionam documento bruto e medição; no domínio relacional, referências conectam valores, evidências, ocorrências e atividades. As regras de ambiente acrescentam cópia da configuração de execução e referências aos seus lançamentos.
 
 Essa rastreabilidade tem limites diferentes. O conteúdo bruto desaparece após a retenção; a ligação entre bancos é lógica, não uma chave estrangeira distribuída; e regras elementares de qualificação não necessariamente preservam todos os limiares históricos dentro de cada avaliação. O \emph{snapshot} das regras de ambiente melhora a explicação nesse fluxo, mas não autoriza afirmar que todas as políticas históricas de todo o sistema são integralmente reconstruíveis.
+
+
+
+A Figura~\ref{fig:der-pontos} explicita as relações persistidas que sustentam esses efeitos. A atividade vincula uma pessoa a uma missão, enquanto a execução de regra de ambiente preserva outra origem possível para a pontuação. O lançamento identifica a pessoa beneficiada e a origem aplicável. As duas origens são alternativas: a restrição do registro exige os vínculos próprios de missão ou os vínculos de execução de regra de ambiente, conforme o caso. A modelagem permite consultar os pontos conjuntamente sem tornar equivalentes os processos que os produziram.
+
+\begin{figure}[!htb]\centering
+\caption{Recorte do DER: participação e origens dos lançamentos de pontos.}\label{fig:der-pontos}
+\par\vspace{5mm}
+\input{imagens/diagramas/der-participacao-pontos.tex}
+\par\vspace{3mm}
+\caption*{Fonte: elaboração do autor, adaptada do DER do banco analítico \cite{probenDer2026}. Relações e atributos selecionados; 1 e N indicam cardinalidades máximas, sem detalhar a obrigatoriedade dos vínculos.}
+\end{figure}
 
 \section{Operação e proteção ao longo do percurso}
 O console permite configurar sensores, integrações, fontes compartilhadas, missões e regras, além de consultar medições e agregados. Esse suporte operacional é relevante porque a adaptação de fontes precisa ser realizável sem alterar o código a cada configuração. As capturas do Apêndice~\ref{ap:console} ilustram funcionalidades já documentadas; por serem anteriores à atualização, não são apresentadas como prova visual de todas as telas atuais.
@@ -489,7 +602,7 @@ A principal implicação da arquitetura é permitir que o significado utilizado 
 Como continuidade, a aplicação em diferentes espaços poderá investigar a adequação dos perfis de integração e das políticas de contexto. A participação dos ocupantes permitirá examinar como as informações disponibilizadas e as atividades propostas se relacionam à construção de hábitos. A arquitetura estabelece a base computacional para essa investigação, articulando dados ambientais, contexto institucional e efeitos de gamificação.
 
 \appendix
-\chapter{Fontes Técnicas e Reprodução da Análise}\label{ap:evidencias}
+\chapter{Fontes Técnicas e Evidências de Avaliação}\label{ap:evidencias}\label{ap:avaliacao-tecnica}
 Este apêndice identifica o material de implementação utilizado para fundamentar a descrição do sistema. Os caminhos são relativos ao repositório técnico e pertencem ao commit \path{b7192907eeb602a02cc3413f033bd2c4a7256397}. A lista organiza a conferência do percurso; não constitui um relatório de execução das suítes.
 
 \begin{longtable}{p{3.1cm}p{9.8cm}}
@@ -515,22 +628,27 @@ Para reprodução da análise, deve-se obter o commit identificado e conferir os
 
 Os documentos históricos continuam identificados pelo commit antigo nas respectivas referências. Resultados locais sem arquivo preservado não são convertidos em evidência atual. Uma versão de entrega deverá arquivar relatórios e resultados brutos junto de uma identificação permanente do código correspondente.
 
-\chapter{Registros Complementares de Avaliação}\label{ap:avaliacao-tecnica}
+\section{Tecnologias e modelagem documental}
+Os arquivos de dependências registram Java 21 e Spring Boot 4.0.9 nos serviços. O cliente de administração declara React 19, TypeScript 5.9, Material UI 7 e Vite 7. Os arquivos de composição especificam as imagens PostgreSQL 16, MongoDB 7 e Eclipse Mosquitto 2. Essas identificações descrevem o ambiente declarado no repositório; a identificação de uma instalação particular depende de seus próprios registros \cite{probenAtual2026}.
+
+O DER de origem encontra-se em \path{Documentos/DER-BancoAnalitico/DER-Salas.drawio}, com uma folha principal e uma folha de ampliação do modelo. Os recortes do Capítulo~\ref{cap:desenvolvimento} reorganizam relações selecionadas para leitura e as confrontam com as definições do esquema. O documento completo é preservado junto das figuras deste TCC, em \path{imagens/diagramas/DER-Salas-fonte.drawio}. O modelo documental e seus índices são descritos em \path{Documentos/Modelo-MongoDB/Modelo-Telemetria-MongoDB.md}. O primeiro representa entidades e vínculos do banco relacional; o segundo descreve documentos e estados da telemetria. São perspectivas complementares da persistência, e não dois DERs relacionais equivalentes \cite{probenDer2026,probenAtual2026}.
+
+\section{Evidências complementares de avaliação}
 Este apêndice reúne a identificação técnica dos materiais utilizados e os registros que complementam a análise do artefato. Sua finalidade é permitir conferência e reprodução dos procedimentos.
 
-\section{Identificação dos materiais}
+\subsection{Identificação dos materiais}
 A descrição atual da arquitetura está vinculada ao commit \path{b7192907eeb602a02cc3413f033bd2c4a7256397}, consultado em 12 de novembro de 2026, do repositório \path{ravilon/PROCEL-Back-End}. Os módulos dessa versão são \path{Proben-API}, \path{Proben-Telemetry} e \path{Proben-Admin}, identificadores históricos que correspondem, respectivamente, ao serviço de integração, processamento e disponibilização de dados, ao serviço de coleta e persistência de dados brutos e à interface de administração e configuração. Essas denominações funcionais são empregadas ao longo do texto; os nomes de implementação permanecem onde a reprodução técnica os exige. Foram inspecionados código de serviços, cenários de testes, migrations de fontes compartilhadas e regras de ambiente, além dos documentos técnicos indicados no Apêndice~\ref{ap:evidencias} \cite{probenAtual2026}.
 
 A inspeção examina o que está implementado e quais oráculos os testes expressam. A etapa atual de avaliação não inclui uma nova execução das suítes Java ou do console web. Portanto, a presença de um teste não é apresentada como aprovação do caso. O relatório operacional de setembro e os números do experimento de motores são tratados como evidências históricas, com o alcance de suas próprias fontes. A versão histórica anteriormente utilizada no TCC, \path{141db8ccbf63cf3896344fbb90197dfae3618691}, é mantida nas referências históricas e não substituída pelo hash atual \cite{probenReadme2026,probenSmoke2026,probenDrools2026}.
 
 Essa separação é necessária porque atualizar o texto de uma funcionalidade não atualiza os resultados de seu teste. Contagens de classes, migrations ou anotações de teste também não demonstram correção. A análise utiliza a cadeia requisito--mecanismo--cenário--evidência, indicando onde existe apenas inspeção, onde há registro de execução anterior e onde permanece uma lacuna.
 
-\section{Registros históricos de verificação}
+\subsection{Registros históricos de verificação}
 O relatório de testes de sanidade de 17 de setembro de 2026 registra 112 verificações aprovadas, cinco avisos e zero falhas em 71,6 segundos, contra um ambiente identificado como produção. Entre os avisos estavam timeout na sincronização de salas, falha de autenticação ao consultar um processamento de horários e a verificação de persistência não realizada em consequência, além de estados tolerados de usuário já existente e presença já encerrada \cite{probenSmoke2026}.
 
 O relatório é uma evidência operacional daquele roteiro e instante. Ele não identifica o hash implantado e antecede a versão atual; por isso, não valida as novas fontes externas ou as regras de ambiente. O tempo total mistura rede, espera e operações distintas e não é tratado como medida de desempenho da arquitetura.
 
-\section{Experimento histórico dos motores de regras}
+\subsection{Experimento histórico dos motores de regras}
 O documento de decisão sobre Drools registra um experimento com \emph{Java Microbenchmark Harness}, ferramenta para medição de operações Java em condições controladas. A configuração utilizou dois processos de execução independentes, cinco iterações de aquecimento e dez de medição, de um segundo cada, com OpenJDK 21.0.10 em Windows 11. O próprio documento informa que o hardware não foi identificado automaticamente. O registro não vincula de modo suficiente todos os resultados a um hash executado e a um ambiente dedicado; esses limites são preservados nesta análise \cite{probenDrools2026}.
 
 O experimento compara um motor simples com Drools em dois estados. Na operação fria, a criação e compilação da base de regras são incluídas. Na operação quente, a base compilada é reutilizada, mas uma sessão é criada para cada avaliação. Cada operação avalia um lote completo de fatos, sem rede, persistência e demais executores da aplicação. A Tabela~\ref{tab:benchmark} reproduz apenas os resultados do cenário instantâneo com mil fatos, para o qual existe comparação entre as três configurações.

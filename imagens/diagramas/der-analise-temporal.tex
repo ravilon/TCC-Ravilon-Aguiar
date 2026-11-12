@@ -1,0 +1,16 @@
+\begin{tikzpicture}[tcc diagram]
+\node[tcc data,minimum width=4.4cm,minimum height=1.5cm] (job) at (0,0)
+ {\textbf{AggregationJob}\\período solicitado\\e estado do trabalho};
+\node[tcc data,minimum width=4.4cm,minimum height=1.5cm] (window) at (5.4,0)
+ {\textbf{AggregationWindow}\\intervalo, estado\\e tentativas};
+\node[tcc data,minimum width=4.4cm,minimum height=1.5cm] (bucket) at (10.8,0)
+ {\textbf{NumericBucket}\\média, extremos\\e amostras};
+\node[tcc data,minimum width=4.4cm,minimum height=1.5cm] (param) at (5.4,-3.3)
+ {\textbf{ParametroDef}\\grandeza agregada};
+\node[tcc data,minimum width=4.4cm,minimum height=1.5cm] (sensor) at (10.8,-3.3)
+ {\textbf{Sensor}\\dispositivo de origem};
+\draw[tcc relation] (job)--node[tcc cardinality,pos=.15,above]{1}node[tcc cardinality,pos=.85,above]{N}(window);
+\draw[tcc relation] (window)--node[tcc cardinality,pos=.15,above]{1}node[tcc cardinality,pos=.85,above]{N}(bucket);
+\draw[tcc relation] (sensor)--node[tcc cardinality,pos=.15,right]{1}node[tcc cardinality,pos=.85,right]{N}(bucket);
+\draw[tcc relation] (param.north)--node[tcc cardinality,left]{1}(5.4,-1.65)-|node[tcc cardinality,pos=.9,left]{N}(bucket.south west);
+\end{tikzpicture}

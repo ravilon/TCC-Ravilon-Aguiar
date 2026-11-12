@@ -41,6 +41,7 @@
 - Relacionar requisitos, escolhas e avaliação à pergunta de pesquisa e ao método adotado.
 - Usar exemplos que acompanhem uma observação ao longo das etapas, preservando a distinção entre fluxos diferentes.
 - Abrir cada capítulo com sua finalidade e conexão ao anterior antes das seções.
+- Cada capítulo e apêndice deve desenvolver conteúdo próprio. Não criar capítulos vazios ou páginas de título apenas para ancorar referências; consolidar material sobreposto em seções quando apropriado.
 - Evitar organizar o argumento como catálogo de classes, endpoints, tabelas ou flags. Transferir detalhes operacionais para apêndices quando úteis à reprodução.
 - Figuras devem esclarecer transformações, atores, armazenamentos, relações e destinos dos dados. Não confundir diagrama de fluxo de dados com diagrama de implantação ou DER.
 - Nos diagramas, alinhar caixas em uma malha, manter dimensões e espaçamentos consistentes e usar conectores simétricos quando representarem relações equivalentes. Preservar texto legível, títulos destacados e quebras de linha deliberadas, sem reduzir a figura inteira para acomodar excesso de conteúdo. Conferir visualmente o PDF compilado.

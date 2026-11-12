@@ -1,0 +1,20 @@
+\begin{tikzpicture}[tcc diagram]
+\node[tcc data,minimum width=4.4cm,minimum height=1.2cm] (campus) at (0,0) {\textbf{Campus}};
+\node[tcc data,minimum width=4.4cm,minimum height=1.2cm] (unit) at (10.8,0) {\textbf{Unidade}};
+\node[tcc data,minimum width=4.4cm,minimum height=1.2cm] (building) at (0,-2.3) {\textbf{Predio}};
+\node[tcc data,minimum width=4.4cm,minimum height=1.2cm] (room) at (5.4,-4.6) {\textbf{Compartimento}};
+\node[tcc data,minimum width=4.4cm,minimum height=1.2cm] (person) at (0,-7.1) {\textbf{Pessoa}};
+\node[tcc data,minimum width=4.4cm,minimum height=1.2cm] (presence) at (5.4,-7.1) {\textbf{Presenca}\\entrada e saída};
+\node[tcc data,minimum width=4.4cm,minimum height=1.2cm] (class) at (10.8,-7.1) {\textbf{PeriodoAula}\\data, horário e turma};
+\node[tcc data,minimum width=4.4cm,minimum height=1.2cm] (enrol) at (0,-9.6) {\textbf{AlunoDisciplina}\\turma e período letivo};
+\node[tcc data,minimum width=4.4cm,minimum height=1.2cm] (subject) at (10.8,-9.6) {\textbf{Disciplina}};
+\draw[tcc relation] (campus)--node[tcc cardinality,pos=.15,left]{1}node[tcc cardinality,pos=.85,left]{N}(building);
+\draw[tcc relation] (building.south)--node[tcc cardinality,left]{1}(0,-3.45)-|node[tcc cardinality,pos=.85,left]{N}([xshift=-1cm]room.north);
+\draw[tcc relation] (unit.south)--node[tcc cardinality,right]{1}(10.8,-3.45)-|node[tcc cardinality,pos=.85,right]{N}([xshift=1cm]room.north);
+\draw[tcc relation] (room)--node[tcc cardinality,pos=.15,left]{1}node[tcc cardinality,pos=.85,left]{N}(presence);
+\draw[tcc relation] (room.east)-|node[tcc cardinality,pos=.1,above]{1}node[tcc cardinality,pos=.9,right]{N}(class.north);
+\draw[tcc relation] (person)--node[tcc cardinality,pos=.15,above]{1}node[tcc cardinality,pos=.85,above]{N}(presence);
+\draw[tcc relation] (person)--node[tcc cardinality,pos=.15,left]{1}node[tcc cardinality,pos=.85,left]{N}(enrol);
+\draw[tcc relation] (subject)--node[tcc cardinality,pos=.15,right]{1}node[tcc cardinality,pos=.85,right]{N}(class);
+\draw[tcc relation] (subject)--node[tcc cardinality,pos=.08,above]{1}node[tcc cardinality,pos=.92,above]{N}(enrol);
+\end{tikzpicture}
