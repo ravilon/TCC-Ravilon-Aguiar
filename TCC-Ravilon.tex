@@ -33,6 +33,27 @@
 }
 \hypersetup{hidelinks,unicode=true,linktoc=all}
 
+% Inserir a captura no caminho indicado: a moldura é substituída automaticamente.
+\newcommand{\capturaexperimento}[2]{%
+  \IfFileExists{imagens/capturas-experimento/#1}{%
+    \includegraphics[width=\textwidth,height=.36\textheight,keepaspectratio]{imagens/capturas-experimento/#1}%
+  }{%
+    \fbox{\begin{minipage}[c][4.2cm][c]{.92\textwidth}
+      \centering\sffamily\small
+      \textbf{Espaço reservado para captura de tela}\par\medskip
+      #2\par\medskip
+      {\footnotesize Arquivo: \path{imagens/capturas-experimento/#1}}
+    \end{minipage}}%
+  }%
+}
+\newcommand{\fontecapturaexperimento}[1]{%
+  \IfFileExists{imagens/capturas-experimento/#1}{%
+    \caption*{Fonte: captura do sistema pelo autor.}%
+  }{%
+    \caption*{Fonte: espaço destinado à documentação visual pelo autor.}%
+  }%
+}
+
 \unidade{Centro de Desenvolvimento Tecnológico}
 \curso{Ciência da Computação}
 \nomecurso{Bacharelado em Ciência da Computação}
@@ -64,11 +85,11 @@ Ao meu irmão, Ramon Aguiar, por sempre acreditar em mim.
 \end{dedicatoria}
 
 \begin{abstract}
-O projeto de gamificação do Programa de Bom Uso Energético da Universidade Federal de Pelotas busca incentivar mudanças voluntárias de conduta no uso da energia, considerando o conforto dos ocupantes. A previsão de sensores em salas do Centro de Artes e a participação das pessoas em missões exigem uma infraestrutura que integre dados de diferentes origens e mantenha relações entre observações, espaços, usuários e atividades. Este trabalho apresenta o projeto e a implementação da arquitetura de dados e dos serviços desenvolvidos para apoiar o sistema de gamificação associado ao programa. A pesquisa foi organizada segundo a Design Science Research, abordagem de construção e avaliação de artefatos voltados à solução de problemas. A arquitetura organiza o percurso dos dados: recebimento de mensagens de sensores, preservação temporária do conteúdo original, transformação em medições padronizadas, integração de fontes ambientais externas e contexto acadêmico, consulta de agregados e avaliação de condições associadas à gamificação. A solução combina armazenamento documental e relacional por meio de persistência poliglota, conciliando a variabilidade das mensagens com a integridade das relações de domínio. Perfis configuráveis permitem adaptar formatos de sensores, enquanto mecanismos de idempotência e recuperação procuram evitar efeitos repetidos e permitir a retomada do processamento. Fontes compartilhadas de temperatura externa e regras de ambiente relacionam medições locais, condições temporais e beneficiários. A análise do artefato evidencia como a separação entre recebimento, interpretação e uso dos dados permite acomodar a diversidade de fontes e conservar as relações necessárias à gamificação. A contribuição é uma base de integração rastreável de fontes heterogêneas, preparada para apoiar análises e futuras intervenções gamificadas no contexto institucional.
+O projeto de gamificação do Programa de Bom Uso Energético da Universidade Federal de Pelotas busca incentivar mudanças voluntárias de conduta no uso da energia, considerando o conforto dos ocupantes. A previsão de sensores em salas do Centro de Artes e a participação das pessoas em missões exigem uma infraestrutura que integre dados de diferentes origens e mantenha relações entre observações, espaços, usuários e atividades. Este trabalho apresenta o projeto e a implementação da arquitetura de dados e dos serviços desenvolvidos para apoiar o sistema de gamificação associado ao programa. A pesquisa foi organizada segundo a Design Science Research, abordagem de construção e avaliação de artefatos voltados à solução de problemas. A arquitetura organiza o percurso dos dados: recebimento de mensagens de sensores, preservação temporária do conteúdo original, transformação em medições padronizadas, integração de fontes ambientais externas e contexto acadêmico, consulta de agregados e avaliação de condições associadas à gamificação. A solução combina armazenamento documental e relacional por meio de persistência poliglota, conciliando a variabilidade das mensagens com a integridade das relações de domínio. Perfis configuráveis permitem adaptar formatos de sensores, enquanto mecanismos de idempotência e recuperação procuram evitar efeitos repetidos e permitir a retomada do processamento. Fontes compartilhadas de temperatura externa e regras de ambiente relacionam medições locais, condições temporais e beneficiários. A avaliação combina análise do artefato e ensaio integrado com 720 mensagens de sensores virtuais, reconciliadas com 9.360 valores de parâmetros e suas qualificações. Os registros relacionam condições, atividades e 220 concessões de pontos, preservando uma divergência na avaliação por duração. Os resultados evidenciam como a separação entre recebimento, interpretação e uso dos dados permite acompanhar as relações necessárias à gamificação. A contribuição é uma base de integração rastreável de fontes heterogêneas, preparada para apoiar análises e futuras intervenções gamificadas no contexto institucional.
 \end{abstract}
 
 \begin{englishabstract}{Architecture for Multi-Structured Data Management in Gamified Systems: Integration of Heterogeneous Data Sources}
-The gamification project of the energy-use program at the Federal University of Pelotas aims to encourage voluntary changes in energy-use behavior while considering occupant comfort. Planned sensors in rooms at the Center for Arts and people's participation in missions require infrastructure that integrates heterogeneous sources and relates observations, spaces, users, and activities. This work presents the design and implementation of the data architecture and supporting services developed for the institutional gamification system. Design Science Research guided artifact development and evaluation. The presentation follows the data lifecycle: receiving sensor messages, temporarily preserving original content, transforming it into standardized measurements, integrating external environmental sources and academic context, querying aggregates, and evaluating conditions associated with gamification. The solution combines document and relational storage through polyglot persistence, accommodating variable messages and structured domain relationships. Configurable integration profiles support different sensor formats, while idempotency and recovery mechanisms address repeated effects and interrupted processing. Shared outdoor-temperature sources and environmental rules relate local measurements, temporal conditions, and beneficiaries. Artifact analysis explains how separating data reception, interpretation, and use accommodates heterogeneous sources while preserving the relationships needed for gamification. The contribution is traceable integration infrastructure for heterogeneous sources, intended to support analysis and future institutional gamification interventions.
+The gamification project of the energy-use program at the Federal University of Pelotas aims to encourage voluntary changes in energy-use behavior while considering occupant comfort. Planned sensors in rooms at the Center for Arts and people's participation in missions require infrastructure that integrates heterogeneous sources and relates observations, spaces, users, and activities. This work presents the design and implementation of the data architecture and supporting services developed for the institutional gamification system. Design Science Research guided artifact development and evaluation. The presentation follows the data lifecycle: receiving sensor messages, temporarily preserving original content, transforming it into standardized measurements, integrating external environmental sources and academic context, querying aggregates, and evaluating conditions associated with gamification. The solution combines document and relational storage through polyglot persistence, accommodating variable messages and structured domain relationships. Configurable integration profiles support different sensor formats, while idempotency and recovery mechanisms address repeated effects and interrupted processing. Shared outdoor-temperature sources and environmental rules relate local measurements, temporal conditions, and beneficiaries. Evaluation combines artifact analysis with an integrated experiment involving 720 virtual-sensor messages, reconciled with 9,360 parameter values and their qualifications. The records relate conditions, activities, and 220 point awards, while retaining a divergent result in duration-based evaluation. The results show how separating data reception, interpretation, and use supports tracing the relationships required for gamification. The contribution is traceable integration infrastructure for heterogeneous sources, intended to support analysis and future institutional gamification interventions.
 \end{englishabstract}
 
 \listoffigures
@@ -295,7 +316,26 @@ A análise foi organizada em torno de três questões: como acomodar a diversida
 
 Para examiná-las, foram relacionados os requisitos do problema às estruturas de representação, às transformações e aos mecanismos de processamento implementados. Os cenários de teste e os registros de execução disponíveis complementam essa análise, enquanto a comparação entre motores de regras fornece evidência específica para uma decisão de processamento. Os exemplos que acompanham o percurso dos dados são demonstrações explicativas, identificadas como tais, e não medições de uma intervenção com ocupantes.
 
-A avaliação é, portanto, uma análise do artefato construído e de suas implicações para a integração de dados. A identificação dos arquivos e dos registros utilizados é reunida nos apêndices para permitir sua conferência, sem transformar essa identificação no objeto da pesquisa.
+A avaliação articula a análise do artefato e um ensaio controlado de seu fluxo integrado. A primeira relaciona as decisões de projeto ao problema de pesquisa; o segundo acompanha entradas conhecidas até as medições, qualificações, agregações e consequências nas atividades. A identificação dos arquivos e dos registros utilizados é reunida nos apêndices para permitir sua conferência, sem transformar essa identificação no objeto da pesquisa.
+
+\section{Protocolo de avaliação do fluxo integrado}\label{sec:protocolo-integrado}
+O ensaio investiga como uma observação recebida se torna informação utilizável pela gamificação. Para isso, relaciona três conjuntos de evidências: mensagens produzidas com conteúdo conhecido, medições e qualificações consultadas no serviço de dados e registros de ocorrências, atividades e pontos. A conferência entre essas etapas permite examinar a continuidade da informação e distinguir a aceitação de uma publicação da conclusão de seus efeitos no domínio.
+
+O cenário compreende dez salas e dez sensores virtuais, com vinte estudantes de teste vinculados ao contexto acadêmico configurado. A infraestrutura foi executada em uma máquina virtual privada, \emph{Virtual Private Server} (VPS), do plano Hostinger KVM~2, conforme identificação fornecida pelo autor. Cada repetição publica sessenta mensagens, distribuídas entre os dez sensores, à taxa alvo de duas mensagens por segundo no conjunto. São quatro condições de avaliação, com três repetições por condição, totalizando 720 mensagens. As repetições são sequenciais, com sementes de geração distintas e missões próprias; essa organização conserva resultados individuais sem supor que o estado compartilhado do ambiente seja reinicializado entre execuções.
+
+Cada mensagem contém treze parâmetros: temperatura, presença, iluminação, estado do ar-condicionado, quatro valores de energia, temperatura de ajuste do equipamento, umidade, ruído, concentração de dióxido de carbono e abertura de janela. Os valores internos são sintéticos. Os valores de energia são incrementos calculados a partir de potências assumidas, e não leituras de consumo físico. Como contexto externo fixo, reutilizam-se uma observação de temperatura de $25{,}6\,^{\circ}\mathrm{C}$ e uma média de sete dias de $18{,}23\,^{\circ}\mathrm{C}$ previamente obtidas pela integração com a WeatherAPI. A fixação dessas referências permite interpretar as execuções sob o mesmo contexto externo.
+
+A qualificação utiliza faixas sintéticas cadastradas para os parâmetros. Em cada repetição, seis mensagens recebem um valor deliberadamente fora de faixa: duas para temperatura, duas para umidade, uma para ruído e uma para dióxido de carbono. Assim, são esperadas 780 avaliações e seis resultados de alerta por repetição. O alerta é uma interpretação do valor recebido; a medição continua a fazer parte do conjunto cuja persistência deve ser conferida.
+
+As missões utilizam condições que representam diferentes relações com o tempo. A avaliação instantânea compara a temperatura com o limite de $25\,^{\circ}\mathrm{C}$; a transição observa a mudança para presença verdadeira; a duração requer a manutenção dessa presença por dez segundos, com lacuna máxima configurada de dez segundos; e a avaliação no encerramento de uma janela de dez segundos considera o último valor de presença. Cada missão é de ciclo único, requer um progresso para conclusão automática e concede cinco pontos por atividade concluída. Os vinte estudantes de teste são vinculados a cada missão; sua elegibilidade decorre da configuração acadêmica, não de identificação física realizada pelo sensor. A Figura~\ref{fig:captura-configuracao} reserva a documentação visual dessa relação entre condição, tempo e recompensa.
+
+\begin{figure}[htbp]\centering
+\caption{Configuração da condição temporal e da recompensa da missão experimental}\label{fig:captura-configuracao}
+\capturaexperimento{configuracao-missao.png}{Exibir a condição de presença, a duração mínima, a lacuna admitida, a política de atribuição e a recompensa de cinco pontos.}
+\fontecapturaexperimento{configuracao-missao.png}
+\end{figure}
+
+A confirmação do intermediário MQTT é medida no publicador, enquanto medições e efeitos das missões são conferidos por consultas autenticadas ao serviço de dados. O atraso até a representação canônica corresponde à diferença entre o horário de origem e o horário de recebimento da medição; depende, portanto, dos relógios envolvidos. Os tempos são resumidos pela média e pelo desvio padrão amostral das três médias de repetição em cada modo. As contagens são apresentadas por repetição, preservando resultados divergentes. A taxa configurada caracteriza uma carga controlada de integração, e não um ensaio de saturação. O protocolo e os artefatos de reprodução estão identificados na Seção~\ref{ap:campanha-integrada}.
 
 \chapter{Da Origem dos Dados ao Apoio à Gamificação}\label{cap:desenvolvimento}
 A arquitetura é apresentada neste capítulo pelo percurso dos dados. Primeiro são identificadas suas origens e os espaços aos quais se referem. Em seguida, são discutidos recebimento, preservação, transformação e contextualização. Finalmente, mostram-se as formas de consulta e os mecanismos pelos quais observações podem participar de regras, atividades e registros de pontos. Cada etapa explicita o desafio que motivou sua organização e os limites da solução.
@@ -641,7 +681,94 @@ A comparação entre motores de regras oferece evidência específica para uma d
 
 O interesse dessa comparação para a pesquisa está no compromisso entre expressividade e custo de processamento. Empregar um mecanismo mais geral em todas as condições acrescentaria custo mesmo quando uma comparação direta é suficiente. Separar avaliação e efeitos de domínio permite que a estratégia de processamento seja escolhida sem redefinir as relações entre evidências, atividades e pontos. O protocolo, a identificação do registro e a tabela detalhada do experimento são apresentados no Apêndice~\ref{ap:evidencias}.
 
-Os cenários automatizados de integração, temporalidade, seleção de fontes e repetição complementam essa análise ao explicitar condições sob as quais o comportamento esperado deve ser preservado. Seu papel é apoiar o exame das decisões do artefato. A identificação dos cenários e os registros de execução permanecem nos apêndices; os números de um experimento específico não são generalizados para o desempenho do sistema completo.
+Os cenários automatizados de integração, temporalidade, seleção de fontes e repetição complementam essa análise ao explicitar condições sob as quais o comportamento esperado deve ser preservado. A campanha integrada apresentada a seguir acrescenta evidências que relacionam publicação, persistência e efeitos nas atividades. O experimento de motores permanece como observação do custo de avaliação em memória; a campanha examina o encadeamento dos serviços sob uma carga definida.
+
+\section{Avaliação experimental do fluxo integrado de dados}\label{sec:avaliacao-integrada}
+A avaliação acompanha o dado desde sua publicação até o uso em qualificações, agregações e missões. Seu interesse para a pesquisa está na passagem entre representações: o conteúdo produzido pelo sensor virtual precisa conservar sua utilidade ao ser convertido em medição, relacionado a um contexto e empregado em uma decisão. O cenário e os critérios de conferência seguem o protocolo da Seção~\ref{sec:protocolo-integrado}.
+
+\subsection{Da publicação à informação qualificada}
+As doze execuções produziram 720 publicações confirmadas pelo intermediário de mensagens. A consulta posterior ao serviço de dados retornou as 720 medições canônicas esperadas, com 9.360 valores de parâmetros e 9.360 avaliações de qualificação. A Tabela~\ref{tab:reconciliacao-integrada} relaciona as quantidades esperadas e observadas; a correspondência foi preservada em cada uma das doze repetições.
+
+\begin{table}[htbp]\centering\small
+\caption{Reconciliação das entradas e de sua interpretação na campanha}\label{tab:reconciliacao-integrada}
+\begin{tabularx}{\textwidth}{Yrr}\toprule
+Elemento acompanhado & Esperado & Observado \\\midrule
+Publicações confirmadas & 720 & 720 \\
+Medições canônicas & 720 & 720 \\
+Valores de parâmetros & 9.360 & 9.360 \\
+Avaliações de qualificação & 9.360 & 9.360 \\
+Alertas para valores introduzidos fora da faixa & 72 & 72 \\\bottomrule
+\end{tabularx}
+\caption*{Fonte: elaboração do autor a partir dos registros da campanha.}
+\end{table}
+
+Os alertas corresponderam às alterações previstas nas faixas sintéticas: em cada repetição, foram observados dois para temperatura, dois para umidade, um para ruído e um para dióxido de carbono. As demais 774 avaliações de cada repetição resultaram em condição normal. Esse resultado explicita a diferença funcional entre armazenar e qualificar: um valor fora da faixa permanece disponível, acompanhado de sua interpretação, em vez de desaparecer do histórico. A Figura~\ref{fig:captura-medicao} deverá ilustrar essa associação entre observação, parâmetros e resultado de qualificação.
+
+\begin{figure}[htbp]\centering
+\caption{Medição canônica e qualificação de um valor fora da faixa configurada}\label{fig:captura-medicao}
+\capturaexperimento{medicao-qualificada.png}{Exibir o sensor e a sala, o horário da medição, os parâmetros recebidos e um alerta correspondente a uma anomalia sintética da campanha.}
+\fontecapturaexperimento{medicao-qualificada.png}
+\end{figure}
+
+A etapa de agregação também produziu informação consultável. O processamento das dezoito janelas, com duração nominal de um minuto e último intervalo parcial, foi concluído, e a consulta filtrada pelo modelo de sensor e pelo intervalo da campanha informou 540 registros de agregação. Cada registro relaciona sensor, parâmetro, intervalo e quantidade de amostras a seus valores médio, mínimo e máximo. Desse modo, uma sequência de observações passa a oferecer uma representação resumida para análise, conservando os critérios de agrupamento. A Figura~\ref{fig:captura-agregacao} destina-se a mostrar essa transformação em uma consulta do sistema.
+
+\begin{figure}[htbp]\centering
+\caption{Consulta de valores agregados para sensores e intervalo da campanha}\label{fig:captura-agregacao}
+\capturaexperimento{consulta-agregados.png}{Exibir os filtros de sensor ou modelo e período, uma janela de agregação, a quantidade de amostras e os valores médio, mínimo e máximo.}
+\fontecapturaexperimento{consulta-agregados.png}
+\end{figure}
+
+\subsection{Da condição avaliada às atividades e aos pontos}
+As consequências das condições foram conferidas nos registros de ocorrências, atividades e lançamentos de pontos associados às missões. A Tabela~\ref{tab:efeitos-integrados} preserva os valores de cada repetição, na ordem de execução dentro do modo. A distinção entre ocorrência e atividade é relevante: várias condições podem ser detectadas ao longo das medições, enquanto uma atividade de ciclo único deve produzir sua recompensa uma única vez.
+
+\begin{table}[htbp]\centering\small
+\caption{Efeitos observados por modo nas três repetições}\label{tab:efeitos-integrados}
+\begin{tabularx}{\textwidth}{Yccc}\toprule
+Modo & Ocorrências & Atividades concluídas & Pontos concedidos \\\midrule
+Instantâneo & 30 / 30 / 28 & 20 / 20 / 20 & 100 / 100 / 100 \\
+Transição & 10 / 10 / 10 & 20 / 20 / 20 & 100 / 100 / 100 \\
+Duração & 5 / 4 / 0 & 20 / 20 / 0 & 100 / 100 / 0 \\
+Janela encerrada & 20 / 28 / 22 & 20 / 20 / 20 & 100 / 100 / 100 \\\bottomrule
+\end{tabularx}
+\caption*{Fonte: elaboração do autor. Cada célula apresenta as repetições 1, 2 e 3.}
+\end{table}
+
+Nos modos instantâneo, transição e janela encerrada, as vinte atividades foram concluídas em cada repetição, com cem pontos por missão. Em conjunto com as duas primeiras repetições de duração, foram registrados 220 lançamentos de concessão, totalizando 1.100 pontos. Cada lançamento correspondeu a cinco pontos associados à respectiva missão. A diferença entre as contagens de ocorrências e de lançamentos mostra que a detecção de condições e a recompensa da atividade são etapas distintas do fluxo. A Figura~\ref{fig:captura-pontos} deverá tornar visível a relação entre uma ocorrência, a atividade concluída e seu lançamento.
+
+\begin{figure}[htbp]\centering
+\caption{Relação entre ocorrência, conclusão da atividade e concessão de pontos}\label{fig:captura-pontos}
+\capturaexperimento{atividade-pontos.png}{Exibir a missão da campanha, uma atividade concluída e seu lançamento de cinco pontos, com identificadores ou filtros que permitam relacionar os registros.}
+\fontecapturaexperimento{atividade-pontos.png}
+\end{figure}
+
+O modo duração apresentou um resultado divergente: as duas primeiras repetições produziram cinco e quatro ocorrências, respectivamente, enquanto a terceira não produziu ocorrências, conclusões ou pontos. Nessa terceira repetição, as 25 janelas foram invalidadas com a indicação de que a condição não permaneceu satisfeita por dez segundos. O fluxo enviado, entretanto, contém quatro amostras consecutivas de presença verdadeira por sala, espaçadas em cinco segundos e cobrindo quinze segundos entre a primeira e a última. Essa diferença exige examinar a disponibilidade das amostras no instante de avaliação, além da sequência em tempo de origem.
+
+A divergência evidencia um desafio central da integração temporal: preservar as medições não equivale a torná-las disponíveis para uma decisão no mesmo instante. Os resultados de reconciliação sustentam a continuidade até a representação canônica; o modo duração acrescenta a necessidade de relacionar o horário da observação, sua chegada e o momento da decisão. A causa da invalidação não foi estabelecida pela campanha. Por isso, o resultado permanece individualizado e orienta uma investigação das janelas e de suas evidências, conforme o espaço da Figura~\ref{fig:captura-janela}.
+
+\begin{figure}[htbp]\centering
+\caption{Evidências temporais de uma janela invalidada no ensaio de duração}\label{fig:captura-janela}
+\capturaexperimento{janela-duracao.png}{Exibir início, término previsto, última medição e motivo de invalidação de uma janela da terceira repetição de duração; relacionar os horários às amostras de presença.}
+\fontecapturaexperimento{janela-duracao.png}
+\end{figure}
+
+\subsection{Tempos observados e significado da carga}
+A confirmação da publicação e a disponibilidade canônica correspondem a fronteiras diferentes da arquitetura. A primeira acompanha a interação do publicador com o intermediário MQTT. A segunda acrescenta a espera e o processamento até o recebimento da medição no serviço de dados. A Tabela~\ref{tab:tempos-integrados} apresenta a média e o desvio padrão entre as três médias de repetição de cada modo, evitando reunir todas as mensagens como se fossem repetições independentes do experimento.
+
+\begin{table}[htbp]\centering\small
+\caption{Tempos observados por modo: média e desvio padrão entre repetições}\label{tab:tempos-integrados}
+\begin{tabularx}{\textwidth}{Ycc}\toprule
+Modo & Confirmação da publicação (ms) & Origem até recebimento canônico (s) \\\midrule
+Instantâneo & $41{,}96 \pm 2{,}44$ & $4{,}45 \pm 1{,}24$ \\
+Transição & $39{,}66 \pm 1{,}19$ & $4{,}13 \pm 0{,}16$ \\
+Duração & $37{,}12 \pm 1{,}08$ & $3{,}58 \pm 0{,}14$ \\
+Janela encerrada & $38{,}24 \pm 0{,}64$ & $3{,}77 \pm 0{,}22$ \\\bottomrule
+\end{tabularx}
+\caption*{Fonte: elaboração do autor. Três repetições de sessenta mensagens por modo.}
+\end{table}
+
+A média geral das confirmações foi de $39{,}24$ ms; a diferença média entre origem e recebimento canônico foi de $3{,}98$ s. A distinção mostra por que uma resposta rápida de publicação deve ser interpretada separadamente do processamento posterior. O segundo indicador utiliza relógios de origem e destino e não representa o tempo até a concessão de pontos. Nos registros da campanha, os executores de avaliação e de janelas estavam configurados com intervalo de cinco segundos entre execuções e lotes de vinte itens, parâmetros que também precisam ser considerados ao interpretar decisões temporais.
+
+Sob a carga alvo de duas mensagens por segundo, a taxa calculada pelo publicador foi de aproximadamente $2{,}03$ mensagens por segundo em todos os modos. O ensaio oferece evidências de integração nessa carga e nesse cenário. Os valores internos sintéticos, o contexto externo fixo, a execução sequencial e as três repetições por modo delimitam a interpretação: a contribuição observada é a articulação entre representação, qualificação, contexto e efeitos persistidos, acompanhada de uma divergência temporal que permanece identificada. Essa evidência complementa a análise arquitetural ao tornar verificável o percurso entre observação e consequência.
 
 \section{Configurabilidade e adaptação institucional}
 A configurabilidade acrescenta uma dimensão de reutilização à contribuição da arquitetura. Sensores, espaços e fontes externas podem mudar entre unidades, enquanto as responsabilidades de receber, interpretar, contextualizar e avaliar permanecem comuns. Representar essas diferenças em perfis, vínculos e condições permite concentrar a adaptação nos elementos variáveis. A relação com os sistemas configuráveis discutidos na Seção~\ref{sec:configurabilidade} está na preservação dessa base compartilhada.
@@ -650,6 +777,8 @@ O impacto funcional aparece quando uma diferença local pode ser expressa pelas 
 
 \section{Síntese das contribuições e alcance da pesquisa}
 O percurso analisado permite responder à questão de pesquisa por três relações de projeto: separar a estrutura externa do significado utilizado no domínio; integrar observações a contextos espaciais, temporais e de participação; e conservar vínculos entre dados e efeitos de gamificação. Essas relações organizam o artefato e explicam por que seus componentes precisam atuar em conjunto.
+
+A campanha controlada acrescenta evidência empírica a essas relações ao reconciliar 720 medições, seus 9.360 valores e as respectivas qualificações, além de relacionar ocorrências a atividades e pontos. A análise das repetições conserva a distinção entre receber informação, interpretá-la e produzir efeitos. O resultado divergente na duração reforça o papel do tempo como parte da integração e torna explícita a necessidade de examinar quando a informação está disponível para decidir.
 
 A contribuição é aplicada ao contexto do Centro de Artes da UFPel, mas as decisões tratam necessidades que podem reaparecer em outras unidades: substituição de dispositivos, compartilhamento de fontes externas e adaptação das políticas ao uso dos espaços. A configuração por perfis e escopos oferece meios para essa adaptação. A extensão a outros ambientes constitui uma possibilidade de investigação a partir da arquitetura, e não uma consequência automática da modularidade.
 
@@ -661,6 +790,8 @@ Este trabalho investigou a construção de uma infraestrutura capaz de relaciona
 A solução implementada combina preservação documental temporária e persistência relacional, perfis configuráveis de integração, fontes externas compartilhadas e relações acadêmicas e de participação. Agregação, missões e regras de ambiente utilizam essa base com mecanismos de identidade, estados e recuperação. O sistema também registra configurações e evidências de execução de regras de ambiente, incluindo o cálculo de uma faixa adaptativa a partir de dados internos e externos.
 
 Em resposta à questão de pesquisa, o artefato mostra uma forma concreta de separar a variabilidade das fontes das relações estáveis necessárias ao domínio, mantendo vínculos entre observações e efeitos. A principal contribuição não está em uma tecnologia isolada, mas na articulação desses mecanismos e na explicitação dos desafios de integração, tempo, contexto e repetição.
+
+O ensaio integrado acompanhou 720 mensagens de sensores virtuais até suas medições canônicas, totalizando 9.360 valores de parâmetros e igual quantidade de qualificações. As consultas de agregação e os 220 lançamentos de concessão de pontos ampliaram essa observação até os usos da informação. Os modos instantâneo, transição e janela encerrada concluíram as atividades nas três repetições; o modo duração apresentou uma repetição divergente. Esse resultado situa a contribuição empírica no funcionamento observado da cadeia de integração e identifica a disponibilidade temporal das evidências como questão para aprofundamento.
 
 A principal implicação da arquitetura é permitir que o significado utilizado pelas atividades permaneça relacionado à origem e ao contexto dos dados. Essa organização oferece suporte à continuidade da informação diante da diversidade dos dispositivos e à associação entre condições ambientais e participação. A contribuição ao projeto institucional consiste em tornar essas relações disponíveis para estratégias de retorno e incentivo ao uso consciente da energia.
 
@@ -706,9 +837,22 @@ Este apêndice reúne a identificação técnica dos materiais utilizados e os r
 \subsection{Identificação dos materiais}
 A descrição atual da arquitetura está vinculada ao commit \path{b7192907eeb602a02cc3413f033bd2c4a7256397}, consultado em 12 de novembro de 2026, do repositório \path{ravilon/PROCEL-Back-End}. Os módulos dessa versão são \path{Proben-API}, \path{Proben-Telemetry} e \path{Proben-Admin}, identificadores históricos que correspondem, respectivamente, ao serviço de integração, processamento e disponibilização de dados, ao serviço de coleta e persistência de dados brutos e à interface de administração e configuração. Essas denominações funcionais são empregadas ao longo do texto; os nomes de implementação permanecem onde a reprodução técnica os exige. Foram inspecionados código de serviços, cenários de testes, migrations de fontes compartilhadas e regras de ambiente, além dos documentos técnicos indicados no Apêndice~\ref{ap:evidencias}.
 
-A inspeção examina o que está implementado e quais oráculos os testes expressam. A etapa atual de avaliação não inclui uma nova execução das suítes Java ou do console web. Portanto, a presença de um teste não é apresentada como aprovação do caso. O relatório operacional de setembro e os números do experimento de motores são tratados como evidências históricas, com o alcance de suas próprias fontes. A versão histórica anteriormente utilizada no TCC, \path{141db8ccbf63cf3896344fbb90197dfae3618691}, é mantida na referência histórica do repositório \cite{probenReadme2026}.
+A inspeção examina o que está implementado e quais oráculos os testes expressam. Ela é complementada pela campanha integrada descrita a seguir, com registros próprios de execução. A campanha não corresponde à execução das suítes Java ou do console web; a presença de um teste no código continua distinta da aprovação daquele caso. O relatório operacional de setembro e os números do experimento de motores são tratados como evidências históricas, com o alcance de suas próprias fontes. A versão histórica anteriormente utilizada no TCC, \path{141db8ccbf63cf3896344fbb90197dfae3618691}, é mantida na referência histórica do repositório \cite{probenReadme2026}.
 
 Essa separação é necessária porque atualizar o texto de uma funcionalidade não atualiza os resultados de seu teste. Contagens de classes, migrations ou anotações de teste também não demonstram correção. A análise utiliza a cadeia requisito--mecanismo--cenário--evidência, indicando onde existe apenas inspeção, onde há registro de execução anterior e onde permanece uma lacuna.
+
+\subsection{Registros da campanha integrada}\label{ap:campanha-integrada}
+A campanha de 12 de novembro de 2026 está arquivada em \path{Documentos/TestesDeCarga/full-campaign-20261112-04/} no repositório técnico. A identificação permanente dos artefatos consultados é o commit \path{57b7c3baed3324d43b4d6eb50be6ec99f2a82781}, disponível em \url{https://github.com/ravilon/PROCEL-Back-End/tree/57b7c3baed3324d43b4d6eb50be6ec99f2a82781/Documentos/TestesDeCarga/full-campaign-20261112-04}. Esse identificador fixa a publicação dos registros; os manifestos consultados não identificam o commit implantado durante o ensaio. Ele não substitui as identificações das inspeções e experimentos anteriores.
+
+O intervalo registrado vai de 21h46min44s a 21h59min03s em tempo universal coordenado, \emph{Coordinated Universal Time} (UTC), equivalente a 18h46min44s a 18h59min03s no horário de Brasília. O relatório identifica um ambiente de testes isolado. A identificação Hostinger KVM~2 foi informada pelo autor; os manifestos preservados não detalham processador, memória, sistema operacional ou versões efetivamente executadas dos serviços. Para caracterizar a instalação, esses dados devem ser obtidos de um inventário do ambiente, sem deduzi-los apenas do nome comercial do plano.
+
+Os arquivos \path{results.md} e \path{results.json} apresentam a síntese e as contagens consolidadas. Cada diretório em \path{runs/} preserva mensagens em \path{events.ndjson}, identificação da geração em \path{manifest.json}, resumo do publicador em \path{summary.json}, reconciliação de medições e qualificações em \path{server-metrics.json} e evidências de missões em \path{mission-metrics.json}. O arquivo \path{SHA256SUMS.txt} reúne resumos criptográficos para conferência dos arquivos. Os scripts \path{scripts/tcc/Invoke-TccFullCampaign.ps1} e \path{scripts/tcc/collect-full-campaign-metrics.mjs} registram o roteiro e a consolidação das consultas. O coletor restringe as contagens de qualificação às regras vinculadas ao grupo do ensaio e os lançamentos de pontos às respectivas missões.
+
+O resumo de cada publicador também contém interpretações locais das regras dos diagramas, explicitamente marcadas como simulação. Essas interpretações não são utilizadas como comprovação de execução das regras de ambiente no serviço. Os resultados de missões apresentados no Capítulo~\ref{cap:avaliacao} provêm das consultas às ocorrências, janelas, atividades e lançamentos persistidos. A consulta de agregação informa 540 registros no total e preserva uma primeira página com cem itens; o valor total é apresentado como contagem informada pela consulta, sem confundi-lo com uma inspeção individual de todos os registros.
+
+O estado inicial registra seleção do motor simples e habilitação da avaliação temporal com Drools. Os executores de avaliação e janelas têm intervalo de cinco segundos e lote de vinte itens. Para duração, as evidências da terceira repetição preservam 25 janelas invalidadas, nenhuma ocorrência e nenhuma concessão de pontos. Os arquivos \path{preexisting-active-events.json}, \path{setup-attempts.json} e \path{cleanup.json} documentam o isolamento de eventos existentes, tentativas de configuração descartadas e desativação das missões temporárias após a coleta, com preservação dos registros produzidos.
+
+Os espaços de captura da Figura~\ref{fig:captura-configuracao} e das Figuras~\ref{fig:captura-medicao} a~\ref{fig:captura-janela} são substituídos automaticamente ao incluir as imagens nos caminhos indicados. As capturas deverão mostrar os filtros, horários e vínculos pertinentes aos registros da campanha, ocultando credenciais e dados pessoais desnecessários. Elas complementam os dados estruturados de reprodução, que constituem a fonte das contagens e dos tempos apresentados.
 
 \subsection{Registros históricos de verificação}
 O relatório de testes de sanidade de 17 de setembro de 2026 \cite{probenSmoke2026} registra 112 verificações aprovadas, cinco avisos e zero falhas em 71,6 segundos, contra um ambiente identificado como produção. Entre os avisos estavam timeout na sincronização de salas, falha de autenticação ao consultar um processamento de horários e a verificação de persistência não realizada em consequência, além de estados tolerados de usuário já existente e presença já encerrada.
