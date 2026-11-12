@@ -31,7 +31,7 @@ latexmk -pdf -interaction=nonstopmode -halt-on-error TCC-Ravilon.tex
 
 ## Versão do sistema descrita
 
-A revisão de 12/11/2026 utiliza o backend no commit [`5e2a1e27d2f4ceb31217867259a303eee84b3c0f`](https://github.com/ravilon/PROCEL-Back-End/tree/5e2a1e27d2f4ceb31217867259a303eee84b3c0f). A versão atual é analisada por inspeção; relatórios e números de benchmark anteriores conservam sua identificação histórica. A atualização do texto não representa nova execução das suítes do backend.
+A revisão de 12/11/2026 utiliza o backend no commit [`b7192907eeb602a02cc3413f033bd2c4a7256397`](https://github.com/ravilon/PROCEL-Back-End/tree/b7192907eeb602a02cc3413f033bd2c4a7256397). A versão atual é analisada por inspeção; relatórios e números de benchmark anteriores conservam sua identificação histórica. A atualização do texto não representa nova execução das suítes do backend.
 
 ## Material de revisão
 
@@ -42,3 +42,6 @@ A revisão de 12/11/2026 utiliza o backend no commit [`5e2a1e27d2f4ceb3121786725
 - `revisao/TCC-Ravilon-revisado.pdf`: PDF de conferência.
 
 O desenvolvimento acompanha origem, recebimento, transformação, contexto, consulta e efeitos de gamificação. Os apêndices reúnem caminhos técnicos e capturas históricas. O cliente móvel e a avaliação do impacto comportamental e energético pertencem à continuidade do projeto institucional.
+
+
+A [atualização de pontuação](revisao/Atualizacao-pontos-2026-11-12.md) acompanha a refatoração para pontos, incluindo contratos, serviços e a migration V34.

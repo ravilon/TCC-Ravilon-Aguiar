@@ -22,6 +22,8 @@
 - Não transformar objetivos de escalabilidade, conforto ou economia em resultados comprovados.
 
 ## Idioma e siglas
+- Usar pontos e pontuação para o sistema; não denominar a pontuação atual como XP ou pontos de experiência. Manter nomes antigos somente em referências históricas e identificadores de migrations já aplicadas, quando necessários à rastreabilidade.
+
 - Empregar traduções em português quando consolidadas na área; evitar traduções improvisadas.
 - Quando não houver tradução consolidada, apresentar o termo em inglês por extenso e explicar seu significado em português, preferencialmente na primeira ocorrência.
 - Definir siglas na primeira ocorrência; evitar siglas desnecessárias. Resumo e texto principal devem ser compreensíveis de forma independente.
@@ -47,3 +49,4 @@
 - Verificar o diff e executar a compilação LaTeX quando houver alteração no texto ou nas figuras, se as dependências estiverem disponíveis; comunicar quando não for possível.
 
 Fonte sobre o Qualis: https://www.gov.br/capes/pt-br/assuntos/noticias/sobre-o-qualis-periodicos-na-avaliacao-quadrienal-2021-2024
+

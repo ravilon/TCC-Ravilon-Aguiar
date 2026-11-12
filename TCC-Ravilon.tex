@@ -59,7 +59,6 @@ The gamification project of the energy-use program at the Federal University of 
 \item[\textbf{REST}] Representational State Transfer
 \item[\textbf{TTL}] Time to Live
 \item[\textbf{UFPel}] Universidade Federal de Pelotas
-\item[\textbf{XP}] Experience Points
 \end{listofabbrv}
 \tableofcontents
 
@@ -216,7 +215,7 @@ R10 & Avaliar o ambiente & Regras locais e padrões, dados válidos, contexto e 
 \end{table}
 
 \section{Versões e fontes de evidência}\label{sec:versoes}
-A descrição atual da arquitetura está vinculada ao commit \path{5e2a1e27d2f4ceb31217867259a303eee84b3c0f}, consultado em 12 de novembro de 2026, do repositório \path{ravilon/PROCEL-Back-End}. Os módulos dessa versão são \path{Proben-API}, \path{Proben-Telemetry} e \path{Proben-Admin}, identificadores históricos que correspondem, respectivamente, ao serviço de integração, processamento e disponibilização de dados, ao serviço de coleta e persistência de dados brutos e à interface de administração e configuração. Essas denominações funcionais são empregadas ao longo do texto; os nomes de implementação permanecem onde a reprodução técnica os exige. Foram inspecionados código de serviços, cenários de testes, migrations de fontes compartilhadas e regras de ambiente, além dos documentos técnicos indicados no Apêndice~\ref{ap:evidencias} \cite{probenAtual2026}.
+A descrição atual da arquitetura está vinculada ao commit \path{b7192907eeb602a02cc3413f033bd2c4a7256397}, consultado em 12 de novembro de 2026, do repositório \path{ravilon/PROCEL-Back-End}. Os módulos dessa versão são \path{Proben-API}, \path{Proben-Telemetry} e \path{Proben-Admin}, identificadores históricos que correspondem, respectivamente, ao serviço de integração, processamento e disponibilização de dados, ao serviço de coleta e persistência de dados brutos e à interface de administração e configuração. Essas denominações funcionais são empregadas ao longo do texto; os nomes de implementação permanecem onde a reprodução técnica os exige. Foram inspecionados código de serviços, cenários de testes, migrations de fontes compartilhadas e regras de ambiente, além dos documentos técnicos indicados no Apêndice~\ref{ap:evidencias} \cite{probenAtual2026}.
 
 A inspeção examina o que está implementado e quais oráculos os testes expressam. A etapa atual de avaliação não inclui uma nova execução das suítes Java ou do console web. Portanto, a presença de um teste não é apresentada como aprovação do caso. O relatório operacional de setembro e os números do experimento de motores são tratados como evidências históricas, com o alcance de suas próprias fontes. A versão histórica anteriormente utilizada no TCC, \path{141db8ccbf63cf3896344fbb90197dfae3618691}, é mantida nas referências históricas e não substituída pelo hash atual \cite{probenReadme2026,probenSmoke2026,probenDrools2026}.
 
@@ -378,7 +377,7 @@ A aplicação científica do modelo exige cautela. O estudo de referência trata
 Condições adicionais, como estado de um equipamento e ocupação, continuam necessárias quando configuradas. A faixa adaptativa não as substitui. Dados ausentes, antigos ou com cobertura insuficiente impedem o uso da condição correspondente; a execução registra o motivo, em vez de preencher lacunas com zero ou conceder pontos a partir de uma informação inexistente.
 
 \section{Dos resultados aos efeitos de gamificação}
-O último desafio do percurso é relacionar uma decisão a pessoas sem perder sua evidência nem repetir seu efeito. Em missões, ocorrências podem progredir atividades e gerar pontos. Em regras de ambiente, a execução identifica contexto, beneficiários e resultado antes de registrar o efeito. O saldo de \emph{Experience Points} (XP), pontos de experiência, é calculado pela soma de lançamentos em um \emph{ledger}, registro de movimentações preservadas, em vez de substituir continuamente um saldo na pessoa \cite{probenAtual2026}.
+O último desafio do percurso é relacionar uma decisão a pessoas sem perder sua evidência nem repetir seu efeito. Em missões, ocorrências podem progredir atividades e gerar pontos. Em regras de ambiente, a execução identifica contexto, beneficiários e resultado antes de registrar o efeito. O saldo de pontos é calculado pela soma de lançamentos em um \emph{ledger}, registro de movimentações preservadas, em vez de substituir continuamente um saldo na pessoa \cite{probenAtual2026}. A recompensa de uma missão é expressa em pontos, e o registro de movimentações distingue concessões, estornos e ajustes. O saldo e o extrato são disponibilizados por consultas próprias, mantendo a relação entre a pontuação e os lançamentos que a compõem.
 
 \begin{figure}[htbp]\centering
 \caption{Relações conceituais necessárias para explicar um efeito de gamificação. A implementação concreta difere entre missões e regras de ambiente.}
@@ -490,7 +489,7 @@ A continuidade do trabalho deve priorizar a consolidação das evidências técn
 
 \appendix
 \chapter{Fontes Técnicas e Reprodução da Análise}\label{ap:evidencias}
-Este apêndice identifica o material de implementação utilizado para fundamentar a descrição do sistema. Os caminhos são relativos ao repositório técnico e pertencem ao commit \path{5e2a1e27d2f4ceb31217867259a303eee84b3c0f}. A lista organiza a conferência do percurso; não constitui um relatório de execução das suítes.
+Este apêndice identifica o material de implementação utilizado para fundamentar a descrição do sistema. Os caminhos são relativos ao repositório técnico e pertencem ao commit \path{b7192907eeb602a02cc3413f033bd2c4a7256397}. A lista organiza a conferência do percurso; não constitui um relatório de execução das suítes.
 
 \begin{longtable}{p{3.1cm}p{9.8cm}}
 \caption{Componentes utilizados na inspeção do fluxo atual}\label{tab:fontes-codigo}\\
@@ -501,12 +500,15 @@ Integração & \path{Proben-API/src/main/java/com/proben/api/service/sensors/Sen
 Fontes externas & \path{Proben-API/src/main/java/com/proben/api/service/shared/SharedContextService.java}; \path{SharedContextCollector.java}; \path{CredentialEncryptionService.java}. \\
 Contexto acadêmico & \path{Proben-API/src/main/java/com/proben/api/service/academic/AcademicContextResolver.java}; \path{service/missions/beneficiaries/DefaultMissionBeneficiaryResolver.java}. \\
 Regras de ambiente & \path{Proben-API/src/main/java/com/proben/api/service/environment/EnvironmentRuleService.java}; \path{EnvironmentRuleWorker.java}; \path{AdaptiveComfortCalculator.java}. \\
-Estrutura persistida & \path{Proben-API/src/main/resources/db/migration/}, especialmente V29 a V33 para contextos, coleta e regras de ambiente. \\
+Pontuação & \path{Proben-API/src/main/java/com/proben/api/service/missions/PontosRewardService.java}; \path{PontosQueryService.java}; \path{controller/people/PessoaPontosController.java}; \path{dto/people/PontosDTOs.java}, nos pacotes de serviços, controle e contratos da API. \\
+Estrutura persistida & \path{Proben-API/src/main/resources/db/migration/}, especialmente V29 a V33 para contextos, coleta e regras de ambiente e V34 para a nomenclatura atual de pontos. \\
 Documentação & \path{README.md}; \path{Documentos/Catalogo-Dados.md}; \path{Documentos/Modelo-MongoDB/Modelo-Telemetria-MongoDB.md}; \path{Documentos/Organizacao-do-Codigo.md}. \\\bottomrule
 \end{longtable}
 {\footnotesize Fonte: inspeção do repositório técnico pelo autor \cite{probenAtual2026}.\par}
 
 No diretório de testes de regras de ambiente foram examinados cenários de resolução, histórico, concorrência, integração acadêmica, fontes compartilhadas e conforto adaptativo. Em particular, \path{EnvironmentRuleResolutionIntegrationTest} trata precedência e reserva; \path{EnvironmentRuleSharedContextIntegrationTest} trata localização e cobertura; \path{EnvironmentRuleAdaptiveComfortIntegrationTest} trata limites e fatos obrigatórios. O conjunto de fontes compartilhadas também contém cenários de falha, posse de reserva e proteção da coleta. A presença de Testcontainers com opção de ignorar testes sem Docker exige registrar separadamente casos executados e ignorados em uma futura execução.
+
+A pontuação utiliza o registro relacional \texttt{pontos\_lancamento}, com o montante de cada movimentação no campo \texttt{pontos}; a recompensa configurada na missão também utiliza esse nome. As consultas atuais são \texttt{GET} \path|/api/pessoas/{pessoaId}/pontos| e \texttt{GET} \path|/api/pessoas/{pessoaId}/pontos/lancamentos|. O contrato de saldo apresenta \texttt{saldoTotalPontos}, \texttt{totalConcedidoPontos}, \texttt{totalEstornadoPontos} e \texttt{totalAjustadoPontos}. A migration V34 renomeia as estruturas e adapta as chaves de idempotência existentes, mantendo os registros de pontuação. Os cenários de \path{PessoaPontosControllerTest} e \path{PontosRewardServiceIntegrationTest} exercitam contratos, permissões, composição do saldo, repetição, conflito e concorrência \cite{probenAtual2026}.
 
 Para reprodução da análise, deve-se obter o commit identificado e conferir os módulos \path{Proben-API}, \path{Proben-Telemetry} e \path{Proben-Admin}. Uma execução de testes pode utilizar \path{./Proben-API/mvnw -f Proben-API/pom.xml test} e \path{./Proben-API/mvnw -f Proben-Telemetry/pom.xml test}, com ambiente Java e Docker compatíveis; o console utiliza seus comandos definidos no arquivo de dependências. O benchmark é uma etapa separada, descrita em \path{Documentos/Decisao-Drools-POC.md}. Os resultados precisam registrar hash, ambiente, comando, falhas e casos ignorados.
 
@@ -534,3 +536,4 @@ As capturas a seguir, já presentes no material anterior do TCC, ilustram a rela
 \bibliographystyle{abnt}
 \bibliography{bibliografia}
 \end{document}
+

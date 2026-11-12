@@ -1,7 +1,7 @@
 # Plano de revisão: acompanhar os dados do problema à avaliação
 
 ## Estado deste documento
-Organização aplicada à reescrita integral dos capítulos em 12/11/2026. Backend de referência: commit 5e2a1e27d2f4ceb31217867259a303eee84b3c0f.
+Organização aplicada à reescrita integral dos capítulos em 12/11/2026. Backend de referência: commit b7192907eeb602a02cc3413f033bd2c4a7256397.
 O mapa abaixo é conceitual e preliminar: não especifica cada transação nem substitui a validação dos fluxos ponta a ponta.
 Relatórios de testes e benchmarks antigos continuam vinculados às versões originais.
 
@@ -65,7 +65,7 @@ O estrato Qualis desse periódico ainda não foi verificado nesta rodada. Não a
 - Proben-API/src/main/java/com/proben/api/service/environment/EnvironmentRuleWorker.java: avaliação recuperável de regras de ambiente e registro idempotente de pontos.
 - As classes e testes adicionais devem ser inspecionados conforme cada seção for reescrita. A presença de testes não equivale a execução aprovada.
 
-Versão: https://github.com/ravilon/PROCEL-Back-End/tree/5e2a1e27d2f4ceb31217867259a303eee84b3c0f
+Versão: https://github.com/ravilon/PROCEL-Back-End/tree/b7192907eeb602a02cc3413f033bd2c4a7256397
 
 ## Uso do histórico de conversas
 A busca recuperou trechos do PROCEL-DataHandler sobre modelagem inicial de salas e sensores, separação entre armazenamento bruto e relacional, perfis de integração, processamento temporal e contexto externo compartilhado.
@@ -83,3 +83,7 @@ Não usar conversas como referência científica. Não afirmar que todas as alte
 
 ## Resultado da aplicação
 Os itens acima foram incorporados à revisão do texto. A figura principal foi produzida em TikZ e os detalhes de reprodução e capturas históricas foram organizados em apêndices. A versão atual foi inspecionada, sem nova execução de suas suítes. A matriz de fundamentação e o registro de validação complementam este plano. A figura Mermaid continua como mapa de trabalho; a figura do TCC representa o percurso com maior contexto.
+
+
+## Atualização de pontuação
+A referência atual foi atualizada para o commit b7192907eeb602a02cc3413f033bd2c4a7256397, que adota pontos em entidades, contratos e persistência. A migration V34 renomeia o registro de lançamentos e preserva seus dados. Relatórios antigos mantêm suas versões.
