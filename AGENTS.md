@@ -21,6 +21,7 @@
 - Evitar autocitações repetidas ao autor para descrever o sistema desenvolvido. Concentrar a identificação bibliográfica do repositório, DER e registros próprios no apêndice de reprodução; no corpo, usar remissão interna quando necessária. Nas figuras próprias, indicar elaboração do autor, preservando as citações científicas de conceitos e métodos.
 - Exemplo: persistência poliglota (polyglot persistence) exige definição bibliográfica e justificativa pelas necessidades dos dados; diferentes protocolos, isoladamente, não justificam bancos diferentes.
 - Não transformar objetivos de escalabilidade, conforto ou economia em resultados comprovados.
+- Tratar configurabilidade como adaptação por opções, parâmetros, mapeamentos e regras previstos na base comum. Distinguir essa propriedade da modificação de código e da classificação comercial COTS (Commercial Off-The-Shelf). Relacionar o conceito à literatura de sistemas configuráveis e LIMS, sem atribuir ao artefato uma classificação comercial ou facilidade de implantação já demonstrada.
 
 ## Idioma e siglas
 - Definir telemetria na primeira ocorrência como obtenção e transmissão remota de medições e reservar o termo ao fluxo dos sensores. Usar coleta e integração de dados para a arquitetura geral e mensagens dos sensores ou mensagens brutas quando tornar a leitura mais clara.

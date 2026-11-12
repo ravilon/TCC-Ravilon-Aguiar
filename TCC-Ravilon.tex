@@ -75,6 +75,7 @@ The gamification project of the energy-use program at the Federal University of 
 \listoftables
 \begin{listofabbrv}{PROBEN}
 \item[\textbf{API}] Application Programming Interface
+\item[\textbf{COTS}] Commercial Off-The-Shelf
 \item[\textbf{DER}] Diagrama de entidade-relacionamento
 \item[\textbf{DSR}] Design Science Research
 \item[\textbf{HTTP}] Hypertext Transfer Protocol
@@ -82,6 +83,7 @@ The gamification project of the energy-use program at the Federal University of 
 \item[\textbf{JPA}] Jakarta Persistence API
 \item[\textbf{JSON}] JavaScript Object Notation
 \item[\textbf{JWT}] JSON Web Token
+\item[\textbf{LIMS}] Laboratory Information Management Systems
 \item[\textbf{MQTT}] MQTT --- protocolo de publicação e assinatura de mensagens
 \item[\textbf{PROBEN}] Programa de Bom Uso Energético
 \item[\textbf{QoS}] Quality of Service
@@ -180,6 +182,15 @@ O PostgreSQL atende à necessidade complementar de preservar relações estávei
 
 A adoção conjunta faz sentido porque articula flexibilidade de entrada, administração da retenção, exploração documental e integridade relacional em responsabilidades distintas. A coordenação entre bancos integra essa escolha e é tratada por identidades persistidas, referências de origem e recuperação do processamento. A persistência poliglota organiza, desse modo, tanto a diversidade dos dados quanto sua evolução temporal: cada representação permanece no mecanismo e pelo período compatíveis com sua função no percurso da informação.
 
+\section{Software configurável e adaptação entre contextos}\label{sec:configurabilidade}
+A implantação de uma mesma base de software em organizações distintas exige representar diferenças de dados, processos e políticas. A expressão \emph{off-the-shelf software} designa software previamente desenvolvido e disponibilizado para utilização; em produtos comerciais, utiliza-se \emph{Commercial Off-The-Shelf} (COTS). A configurabilidade descreve outra dimensão: a possibilidade de adaptar o comportamento pelas opções e mecanismos previstos no produto. Essa distinção permite relacionar a experiência de sistemas padronizados à arquitetura estudada, cujo interesse é preservar uma base comum e expressar as diferenças entre contextos por configuração \cite{gsaConfiguracao2026}.
+
+Neste texto, configuração significa selecionar e preencher opções já previstas, como parâmetros, vínculos, mapeamentos e condições. Customização por código designa a introdução ou alteração de lógica programada para atender a uma necessidade específica. Essa convenção distingue mudanças nos dados de configuração de mudanças no mecanismo que os interpreta. O guia técnico da 18F apresenta essa separação para produtos COTS, enquanto \citet{rosemann2007} mostram a importância de representar explicitamente as alternativas de configuração de sistemas empresariais \cite{gsaConfiguracao2026}.
+
+Uma aplicação dessa perspectiva aparece nos \emph{Laboratory Information Management Systems} (LIMS), sistemas de gerenciamento de informações laboratoriais. \citet{russom2012} relatam a implantação de um LIMS configurável para desenvolvimento de processos e produção celular. A seleção considerou flexibilidade, necessidade contínua de programação e integração com equipamentos. O estudo exemplifica como uma base de software pode ser ajustada às necessidades de um laboratório e manter possibilidades de adaptação a ambientes semelhantes.
+
+Para esta pesquisa, a propriedade relevante é tornar explícito o que pode variar sem alterar o núcleo de processamento. Formatos de mensagens, fontes externas e condições de avaliação constituem pontos de adaptação. O núcleo conserva as operações de identificação, persistência e tratamento dos resultados, enquanto configurações descrevem diferenças admitidas entre dispositivos e ambientes. Essa organização favorece a reutilização porque desloca decisões locais para elementos administráveis e verificáveis, preservando uma implementação comum para o percurso dos dados.
+
 \section{Tempo, repetição e recuperação do processamento}
 O instante em que uma observação ocorre pode diferir daquele em que é recebida ou processada. Akidau et al. \cite{akidau2015} mostram a importância dessa distinção para fluxos não limitados e fora de ordem, relacionando tempo do evento, janelas e resultados. Neste trabalho, essas ideias fundamentam a necessidade de explicitar intervalos e políticas de atraso; não implicam adoção integral do modelo Dataflow.
 
@@ -216,18 +227,25 @@ Akidau et al. \cite{akidau2015} abordam o processamento de dados não limitados 
 
 \begin{table}[htbp]\centering\small
 \caption{Relação entre a literatura e o problema investigado}\label{tab:relacionados}
-\begin{tabularx}{\textwidth}{p{3.1cm}YY}\toprule
-Estudo & Contribuição utilizada & Delimitação no TCC \\\midrule
-Orland et al.; Iria et al. & Relação entre informação ambiental e intervenção gamificada. & Infraestrutura de dados; efeitos comportamentais não avaliados. \\
-Oppong-Tawiah et al. & Desenvolvimento e avaliação iterativos em sustentabilidade. & Artefato de integração, sem cliente móvel. \\
-Grolinger et al.; Gessert et al. & Escolha de armazenamento conforme os requisitos. & Combinação documental e relacional, sem comparação experimental entre bancos. \\
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.1cm}YY}\toprule
+Estudo & Contribuição utilizada & Relação com a arquitetura \\\midrule
+Orland et al.; Iria et al. & Relação entre informação ambiental e intervenção gamificada. & Relação entre observações, contexto e atividades. \\
+Oppong-Tawiah et al. & Desenvolvimento e avaliação iterativos em sustentabilidade. & Organização da infraestrutura que disponibiliza dados às aplicações. \\
+Grolinger et al.; Gessert et al. & Escolha de armazenamento conforme os requisitos. & Representações documentais e relacionais com ciclos de conservação próprios. \\
+Rosemann e van der Aalst; Russom et al. & Configuração de uma base comum para necessidades locais. & Perfis de integração, fontes e condições administráveis. \\
 Akidau et al. & Tempo do evento, janelas e dados fora de ordem. & Janelas e recuperação persistidas, com política limitada de recomputação. \\\bottomrule
 \end{tabularx}
 \caption*{Fonte: síntese do autor a partir dos estudos citados no capítulo.}
 \end{table}
 
+\section{Configuração e reutilização de uma base comum}
+\citet{rosemann2007} investigam modelos capazes de representar alternativas de configuração em sistemas empresariais. Sua contribuição ao presente trabalho é a ideia de que a adaptação precisa ter pontos de escolha explícitos. Nos serviços desenvolvidos, essa perspectiva ajuda a interpretar perfis, mapeamentos e escopos como elementos do projeto da solução, em vez de ajustes externos ao modelo.
+
+\citet{russom2012} oferecem um exemplo aplicado de configurabilidade em LIMS. A relação com este TCC está na adaptação de uma base comum a informações, equipamentos e rotinas locais. No domínio energético, os elementos variáveis são sensores, formatos de mensagens, fontes ambientais e políticas de avaliação. A correspondência entre os estudos ocorre no mecanismo de adaptação; as operações laboratoriais mantêm seu domínio específico.
+
 \section{Posicionamento da contribuição}
-A Tabela~\ref{tab:relacionados} mostra que a contribuição pretendida não é uma nova teoria de motivação nem um novo banco de dados. Ela está na articulação de mecanismos de integração em um problema institucional: permitir que uma observação heterogênea seja preservada, interpretada, contextualizada e relacionada a efeitos de gamificação de forma inspecionável. Trata-se de uma contribuição aplicada de projeto e desenvolvimento, cujo alcance depende da evidência apresentada para cada propriedade.
+A Tabela~\ref{tab:relacionados} situa a contribuição na articulação de mecanismos de integração e configuração em um problema institucional: permitir que uma observação heterogênea seja preservada, interpretada, contextualizada e relacionada a efeitos de gamificação de forma inspecionável. Trata-se de uma contribuição aplicada de projeto e desenvolvimento, cujo alcance depende da evidência apresentada para cada propriedade.
 
 \chapter{Metodologia}\label{cap:metodo}
 A pesquisa parte de uma necessidade institucional e a transforma em um problema de organização e integração de dados. O método articula a compreensão desse problema, a construção de uma solução e a análise de suas contribuições. O interesse está na relação entre as decisões de arquitetura e as possibilidades de uso da informação que elas estabelecem.
@@ -425,6 +443,26 @@ A Figura~\ref{fig:transformacao-dado} retoma o exemplo dos dois sensores para to
 
 Versões e vínculos também precisam continuar válidos no momento da gravação. O serviço de integração revalida o perfil, a versão ativa e o vínculo do dispositivo dentro da operação de ingestão. Esse cuidado procura tratar a alteração concorrente de uma configuração entre sua consulta e seu uso. A versão utilizada fica associada aos metadados da ingestão, apoiando a explicação posterior do resultado.
 
+\subsection{Configuração como mecanismo de adaptação}
+A configuração dos perfis transforma a variação de formatos em uma parte administrável do percurso. No exemplo dos dois sensores, a diferença entre os campos externos é expressa pelo mapeamento; consultas e condições continuam relacionadas à definição comum de temperatura. Uma nova instalação pode cadastrar seus dispositivos e vínculos e definir as interpretações compatíveis com as entradas recebidas, reutilizando o núcleo que valida e persiste as medições.
+
+Esse princípio também orienta fontes externas e regras de ambiente. Uma coleta informa endereço, parâmetros, interpretação do tempo e mapeamentos da resposta; uma regra descreve condições e o escopo em que se aplica. A Tabela~\ref{tab:configurabilidade} relaciona diferenças de contexto aos elementos que as representam. O papel da configuração é conservar as responsabilidades do processamento ao adaptar os dados e as políticas usados em cada ambiente.
+
+\begin{table}[!htb]\centering\small
+\caption{Variações de contexto e mecanismos de configuração.}\label{tab:configurabilidade}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.1cm}>{\raggedright\arraybackslash}p{5.0cm}Y}\toprule
+Variação & Elemento configurável & Responsabilidade preservada \\\midrule
+Dispositivo e grandezas & Tipo de sensor, parâmetros e vínculo espacial. & Identificar a origem e o significado dos valores. \\
+Formato da mensagem & Perfil, caminhos de campos e versão de interpretação. & Produzir medições na representação comum. \\
+Serviço ambiental externo & Endereço, parâmetros de consulta e mapeamentos da resposta. & Incorporar observações externas ao mesmo núcleo de ingestão. \\
+Política de avaliação & Condições, escopo e regras específicas ou padrões. & Avaliar com contexto e preservar resultado e evidências. \\\bottomrule
+\end{tabularx}
+\caption*{Fonte: elaboração do autor.}
+\end{table}
+
+As escolhas ficam sujeitas a verificações de estrutura, tipos e vínculos. Ativação e identificação da versão permitem determinar qual interpretação participa do processamento. Configurabilidade implica, assim, delimitar as variações admitidas e controlar sua aplicação. Esse controle torna a adaptação compreensível para a administração e preserva referências necessárias à explicação dos resultados.
+
 \subsection{Idempotência na fronteira relacional}
 A medição e os metadados são persistidos em uma transação local. O orquestrador distingue ingestão direta, por perfil e originada no serviço de coleta, com restrições próprias para as respectivas identidades. A comparação de uma impressão do conteúdo, ou \emph{fingerprint}, permite distinguir repetição equivalente de conflito.
 
@@ -605,6 +643,11 @@ O interesse dessa comparação para a pesquisa está no compromisso entre expres
 
 Os cenários automatizados de integração, temporalidade, seleção de fontes e repetição complementam essa análise ao explicitar condições sob as quais o comportamento esperado deve ser preservado. Seu papel é apoiar o exame das decisões do artefato. A identificação dos cenários e os registros de execução permanecem nos apêndices; os números de um experimento específico não são generalizados para o desempenho do sistema completo.
 
+\section{Configurabilidade e adaptação institucional}
+A configurabilidade acrescenta uma dimensão de reutilização à contribuição da arquitetura. Sensores, espaços e fontes externas podem mudar entre unidades, enquanto as responsabilidades de receber, interpretar, contextualizar e avaliar permanecem comuns. Representar essas diferenças em perfis, vínculos e condições permite concentrar a adaptação nos elementos variáveis. A relação com os sistemas configuráveis discutidos na Seção~\ref{sec:configurabilidade} está na preservação dessa base compartilhada.
+
+O impacto funcional aparece quando uma diferença local pode ser expressa pelas opções existentes: um novo formato passa a exigir um mapeamento, e uma política de ambiente passa a exigir condições e escopo. A reutilização está vinculada à capacidade de essas configurações representarem os requisitos do novo contexto. Desse modo, a arquitetura oferece meios concretos para a adaptação institucional, com escolhas identificadas e verificações que acompanham sua aplicação.
+
 \section{Síntese das contribuições e alcance da pesquisa}
 O percurso analisado permite responder à questão de pesquisa por três relações de projeto: separar a estrutura externa do significado utilizado no domínio; integrar observações a contextos espaciais, temporais e de participação; e conservar vínculos entre dados e efeitos de gamificação. Essas relações organizam o artefato e explicam por que seus componentes precisam atuar em conjunto.
 
@@ -654,6 +697,8 @@ Os documentos históricos continuam identificados pelo commit antigo nas respect
 Os arquivos de dependências registram Java 21 e Spring Boot 4.0.9 nos serviços. O cliente de administração declara React 19, TypeScript 5.9, Material UI 7 e Vite 7. Os arquivos de composição especificam as imagens PostgreSQL 16, MongoDB 7 e Eclipse Mosquitto 2. Essas identificações descrevem o ambiente declarado no repositório; a identificação de uma instalação particular depende de seus próprios registros.
 
 O DER de origem encontra-se em \path{Documentos/DER-BancoAnalitico/DER-Salas.drawio}, com uma folha principal e uma folha de ampliação do modelo \cite{probenDer2026}. Os recortes do Capítulo~\ref{cap:desenvolvimento} reorganizam relações selecionadas para leitura e as confrontam com as definições do esquema. O documento completo é preservado junto das figuras deste TCC, em \path{imagens/diagramas/DER-Salas-fonte.drawio}. O modelo documental e seus índices são descritos em \path{Documentos/Modelo-MongoDB/Modelo-Telemetria-MongoDB.md}. O primeiro representa entidades e vínculos do banco relacional; o segundo descreve documentos e estados da coleta de mensagens brutas. São perspectivas complementares da persistência, e não dois DERs relacionais equivalentes.
+
+A análise complementar de configurabilidade consultou os serviços de administração e ativação de perfis, ingestão, coleta externa e regras de ambiente no commit \path{61d62aa9fbc736b78e86cbf53a0a6d1277950769} do mesmo repositório. Em particular, foram examinados \path{SensorIntegrationAdminService}, \path{SensorIntegrationActivationService}, \path{SensorIngestOrchestrator}, \path{SharedContextCollector} e \path{EnvironmentRuleService}, em seus pacotes de serviços. Essa inspeção fundamenta os pontos de configuração descritos no texto e mantém a identificação anterior dos registros experimentais.
 
 \section{Evidências complementares de avaliação}
 Este apêndice reúne a identificação técnica dos materiais utilizados e os registros que complementam a análise do artefato. Sua finalidade é permitir conferência e reprodução dos procedimentos.
