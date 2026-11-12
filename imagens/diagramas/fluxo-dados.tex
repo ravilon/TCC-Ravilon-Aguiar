@@ -1,0 +1,38 @@
+\begin{tikzpicture}[tcc diagram]
+\node[tcc actor,minimum width=4.4cm,minimum height=1.15cm] (s) at (0,0)
+  {\textbf{Sensores e produtores}\\telemetria bruta};
+\node[tcc actor,minimum width=4.4cm,minimum height=1.15cm] (d) at (5.4,0)
+  {\textbf{Produtores integrados}\\formato conhecido};
+\node[tcc actor,minimum width=4.4cm,minimum height=1.15cm] (x) at (10.8,0)
+  {\textbf{Fontes externas}\\observações ambientais};
+
+\node[tcc box,minimum width=4.4cm,minimum height=1.15cm] (t) at (0,-2.1)
+  {\textbf{Coleta de dados brutos}\\HTTP ou MQTT};
+\node[tcc box,minimum width=4.4cm,minimum height=1.15cm] (di) at (5.4,-2.1)
+  {\textbf{Ingestão direta}\\recebimento HTTP};
+\node[tcc box,minimum width=4.4cm,minimum height=1.15cm] (h) at (10.8,-2.1)
+  {\textbf{Coleta HTTP}\\consulta à fonte externa};
+
+\node[tcc data,minimum width=4.4cm,minimum height=1.15cm] (raw) at (0,-4.2)
+  {\textbf{Mensagens originais}\\MongoDB};
+\node[tcc box,minimum width=8.1cm,minimum height=1.15cm] (i) at (5.4,-6.3)
+  {\textbf{Integração e padronização}\\interpretação dos campos, tipos e instantes};
+\node[tcc data,minimum width=5.7cm,minimum height=1.15cm] (c) at (5.4,-8.4)
+  {\textbf{Medições padronizadas}\\PostgreSQL};
+\node[tcc actor,minimum width=4.4cm,minimum height=1.15cm] (u) at (0,-8.4)
+  {\textbf{Contexto e participação}\\espaços e pessoas;\\atividades e participação};
+\node[tcc box,minimum width=8.1cm,minimum height=1.15cm] (r) at (5.4,-10.5)
+  {\textbf{Consulta e interpretação contextualizada}\\agregação das medições e avaliação de condições};
+\node[tcc data,minimum width=8.1cm,minimum height=1.15cm] (e) at (5.4,-12.6)
+  {\textbf{Resultados disponíveis ao domínio}\\agregados, evidências e efeitos de gamificação};
+
+\draw[tcc arrow] (s)--(t);\draw[tcc arrow] (d)--(di);\draw[tcc arrow] (x)--(h);
+\draw[tcc arrow] (t)--(raw);
+\draw[tcc arrow] (raw.south)--(0,-5.25)-|([xshift=-2cm]i.north);
+\draw[tcc arrow] (di.south)--(i.north);
+\draw[tcc arrow] (h.south)--(10.8,-5.25)-|([xshift=2cm]i.north);
+\node[tcc label,anchor=south] at (1.7,-5.25) {entrega assíncrona};
+\draw[tcc arrow] (i)--(c);\draw[tcc arrow] (c)--(r);
+\draw[tcc arrow] (u.south)--(0,-10.5)--(r.west);
+\draw[tcc arrow] (r)--(e);
+\end{tikzpicture}

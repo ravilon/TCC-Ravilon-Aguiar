@@ -43,6 +43,7 @@
 - Abrir cada capítulo com sua finalidade e conexão ao anterior antes das seções.
 - Evitar organizar o argumento como catálogo de classes, endpoints, tabelas ou flags. Transferir detalhes operacionais para apêndices quando úteis à reprodução.
 - Figuras devem esclarecer transformações, atores, armazenamentos, relações e destinos dos dados. Não confundir diagrama de fluxo de dados com diagrama de implantação ou DER.
+- Nos diagramas, alinhar caixas em uma malha, manter dimensões e espaçamentos consistentes e usar conectores simétricos quando representarem relações equivalentes. Preservar texto legível, títulos destacados e quebras de linha deliberadas, sem reduzir a figura inteira para acomodar excesso de conteúdo. Conferir visualmente o PDF compilado.
 
 ## Evidências e atualização
 - Consultar a versão atual do backend e fixar o commit usado na inspeção. Conferir código relevante, não apenas README.

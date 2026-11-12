@@ -1,0 +1,32 @@
+% Malha alinhada à composição original: clientes, serviços e bancos.
+% Os títulos abreviam responsabilidades descritas integralmente no texto.
+\begin{tikzpicture}[tcc diagram]
+\node[tcc actor,minimum width=3.9cm,minimum height=1.3cm] (sensor) at (3.55,2.8)
+  {Sensores e gateways\\produtores externos};
+\node[tcc box,minimum width=4.6cm,minimum height=2.1cm] (raw) at (8.4,2.8)
+  {\textbf{Coleta de dados brutos}\\receber via HTTP/MQTT;\\preservar mensagens;\\retomar processamento};
+\node[tcc db,minimum width=3.3cm,minimum height=1.65cm] (mongo) at (12.9,2.8)
+  {\textbf{MongoDB}\\eventos brutos};
+
+\node[tcc actor,minimum width=2.6cm,minimum height=1.1cm] (people) at (0,0)
+  {Pessoas\\autorizadas};
+\node[tcc box,minimum width=3.15cm,minimum height=1.5cm] (admin) at (3.55,0)
+  {\textbf{Administração}\\configurar, operar\\e consultar};
+
+\node[tcc actor,minimum width=3.9cm,minimum height=1.3cm] (direct) at (3.55,-2.8)
+  {Produtores integrados\\e fontes externas};
+\node[tcc box,minimum width=4.6cm,minimum height=2.1cm] (api) at (8.4,-2.8)
+  {\textbf{Integração de dados}\\padronizar e consultar;\\agregar e avaliar regras;\\registrar pontos};
+\node[tcc db,minimum width=3.3cm,minimum height=1.65cm] (pg) at (12.9,-2.8)
+  {\textbf{PostgreSQL}\\dados do domínio};
+
+\draw[tcc arrow] (sensor)--(raw);
+\draw[tcc both] (raw)--(mongo);
+\draw[tcc arrow] (people)--(admin);
+\draw[tcc both] (admin.north east)--(raw.south west);
+\draw[tcc both] (admin.south east)--(api.north west);
+\draw[tcc both] (direct)--(api);
+\draw[tcc both] (api)--(pg);
+\draw[tcc arrow] ([xshift=3.5mm]raw.south)--node[tcc label,right]{entrega de dados} ([xshift=3.5mm]api.north);
+\draw[tcc arrow] ([xshift=-3.5mm]api.north)--node[tcc label,left]{configuração} ([xshift=-3.5mm]raw.south);
+\end{tikzpicture}

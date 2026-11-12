@@ -1,0 +1,20 @@
+\begin{tikzpicture}[tcc diagram]
+\node[tcc actor,minimum width=6.5cm,minimum height=1.45cm] (a) at (0,0)
+  {\textbf{Sensor A}\\\texttt{temp: 22.5}};
+\node[tcc actor,minimum width=6.5cm,minimum height=1.45cm] (b) at (8,0)
+  {\textbf{Sensor B}\\\texttt{ambient.temperature: 22.5}};
+\node[tcc box,minimum width=6.5cm,minimum height=1.45cm] (pa) at (0,-2.35)
+  {\textbf{Mapeamento A}\\seleciona \texttt{/temp}};
+\node[tcc box,minimum width=6.5cm,minimum height=1.45cm] (pb) at (8,-2.35)
+  {\textbf{Mapeamento B}\\seleciona \texttt{/ambient/temperature}};
+\node[tcc data,minimum width=6.5cm,minimum height=1.65cm] (ma) at (0,-4.8)
+  {\textbf{Medição do sensor A}\\temperatura: $22{,}5\,^{\circ}\mathrm{C}$\\instante e origem próprios};
+\node[tcc data,minimum width=6.5cm,minimum height=1.65cm] (mb) at (8,-4.8)
+  {\textbf{Medição do sensor B}\\temperatura: $22{,}5\,^{\circ}\mathrm{C}$\\instante e origem próprios};
+\node[tcc box,minimum width=11cm,minimum height=1.45cm] (use) at (4,-7.35)
+  {\textbf{Consultas e condições}\\mesmo parâmetro do domínio, com origens preservadas};
+\draw[tcc arrow] (a)--(pa);\draw[tcc arrow] (b)--(pb);
+\draw[tcc arrow] (pa)--(ma);\draw[tcc arrow] (pb)--(mb);
+\draw[tcc arrow] (ma.south)--(0,-6.25)-|([xshift=-2cm]use.north);
+\draw[tcc arrow] (mb.south)--(8,-6.25)-|([xshift=2cm]use.north);
+\end{tikzpicture}

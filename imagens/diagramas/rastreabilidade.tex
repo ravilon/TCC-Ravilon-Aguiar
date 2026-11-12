@@ -1,0 +1,22 @@
+\begin{tikzpicture}[tcc diagram]
+\node[tcc data,minimum width=11cm,minimum height=1.35cm] (data) at (4,0)
+  {\textbf{Medições e contexto}\\origens e instantes identificados};
+\node[tcc box,minimum width=6.5cm,minimum height=1.55cm] (mission) at (0,-2.45)
+  {\textbf{Condições de missão}\\valores e evidências temporais\\conforme a condição};
+\node[tcc box,minimum width=6.5cm,minimum height=1.55cm] (env) at (8,-2.45)
+  {\textbf{Regra de ambiente aplicável}\\configuração e evidências\\da execução};
+\node[tcc box,minimum width=6.5cm,minimum height=1.55cm] (activity) at (0,-4.95)
+  {\textbf{Ocorrências e atividades}\\progresso da missão e\\política de beneficiários};
+\node[tcc box,minimum width=6.5cm,minimum height=1.55cm] (result) at (8,-4.95)
+  {\textbf{Resultado da execução}\\contexto, beneficiários e\\pontos calculados};
+\node[tcc data,minimum width=11cm,minimum height=1.35cm] (points) at (4,-7.4)
+  {\textbf{Lançamentos de pontos}\\origem do efeito e pessoa identificadas};
+\node[tcc box,minimum width=11cm,minimum height=1.35cm] (query) at (4,-9.6)
+  {\textbf{Consulta de saldo e extrato}\\disponibilização aos clientes autorizados};
+\draw[tcc arrow] ([xshift=-2cm]data.south)--(2,-1.2)-|(mission.north);
+\draw[tcc arrow] ([xshift=2cm]data.south)--(6,-1.2)-|(env.north);
+\draw[tcc arrow] (mission)--(activity);\draw[tcc arrow] (env)--(result);
+\draw[tcc arrow] (activity.south)--(0,-6.2)-|([xshift=-2cm]points.north);
+\draw[tcc arrow] (result.south)--(8,-6.2)-|([xshift=2cm]points.north);
+\draw[tcc arrow] (points)--(query);
+\end{tikzpicture}

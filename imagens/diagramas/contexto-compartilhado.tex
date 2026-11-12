@@ -1,0 +1,22 @@
+\begin{tikzpicture}[tcc diagram]
+\node[tcc actor,minimum width=6.5cm,minimum height=1.35cm] (source) at (0,0)
+  {\textbf{Fonte meteorológica}\\resposta à consulta HTTP};
+\node[tcc actor,minimum width=6.5cm,minimum height=1.35cm] (geo) at (8,0)
+  {\textbf{Contexto compartilhado}\\localização e salas vinculadas};
+\node[tcc data,minimum width=6.5cm,minimum height=1.35cm] (obs) at (0,-2.3)
+  {\textbf{Observação externa}\\valor, instante e localização};
+\node[tcc box,minimum width=6.5cm,minimum height=1.35cm] (selection) at (8,-2.3)
+  {\textbf{Seleção da fonte}\\vínculo por sala e parâmetro};
+\node[tcc box,minimum width=11cm,minimum height=1.55cm] (valid) at (4,-4.75)
+  {\textbf{Verificação da referência externa}\\localização, atualidade e cobertura temporal necessária};
+\node[tcc box,minimum width=6.5cm,minimum height=1.55cm] (a) at (0,-7.35)
+  {\textbf{Avaliação da sala A}\\leitura interna e contexto\\acadêmico próprios};
+\node[tcc box,minimum width=6.5cm,minimum height=1.55cm] (b) at (8,-7.35)
+  {\textbf{Avaliação da sala B}\\leitura interna e contexto\\acadêmico próprios};
+\draw[tcc arrow] (source)--(obs);\draw[tcc arrow] (geo)--(selection);
+\draw[tcc arrow] (obs.south)--(0,-3.45)-|([xshift=-2cm]valid.north);
+\draw[tcc arrow] (selection.south)--(8,-3.45)-|([xshift=2cm]valid.north);
+\draw[tcc arrow] ([xshift=-2cm]valid.south)--(2,-6.05)-|(a.north);
+\draw[tcc arrow] ([xshift=2cm]valid.south)--(6,-6.05)-|(b.north);
+\node[tcc label] at (4,-6.05) {referência externa válida};
+\end{tikzpicture}
