@@ -225,6 +225,43 @@ A avaliação é, portanto, uma análise do artefato construído e de suas impli
 A arquitetura é apresentada neste capítulo pelo percurso dos dados. Primeiro são identificadas suas origens e os espaços aos quais se referem. Em seguida, são discutidos recebimento, preservação, transformação e contextualização. Finalmente, mostram-se as formas de consulta e os mecanismos pelos quais observações podem participar de regras, atividades e registros de pontos. Cada etapa explicita o desafio que motivou sua organização e os limites da solução.
 
 \section{Visão do percurso e responsabilidades}
+
+A Figura~\ref{fig:arquitetura-geral} situa os componentes antes de acompanhar os dados. A visão geral da arquitetura permite distinguir quem produz informação, quais serviços a recebem e onde cada representação é mantida. As conexões indicam comunicação entre componentes, enquanto a Figura~\ref{fig:fluxo-dados} detalha os caminhos percorridos pela informação.
+
+\begin{figure}[htbp]\centering
+\caption{Arquitetura geral: responsabilidades dos serviços, clientes e armazenamentos.}
+\label{fig:arquitetura-geral}
+\begin{tikzpicture}[
+ box/.style={draw,rounded corners,align=center,text width=3.4cm,minimum height=1.3cm,font=\small},
+ actor/.style={box,dashed},
+ db/.style={box,cylinder,shape border rotate=90,aspect=.22},
+ arr/.style={-{Stealth[length=2mm]},thick},
+ bi/.style={{Stealth[length=2mm]}-{Stealth[length=2mm]},thick},
+ lab/.style={font=\scriptsize,fill=white,inner sep=2pt,align=center}]
+\node[actor] (sensor) at (-4.7,0) {Sensores e\\produtores externos};
+\node[box] (raw) at (0,0) {Serviço de coleta e\\persistência de\\dados brutos};
+\node[db] (mongo) at (4.7,0) {MongoDB\\mensagens originais};
+\node[actor] (people) at (-4.7,-2.7) {Pessoas autorizadas};
+\node[box] (admin) at (0,-2.7) {Interface de\\administração e\\configuração};
+\node[actor] (mobile) at (-4.7,-7.8) {Aplicação móvel\\prevista};
+\node[actor] (other) at (-4.7,-5.4) {Produtores integrados\\e fontes externas};
+\node[box] (api) at (0,-5.4) {Serviço de integração,\\processamento e\\disponibilização de dados};
+\node[db] (pg) at (4.7,-5.4) {PostgreSQL\\medições e relações\\de domínio};
+\draw[arr] (sensor)--node[lab]{HTTP ou\\MQTT}(raw);
+\draw[bi] (raw)--(mongo);
+\draw[arr] (people)--(admin);
+\draw[bi] (admin)--(raw);
+\draw[bi] (admin)--(api);
+\draw[arr] (raw.south east)--(2.45,-1.2)--node[lab,rotate=90]{entrega e interpretação}(2.45,-4.3)--(api.north east);
+\draw[bi] (api)--(pg);
+\draw[bi] (other)--node[lab]{HTTP}(api);
+\draw[arr,dashed] (mobile.north east)--(api.south west);
+\end{tikzpicture}
+\caption*{Fonte: elaboração do autor. Setas duplas indicam consulta ou troca de informações; a conexão tracejada indica o cliente previsto.}
+\end{figure}
+
+Os dois serviços distinguem preservação e interpretação: receber uma mensagem não exige que seu conteúdo já possa ser utilizado pelo domínio. A interface permite configurar essa passagem e consultar seus resultados. A aplicação móvel aparece como destino previsto dos serviços, mantendo os bancos acessíveis por meio das interfaces da arquitetura.
+
 A Figura~\ref{fig:fluxo-dados} apresenta uma visão conceitual dos principais caminhos. As setas representam transferências ou relações de uso dos dados; não representam uma única transação nem exigem que todas as fontes percorram todas as etapas. A separação é importante porque o conteúdo bruto de telemetria, a coleta de uma fonte externa e a confirmação de presença têm naturezas diferentes.
 
 \begin{figure}[htbp]\centering
@@ -297,6 +334,29 @@ O próximo desafio é impedir que o formato de cada dispositivo se propague pela
 
 No exemplo, os campos \texttt{temp} e \texttt{ambient.temperature} são interpretados por configurações diferentes, mas a leitura resultante passa a ser um valor numérico de um parâmetro definido. O domínio não precisa conhecer o nome externo do campo para consultar a temperatura. Essa separação é a contribuição prática da representação comum: estabilizar a relação entre grandeza, sensor e instante.
 
+A Figura~\ref{fig:transformacao-dado} retoma o exemplo dos dois sensores para tornar visível o que muda e o que permanece nessa passagem. As leituras resultantes compartilham a definição de temperatura, mas conservam a identificação dos dispositivos e de seus instantes; não são fundidas em uma única observação.
+
+\begin{figure}[htbp]\centering
+\caption{De formatos distintos a medições comparáveis: exemplo hipotético de duas leituras em graus Celsius.}
+\label{fig:transformacao-dado}
+\begin{tikzpicture}[
+ box/.style={draw,rounded corners,align=center,text width=4.5cm,minimum height=1.1cm,font=\small},
+ dat/.style={box,double},arr/.style={-{Stealth[length=2mm]},thick}]
+\node[box] (a) at (0,0) {Sensor A\\\texttt{temp: 22.5}};
+\node[box] (b) at (6,0) {Sensor B\\\texttt{ambient.temperature: 22.5}};
+\node[box] (pa) at (0,-2) {Mapeamento A\\seleciona \texttt{/temp}};
+\node[box] (pb) at (6,-2) {Mapeamento B\\seleciona \texttt{/ambient/temperature}};
+\node[dat] (ma) at (0,-4) {Medição do sensor A\\temperatura: $22{,}5\,^{\circ}\mathrm{C}$\\instante e origem próprios};
+\node[dat] (mb) at (6,-4) {Medição do sensor B\\temperatura: $22{,}5\,^{\circ}\mathrm{C}$\\instante e origem próprios};
+\node[box] (use) at (3,-6.1) {Consultas e condições utilizam\\o mesmo parâmetro do domínio};
+\draw[arr] (a)--(pa);\draw[arr] (b)--(pb);
+\draw[arr] (pa)--(ma);\draw[arr] (pb)--(mb);
+\draw[arr] (ma.south)|-(use.west);\draw[arr] (mb.south)|-(use.east);
+\end{tikzpicture}
+\caption*{Fonte: elaboração do autor. O exemplo pressupõe unidades compatíveis; o mapeamento de campos não realiza, por si só, uma conversão de unidade.}
+\end{figure}
+
+
 Versões e vínculos também precisam continuar válidos no momento da gravação. O serviço de integração revalida o perfil, a versão ativa e o vínculo do dispositivo dentro da operação de ingestão. Esse cuidado procura tratar a alteração concorrente de uma configuração entre sua consulta e seu uso. A versão utilizada fica associada aos metadados da ingestão, apoiando a explicação posterior do resultado.
 
 \subsection{Idempotência na fronteira relacional}
@@ -318,6 +378,31 @@ O coletor consulta um serviço externo por HTTP, interpreta a resposta e utiliza
 A localização é parte da identidade da observação. As coordenadas podem pertencer ao próprio contexto ou ser obtidas do campus. O registro de coleta associa a medição à localização utilizada e a uma impressão geográfica. Consultas atuais rejeitam observações de uma localização antiga quando as coordenadas mudam. Isso evita que uma série aparentemente contínua combine dados referentes a lugares diferentes.
 
 Uma nova observação compartilhada é um fato disponível às próximas avaliações; ela não é multiplicada em novas medições por sala. Na ingestão atual, somente sensores locais criam diretamente a solicitação de avaliação de missão. A distinção entre disponibilizar contexto e disparar uma avaliação evita interpretar um dado meteorológico como ação independente de cada sala.
+
+A Figura~\ref{fig:contexto-compartilhado} distingue o local ao qual uma observação externa se refere das salas que a utilizam. O compartilhamento ocorre por vínculos e consultas, preservando uma origem identificável para a referência externa. O vínculo espacial é necessário, mas o uso da observação depende também de sua validade temporal.
+
+\begin{figure}[htbp]\centering
+\caption{Compartilhamento de uma observação externa entre avaliações de salas distintas.}
+\label{fig:contexto-compartilhado}
+\begin{tikzpicture}[
+ box/.style={draw,rounded corners,align=center,text width=4.4cm,minimum height=1.1cm,font=\small},
+ dat/.style={box,double},arr/.style={-{Stealth[length=2mm]},thick},
+ lab/.style={font=\scriptsize,fill=white,inner sep=2pt,align=center}]
+\node[box] (source) at (0,0) {Fonte meteorológica\\resposta à consulta HTTP};
+\node[box] (geo) at (6,0) {Contexto compartilhado\\localização e salas vinculadas};
+\node[dat] (obs) at (0,-2.2) {Observação externa\\valor, instante e localização};
+\node[box] (valid) at (6,-2.2) {Seleção da fonte e verificação\\de localização, atualidade\\e cobertura necessária};
+\node[box] (a) at (0,-4.8) {Avaliação da sala A\\leitura interna e contexto\\acadêmico próprios};
+\node[box] (b) at (6,-4.8) {Avaliação da sala B\\leitura interna e contexto\\acadêmico próprios};
+\draw[arr] (source)--(obs);
+\draw[arr] (geo)--(valid);
+\draw[arr] (obs)--(valid);
+\draw[arr] (valid.south)--(6,-3.45)-|node[lab,pos=.55]{referência externa válida}(a.north);
+\draw[arr] (valid.south)--(b.north);
+\end{tikzpicture}
+\caption*{Fonte: elaboração do autor. As salas consultam a referência compartilhada; não são criadas cópias da medição externa para cada uma.}
+\end{figure}
+
 
 \subsection{Validade e cobertura temporal}
 Uma ausência de resposta não representa temperatura zero. A consulta de uma fonte compartilhada distingue informação disponível, desatualizada e ausente. Regras que dependem de dados sem validade suficiente recebem um motivo de não avaliação. Esse tratamento protege a interpretação: atribuir um valor numérico à ausência alteraria médias e decisões sem que houvesse uma observação correspondente.
@@ -373,22 +458,29 @@ Condições adicionais, como estado de um equipamento e ocupação, continuam ne
 O último desafio do percurso é relacionar uma decisão a pessoas sem perder sua evidência nem repetir seu efeito. Em missões, ocorrências podem progredir atividades e gerar pontos. Em regras de ambiente, a execução identifica contexto, beneficiários e resultado antes de registrar o efeito. O saldo de pontos é calculado pela soma de lançamentos em um \emph{ledger}, registro de movimentações preservadas, em vez de substituir continuamente um saldo na pessoa. A recompensa de uma missão é expressa em pontos, e o registro de movimentações distingue concessões, estornos e ajustes. O saldo e o extrato são disponibilizados por consultas próprias, mantendo a relação entre a pontuação e os lançamentos que a compõem.
 
 \begin{figure}[htbp]\centering
-\caption{Relações conceituais necessárias para explicar um efeito de gamificação. A implementação concreta difere entre missões e regras de ambiente.}
+\caption{Caminhos distintos entre evidências, participação e efeitos de gamificação.}
 \label{fig:rastreabilidade}
-\begin{tikzpicture}[node distance=7mm,
- box/.style={draw,rounded corners,align=center,text width=10.4cm,minimum height=9mm,font=\small},
- arr/.style={-{Stealth[length=2mm]},thick}]
-\node[box] (a) {Origem e observação: sensor, tempo e valor};
-\node[box,below=of a] (b) {Interpretação: parâmetro, perfil e contexto aplicável};
-\node[box,below=of b] (c) {Decisão: condição, evidência e resultado};
-\node[box,below=of c] (d) {Participação: atividade ou beneficiários identificados};
-\node[box,below=of d] (e) {Efeito: lançamento de pontos com identidade própria};
-\draw[arr] (a)--(b);\draw[arr] (b)--(c);\draw[arr] (c)--(d);\draw[arr] (d)--(e);
+\begin{tikzpicture}[
+ box/.style={draw,rounded corners,align=center,text width=4.5cm,minimum height=1.15cm,font=\small},
+ dat/.style={box,double},arr/.style={-{Stealth[length=2mm]},thick}]
+\node[dat] (data) at (3,0) {Medições e contexto\\origens e instantes identificados};
+\node[box] (mission) at (0,-2) {Condições de missão\\valores e evidências temporais\\conforme a condição};
+\node[box] (env) at (6,-2) {Regra de ambiente aplicável\\configuração e evidências\\da execução};
+\node[box] (activity) at (0,-4.2) {Ocorrências e atividades\\progresso da missão e\\política de beneficiários};
+\node[box] (result) at (6,-4.2) {Resultado da execução\\contexto, beneficiários e\\pontos calculados};
+\node[dat] (points) at (3,-6.5) {Lançamentos de pontos\\origem do efeito e pessoa\\identificadas};
+\node[box] (query) at (3,-8.4) {Consulta de saldo e extrato\\pelos clientes autorizados};
+\draw[arr] (data.south)-|(mission.north);
+\draw[arr] (data.south)-|(env.north);
+\draw[arr] (mission)--(activity);\draw[arr] (env)--(result);
+\draw[arr] (activity.south)|-(points.west);
+\draw[arr] (result.south)|-(points.east);
+\draw[arr] (points)--(query);
 \end{tikzpicture}
-\caption*{Fonte: elaboração do autor a partir da arquitetura desenvolvida.}
+\caption*{Fonte: elaboração do autor. As setas indicam dependência entre etapas; a concessão de pontos depende das condições e políticas de cada caminho.}
 \end{figure}
 
-A Figura~\ref{fig:rastreabilidade} sintetiza o argumento: um ponto deve estar relacionado à decisão que o produziu, e a decisão aos dados que a sustentaram. Na telemetria, identificadores relacionam documento bruto e medição; no domínio relacional, referências conectam valores, evidências, ocorrências e atividades. As regras de ambiente acrescentam cópia da configuração de execução e referências aos seus lançamentos.
+A Figura~\ref{fig:rastreabilidade} mostra que missões e regras de ambiente mantêm caminhos próprios até o registro dos efeitos. Um ponto deve estar relacionado à decisão que o produziu, e a decisão aos dados que a sustentaram. A convergência no registro de pontos permite consultar o saldo e o extrato sem apagar essa diferença de origem. Na telemetria, identificadores relacionam documento bruto e medição; no domínio relacional, referências conectam valores, evidências, ocorrências e atividades. As regras de ambiente acrescentam cópia da configuração de execução e referências aos seus lançamentos.
 
 Essa rastreabilidade tem limites diferentes. O conteúdo bruto desaparece após a retenção; a ligação entre bancos é lógica, não uma chave estrangeira distribuída; e regras elementares de qualificação não necessariamente preservam todos os limiares históricos dentro de cada avaliação. O \emph{snapshot} das regras de ambiente melhora a explicação nesse fluxo, mas não autoriza afirmar que todas as políticas históricas de todo o sistema são integralmente reconstruíveis.
 
