@@ -1,7 +1,7 @@
 # Plano de revisão: acompanhar os dados do problema à avaliação
 
 ## Estado deste documento
-Proposta de organização, ainda não uma reescrita dos capítulos. Inspeção do backend em 12/11/2026, commit a48763cfc40927653ff9f02a5cab0eb8a9ddf63f.
+Organização aplicada à reescrita integral dos capítulos em 12/11/2026. Backend de referência: commit 5e2a1e27d2f4ceb31217867259a303eee84b3c0f.
 O mapa abaixo é conceitual e preliminar: não especifica cada transação nem substitui a validação dos fluxos ponta a ponta.
 Relatórios de testes e benchmarks antigos continuam vinculados às versões originais.
 
@@ -65,17 +65,21 @@ O estrato Qualis desse periódico ainda não foi verificado nesta rodada. Não a
 - Proben-API/src/main/java/com/proben/api/service/environment/EnvironmentRuleWorker.java: avaliação recuperável de regras de ambiente e registro idempotente de pontos.
 - As classes e testes adicionais devem ser inspecionados conforme cada seção for reescrita. A presença de testes não equivale a execução aprovada.
 
-Versão: https://github.com/ravilon/PROCEL-Back-End/tree/a48763cfc40927653ff9f02a5cab0eb8a9ddf63f
+Versão: https://github.com/ravilon/PROCEL-Back-End/tree/5e2a1e27d2f4ceb31217867259a303eee84b3c0f
 
 ## Uso do histórico de conversas
 A busca recuperou trechos do PROCEL-DataHandler sobre modelagem inicial de salas e sensores, separação entre armazenamento bruto e relacional, perfis de integração, processamento temporal e contexto externo compartilhado.
 O acesso é parcial. Algumas propostas mudaram ao longo do desenvolvimento; o histórico deve apoiar a reconstrução do raciocínio, e o código atual deve confirmar o que foi implementado.
 Não usar conversas como referência científica. Não afirmar que todas as alternativas foram comparadas experimentalmente.
 
-## Próximas alterações no texto
+## Escopo aplicado à revisão
 1. Reorganizar a introdução pelo cenário, problema de dados, lacuna e objetivos; retirar repetições e a abertura imediata por seção.
 2. Revisar resumo e abstract para centrar proposta, método, artefato e contribuição; concentrar limites detalhados nos capítulos pertinentes.
 3. Organizar a fundamentação em torno dos desafios da narrativa e criar uma matriz conceito–afirmação–artigo–evidência.
 4. Reestruturar desenvolvimento conforme as etapas acima; inserir a figura e um exemplo acompanhado ao longo do percurso.
 5. Atualizar referências da implementação sem reapresentar resultados antigos como testes da versão atual.
 6. Revisar avaliação, conclusão e coerência terminológica; compilar e inspecionar o PDF.
+
+
+## Resultado da aplicação
+Os itens acima foram incorporados à revisão do texto. A figura principal foi produzida em TikZ e os detalhes de reprodução e capturas históricas foram organizados em apêndices. A versão atual foi inspecionada, sem nova execução de suas suítes. A matriz de fundamentação e o registro de validação complementam este plano. A figura Mermaid continua como mapa de trabalho; a figura do TCC representa o percurso com maior contexto.

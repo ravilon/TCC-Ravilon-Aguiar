@@ -1,10 +1,17 @@
 \documentclass[tcc,capa]{texufpel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\renewcommand{\sfdefault}{phv}
 \usepackage{graphicx}
 \usepackage{url}
 \usepackage{xurl}
 \usepackage{array}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{amsmath}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,fit,shapes.geometric}
 \hypersetup{hidelinks,unicode=true,linktoc=all}
@@ -30,11 +37,11 @@
 % Substituir por \includepdf{ficha.pdf} após a emissão da ficha no Cobalto.
 
 \begin{abstract}
-O projeto de gamificação do Programa de Bom Uso Energético da Universidade Federal de Pelotas busca promover mudanças voluntárias de conduta e uma consciência mais sustentável no uso de edificações públicas, considerando o conforto dos ocupantes. Nesse contexto, a previsão de sensores em salas do Centro de Artes demanda uma infraestrutura capaz de integrar medições ambientais, fontes externas e registros da participação das pessoas em missões. A diversidade e a possível substituição de modelos de sensores exigem flexibilidade de integração, enquanto as relações entre pessoas, espaços, atividades e recompensas requerem integridade e rastreabilidade. Este trabalho apresenta o projeto e a implementação da arquitetura de dados e dos serviços de backend da plataforma PROBEN, base para a futura aplicação de gamificação. A pesquisa adotou a Ciência do Projeto para orientar a construção e a avaliação do artefato. A solução combina armazenamento documental dos eventos recebidos e armazenamento relacional das medições padronizadas e dos dados acadêmicos e de gamificação. Essa persistência poliglota concilia formatos de entrada variáveis com relações estruturadas de domínio. A infraestrutura contempla comunicação por interfaces HTTP e mensageria MQTT, modelagem configurável de sensores, transformação de dados, tratamento de duplicatas e recuperação do processamento. A modelagem também relaciona usuários e missões e contempla fontes ambientais compartilhadas, como a temperatura externa, necessárias à contextualização de estratégias de conforto térmico adaptativo. A organização modular busca favorecer a evolução e a futura replicação institucional, sem pressupor escalabilidade já demonstrada sob carga. A avaliação reuniu evidências de testes automatizados e um experimento de comparação de motores de regras, sustentando propriedades específicas nos cenários examinados. A aplicação móvel e a avaliação de mudanças comportamentais permanecem fora do escopo; portanto, o trabalho não afirma economia de energia alcançada nem preservação do conforto comprovada em campo.
+O projeto de gamificação do Programa de Bom Uso Energético da Universidade Federal de Pelotas busca incentivar mudanças voluntárias de conduta no uso da energia, considerando o conforto dos ocupantes. A previsão de sensores em salas do Centro de Artes e a participação das pessoas em missões exigem uma infraestrutura que integre dados de diferentes origens e mantenha relações entre observações, espaços, usuários e atividades. Este trabalho apresenta o projeto e a implementação da arquitetura de dados e dos serviços da plataforma PROBEN que darão suporte à aplicação de gamificação. A pesquisa foi organizada segundo a Design Science Research, abordagem de construção e avaliação de artefatos voltados à solução de problemas. O desenvolvimento acompanha o percurso dos dados: recebimento de mensagens de sensores, preservação temporária do conteúdo original, transformação em medições padronizadas, integração de fontes ambientais externas e contexto acadêmico, consulta de agregados e avaliação de condições associadas à gamificação. A solução combina armazenamento documental e relacional por meio de persistência poliglota, conciliando a variabilidade das mensagens com a integridade das relações de domínio. Perfis configuráveis permitem adaptar formatos de sensores, enquanto mecanismos de idempotência e recuperação procuram evitar efeitos repetidos e permitir a retomada do processamento. A versão examinada também contempla fontes compartilhadas de temperatura externa e regras de ambiente que relacionam medições locais, condições temporais e beneficiários. A avaliação distingue a inspeção do código atual dos relatórios históricos de execução e do experimento de comparação de motores de regras. As evidências identificadas sustentam a presença dos mecanismos projetados e delimitam os cenários de verificação, sem transferir resultados antigos para a versão atual. A contribuição é uma base de integração rastreável de fontes heterogêneas, preparada para apoiar análises e futuras intervenções gamificadas no contexto institucional.
 \end{abstract}
 
 \begin{englishabstract}{Multi-Structured Management of Gamified Mobile Data: Integrating Heterogeneous Sources}
-The gamification project of the energy-use program at the Federal University of Pelotas aims to promote voluntary behavioral changes and greater sustainability awareness in the use of public buildings while considering occupant comfort. Planned sensors in classrooms at the Center for Arts require infrastructure that integrates environmental measurements, external sources, and records of people's participation in missions. Different and replaceable sensor models require flexible integration, while relationships among people, spaces, activities, and rewards require integrity and traceability. This work presents the design and implementation of the PROBEN data architecture and backend services as a foundation for a future gamification application. Design Science guided artifact development and evaluation. The solution combines document storage for incoming events with relational storage for standardized measurements, academic entities, and gamification data. This polyglot persistence accommodates variable input formats and structured domain relationships. The infrastructure includes HTTP interfaces and MQTT messaging, configurable sensor modeling, data transformation, duplicate handling, and processing recovery. The data model also relates users to missions and accommodates shared environmental sources, such as outdoor temperature, to contextualize adaptive thermal comfort strategies. Its modular organization aims to support evolution and future institutional replication, without claiming load-tested scalability. Evaluation combined automated-test evidence and a rule-engine comparison experiment, supporting specific properties in the examined scenarios. The mobile application and behavioral evaluation remain outside the scope; consequently, this work does not claim achieved energy savings or field-validated preservation of comfort.
+The gamification project of the energy-use program at the Federal University of Pelotas aims to encourage voluntary changes in energy-use behavior while considering occupant comfort. Planned sensors in rooms at the Center for Arts and people's participation in missions require infrastructure that integrates heterogeneous sources and relates observations, spaces, users, and activities. This work presents the design and implementation of the PROBEN data architecture and backend services that will support the gamification application. Design Science Research guided artifact development and evaluation. The presentation follows the data lifecycle: receiving sensor messages, temporarily preserving original content, transforming it into standardized measurements, integrating external environmental sources and academic context, querying aggregates, and evaluating conditions associated with gamification. The solution combines document and relational storage through polyglot persistence, accommodating variable messages and structured domain relationships. Configurable integration profiles support different sensor formats, while idempotency and recovery mechanisms address repeated effects and interrupted processing. The examined version also includes shared outdoor-temperature sources and environmental rules that relate local measurements, temporal conditions, and beneficiaries. Evaluation distinguishes inspection of the current source code from historical execution reports and a rule-engine comparison experiment. The identified evidence supports the presence of the designed mechanisms and defines the examined verification scenarios without transferring earlier results to the current version. The contribution is traceable integration infrastructure for heterogeneous sources, intended to support analysis and future institutional gamification interventions.
 \end{englishabstract}
 
 \listoffigures
@@ -42,446 +49,488 @@ The gamification project of the energy-use program at the Federal University of 
 \begin{listofabbrv}{PROBEN}
 \item[\textbf{API}] Application Programming Interface
 \item[\textbf{DSR}] Design Science Research
+\item[\textbf{HTTP}] Hypertext Transfer Protocol
 \item[\textbf{IoT}] Internet of Things
+\item[\textbf{JSON}] JavaScript Object Notation
 \item[\textbf{JWT}] JSON Web Token
-\item[\textbf{MQTT}] Message Queuing Telemetry Transport
+\item[\textbf{MQTT}] MQTT --- protocolo de publicação e assinatura de mensagens
 \item[\textbf{PROBEN}] Programa de Bom Uso Energético
 \item[\textbf{QoS}] Quality of Service
 \item[\textbf{REST}] Representational State Transfer
 \item[\textbf{TTL}] Time to Live
+\item[\textbf{UFPel}] Universidade Federal de Pelotas
 \item[\textbf{XP}] Experience Points
 \end{listofabbrv}
 \tableofcontents
 
-\chapter{Introdução}
-\section{Contexto e motivação}
-A Internet das Coisas (IoT) amplia a observação do mundo físico, mas exige arquiteturas capazes de transportar, armazenar e interpretar fluxos heterogêneos \cite{gubbi2013,alfuqaha2015}. Em edificações, leituras de energia, temperatura, umidade, qualidade do ar e presença diferem em protocolo, frequência, unidade e formato. Além do valor, identidade, instante, localização, origem e qualidade alteram a interpretação da observação \cite{sagl2015}.
+\chapter{Introdução}\label{cap:introducao}
+O uso consciente da energia em uma edificação depende tanto de suas instalações quanto das práticas de quem a ocupa. A gamificação pode apoiar intervenções nesse contexto ao associar informações sobre consumo a metas, participação e retorno aos usuários. Estudos em escritórios ilustram essa possibilidade, mas também mostram que o desenho e a avaliação da intervenção precisam considerar o ambiente e seus participantes \cite{oppong2020,iria2020}. Para que uma intervenção assim seja viável, existe uma questão anterior: como reunir dados ambientais e registros de participação de forma que possam ser interpretados em conjunto?
 
-A plataforma recebe o nome do Programa de Bom Uso Energético (PROBEN), iniciativa institucional da UFPel voltada à educação do usuário, à gestão energética e ao desenvolvimento de tecnologias para o uso racional da energia \cite{probenUfpel2026}. Nesse contexto, o projeto ``Validação de sistema de gamificação, gestão e automação na nuvem para eficiência energética de edificações públicas com foco inicial em universidades'' demanda uma base capaz de transformar telemetria em informação útil. Estudos indicam que medição real, feedback, metas e elementos lúdicos podem influenciar consumo \cite{orland2014,oppong2020,iria2020}; contudo, os efeitos dependem do contexto, dos usuários e do desenho da intervenção \cite{hamari2014,morganti2017,beck2019}.
+Na Universidade Federal de Pelotas (UFPel), o Programa de Bom Uso Energético (PROBEN) articula ações de educação e gestão energética \cite{probenUfpel2026}. Nesse contexto, o projeto ``Validação de sistema de gamificação, gestão e automação na nuvem para eficiência energética de edificações públicas com foco inicial em universidades'' prevê o uso de software para apoiar mudanças voluntárias de conduta. A proposta institucional abrange desenvolvimento, validação e avaliação de engajamento e consumo.\footnote{Descrição institucional do projeto fornecida pelo autor durante a revisão do TCC. As metas do projeto institucional delimitam o contexto; não constituem resultados obtidos pelo sistema.} Este trabalho se insere nessa iniciativa e trata da infraestrutura de dados necessária à futura aplicação de gamificação.
 
-O título sintetiza três dimensões desse contexto. ``Multi-estruturado'' refere-se à combinação de eventos documentais, entidades relacionais, agregados e estruturas de gamificação. ``Fontes heterogêneas'' abrange sensores e produtores que diferem em protocolo, formato e semântica. ``Dados móveis gamificados'' corresponde aos registros produzidos pela participação ativa das pessoas, tratadas como sensores contextuais, por meio da aplicação de gamificação que consumirá o backend \cite{sagl2015}. Essa aplicação cliente integra o contexto do projeto, mas sua implementação e sua avaliação estão fora do recorte deste TCC.
+O cenário inicial é o Centro de Artes da UFPel, em cujas salas está prevista a disponibilização de sensores. As observações produzidas por esses dispositivos precisam ser relacionadas aos espaços, às condições externas, aos horários de uso e às pessoas que participam das atividades. O objetivo institucional é incentivar hábitos de uso consciente da energia, considerando o conforto, e não apenas acumular leituras. A integração dos dados constitui, portanto, uma condição para que regras e missões possam fazer sentido no contexto em que serão aplicadas.
 
-Antes de avaliar o efeito comportamental, uma mensagem duplicada não pode gerar duas medições ou recompensas; falhas não devem eliminar a evidência original; e mudanças externas não devem contaminar o domínio. Essas necessidades motivaram a evolução da proposta inicial para a plataforma PROBEN implementada.
+\section{Do cenário institucional ao problema de dados}
+Uma leitura de temperatura, isoladamente, informa pouco sobre uma ação de eficiência energética. Para interpretá-la, pode ser necessário saber em qual sala foi obtida, quando ocorreu, se há atividade prevista naquele local, quais pessoas são elegíveis à atividade e qual condição ambiental externa serve de referência. A relevância do contexto na interpretação de observações técnicas e humanas é discutida por Sagl, Resch e Blaschke \cite{sagl2015}. No presente trabalho, essa relação é concretizada por vínculos entre medições, salas, dados acadêmicos, participação e regras configuráveis.
 
-% Inserção: contextualização discutida na revisão de 12/11/2026.
-O documento institucional do projeto de validação do sistema de gamificação, vinculado à Faculdade de Arquitetura e Urbanismo e ao Departamento de Tecnologia da Construção, estabelece como objetivo geral gerar mudanças de conduta dos usuários por meio da gamificação, favorecendo uma consciência mais sustentável na interação com o ambiente construído.\footnote{Descrição institucional do projeto, seção Geral, páginas 1--2, relatório emitido em 12 de novembro de 2026 e fornecido pelo autor.} O documento caracteriza a participação como voluntária, orientada por metas e comparação de resultados, com ou sem premiação. A intervenção busca conciliar atitudes favoráveis ao conforto e ao uso racional da energia.
+A diversidade das entradas acrescenta outro desafio. Modelos de sensores podem transmitir a mesma grandeza com nomes de campos e estruturas diferentes. Um dispositivo pode ser substituído durante a operação; uma fonte meteorológica pode atender várias salas; e uma mensagem pode chegar novamente após uma falha de comunicação. A infraestrutura precisa absorver essas diferenças sem transformar cada troca de dispositivo em uma mudança de toda a modelagem. Também deve evitar que a repetição de uma mensagem gere uma nova medição ou que a repetição do processamento gere uma nova recompensa.
 
-O projeto institucional abrange desenvolvimento de software, validação em laboratório e aplicação em uma edificação pública de ensino superior, com avaliação de engajamento e impacto no consumo. Esses objetivos delimitam o contexto da pesquisa, mas excedem o recorte deste TCC: a contribuição aqui avaliada é a infraestrutura de dados e serviços de backend necessária para integrar observações ambientais e registros de participação. Resultados de economia citados na justificativa institucional provêm de estudos anteriores e não constituem resultados da plataforma desenvolvida neste trabalho.
+As pessoas constituem outra origem de registros. A adesão a uma missão, a confirmação de presença e o progresso de uma atividade são dados de participação, distintos de observações físicas. A aplicação móvel que produzirá parte dessas interações é uma consumidora futura dos serviços desenvolvidos. O artefato deste TCC implementa a base para recebê-las e relacioná-las, sem incluir o desenvolvimento do cliente móvel nem a avaliação de mudanças comportamentais.
 
-O cenário inicial informado para o projeto é o Centro de Artes da UFPel, em cujas salas está prevista a disponibilização de sensores. O objetivo da intervenção gamificada é a educação para o uso consciente da energia: incentivar a construção de hábitos por meio de participação, missões e retorno ao usuário, considerando o conforto dos ocupantes. A comprovação desses efeitos depende de estudo de campo posterior.
+O título deste trabalho expressa esse recorte. ``Multi-estruturado'' designa, aqui, a coexistência de mensagens documentais, entidades relacionais, séries de medições e registros de gamificação. ``Dados móveis gamificados'' é uma delimitação operacional dos registros de participação previstos para a aplicação móvel; não é proposto como uma nova categoria científica. ``Fontes heterogêneas'' abrange as diferenças de origem, estrutura e significado entre sensores, serviços externos e registros das pessoas.
 
-O problema de dados reúne fontes de naturezas distintas. Sensores fornecem observações ambientais; pessoas participam de atividades e produzem registros de adesão, presença e progresso; fontes externas fornecem contexto compartilhado. Pessoas são participantes e fontes de dados, enquanto missões são estruturas que organizam e relacionam essas atividades. A modelagem deve permitir diferentes modelos de sensores e sua substituição, sem exigir que cada formato externo redefina as entidades de domínio.
+\section{Questão de pesquisa e objetivos}
+A questão investigada é: \emph{como projetar uma infraestrutura de dados que integre observações ambientais heterogêneas e registros de participação, preserve sua rastreabilidade e sustente análises e mecanismos de gamificação da eficiência energética?}
 
-A temperatura externa integra esse contexto por permitir relacionar condições internas e externas às estratégias de conforto térmico adaptativo previstas no projeto. A infraestrutura deve disponibilizar essas observações para regras e missões contextualizadas. A equação, a norma aplicável e as condições de uso do modelo de conforto dependem da especificação da intervenção; não se presume que qualquer ambiente climatizado satisfaça automaticamente suas condições de aplicação.
+O objetivo geral é projetar, implementar e examinar uma arquitetura de dados e serviços que responda a essa questão no contexto do PROBEN. Os objetivos específicos são:
+\begin{enumerate}
+\item caracterizar as fontes e as relações entre sensores, espaços, pessoas e atividades;
+\item estabelecer formas de preservar mensagens originais e representar medições padronizadas;
+\item implementar comunicação por Hypertext Transfer Protocol (HTTP), por requisição e resposta, e por MQTT, com publicação e assinatura de mensagens, tratando repetição e conflito;
+\item permitir a configuração de formatos e modelos de sensores por perfis de integração;
+\item integrar fontes ambientais compartilhadas e informações acadêmicas à interpretação das medições;
+\item oferecer interfaces de consulta e administração, agregação temporal e avaliação de missões e regras de ambiente;
+\item relacionar evidências, atividades e pontos com mecanismos de idempotência e recuperação;
+\item examinar as decisões por inspeção do artefato, cenários de testes e análise crítica das evidências de execução disponíveis.
+\end{enumerate}
 
-O recorte deste TCC é a infraestrutura de dados e serviços que dará suporte à aplicação de gamificação. Sua evolução e replicação em outras unidades são objetivos de projeto, apoiados por componentes separados e integrações configuráveis, mas não constituem resultados de escalabilidade comprovados sob carga.
+\section{Escopo, contribuição e organização}
+A contribuição é uma infraestrutura em que formatos de entrada podem variar, enquanto as relações necessárias à análise e à gamificação permanecem explicitamente modeladas. O trabalho articula persistência poliglota, integração configurável, contexto compartilhado e processamento rastreável. A possibilidade de expansão institucional orienta essas decisões, mas sua comprovação exige medições de carga e operação em outros ambientes.
 
-\section{Problema e objetivos}
-O problema investigado é: \emph{como projetar e implementar uma arquitetura que integre telemetria heterogênea e dados de participação dos usuários, preserve rastreabilidade e forneça dados confiáveis para análise e gamificação da eficiência energética?}
+A avaliação se concentra nas propriedades do software. Economia de energia, adesão sustentada e conforto percebido dependem de uma intervenção posterior com ocupantes e instrumentos de medição apropriados. Essa separação mantém a contribuição verificável e evita tomar a existência de pontos ou de uma condição térmica calculada como comprovação de benefício ambiental.
 
-O objetivo geral é projetar, implementar e avaliar essa arquitetura de backend. Os objetivos específicos são: identificar requisitos; definir persistência para eventos brutos e dados canônicos; implementar REST e MQTT com idempotência e reprocessamento; transformar formatos externos; oferecer API e console; integrar medições, participação, missões e XP sem duplicação; e avaliar o artefato por testes e experimento de desempenho. A futura aplicação de gamificação é consumidora prevista da API, não um produto desenvolvido neste trabalho.
+O Capítulo~\ref{cap:fundamentos} apresenta os conceitos necessários para acompanhar o percurso dos dados. O Capítulo~\ref{cap:relacionados} relaciona esses conceitos a estudos de integração e gamificação. O Capítulo~\ref{cap:metodo} descreve o método e as fontes de evidência. O Capítulo~\ref{cap:desenvolvimento} acompanha os dados da origem ao uso, explicitando desafios e decisões. O Capítulo~\ref{cap:avaliacao} examina o alcance das evidências, e o Capítulo~\ref{cap:conclusao} sintetiza a contribuição e suas possibilidades de continuidade.
 
-\section{Contribuições e organização}
-As contribuições são uma arquitetura que separa bruto, canônico, análise e gamificação; idempotência em múltiplas fronteiras; catálogo configurável de integrações; processamento recuperável por \emph{claim}, \emph{lease} e repetição; e evidências funcionais e de desempenho. Os capítulos seguintes apresentam fundamentação, trabalhos relacionados, método, implementação, avaliação e conclusão.
+\chapter{Fundamentação Teórica}\label{cap:fundamentos}
+O problema investigado reúne três necessidades: interpretar observações de origens distintas, armazená-las segundo suas características e utilizá-las em decisões contextualizadas. Este capítulo apresenta os conceitos que dão suporte a essas necessidades. A discussão parte das fontes, passa por comunicação e persistência e chega ao tratamento temporal e ao uso das informações em gamificação.
 
-\chapter{Fundamentação Teórica}
-\section{IoT, heterogeneidade e canonicalização}
-IoT combina sensoriamento, comunicação e computação distribuída \cite{gubbi2013}. MQTT usa publicação--assinatura e níveis de qualidade de serviço. No QoS 1, a entrega é ``pelo menos uma vez'', de modo que duplicatas podem ocorrer; o \texttt{PUBACK} transfere ao receptor a responsabilidade pela mensagem, mas não comprova que canonicalização, agregação ou concessão de XP tenham terminado \cite{oasisMqtt2019}. Por isso, a identidade idempotente da aplicação não pode depender apenas do identificador de pacote MQTT. Fontes também podem expressar a mesma grandeza com nomes e estruturas distintas. Um modelo canônico desacopla produtores dos consumidores, enquanto a retenção bruta temporária sustenta auditoria e reprocessamento dentro do prazo configurado \cite{probenMongo2026}.
+\section{Observações ambientais e participação humana}
+\emph{Internet of Things} (IoT), ou Internet das Coisas, relaciona objetos físicos, sensoriamento e comunicação para disponibilizar observações e serviços. Gubbi et al. \cite{gubbi2013} e Al-Fuqaha et al. \cite{alfuqaha2015} discutem seus elementos arquiteturais e tecnologias de comunicação. Para este TCC, o ponto relevante é a separação entre a grandeza observada e a maneira como cada dispositivo a transmite.
 
-\subsection{Comunicação por HTTP, REST e MQTT}
-HTTP (\emph{Hypertext Transfer Protocol}) é um protocolo de aplicação baseado em requisições e respostas: um cliente solicita uma operação e um servidor responde com um estado e, quando pertinente, uma representação dos dados.\footnote{Especificação: \url{https://www.rfc-editor.org/rfc/rfc9110}.} No PROBEN, interfaces HTTP permitem enviar medições, consultar informações e operar recursos administrativos.
+O valor de uma observação depende de contexto espacial, temporal e de sua origem. Sagl, Resch e Blaschke \cite{sagl2015} discutem a integração de informações produzidas por sensores técnicos e por pessoas. Essa perspectiva sustenta a inclusão de registros humanos como fonte complementar, preservando sua natureza: uma pessoa declarar participação não equivale a um sensor medir energia. No PROBEN, a distinção orienta a modelagem de presença, adesão, atividade e medição.
 
-REST (\emph{Representational State Transfer}) é um estilo arquitetural, e não um protocolo de comunicação. Ele define restrições como separação entre cliente e servidor, interface uniforme e requisições autossuficientes em relação ao contexto da interação.\footnote{Definição original: \url{https://ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm}.} Neste trabalho, a expressão API REST designa as interfaces HTTP organizadas em torno dos recursos da aplicação; não representa uma auditoria de conformidade de todas as restrições REST.
+\section{Comunicação e interpretação de formatos}
+\emph{Hypertext Transfer Protocol} (HTTP) é um protocolo de aplicação baseado em requisições e respostas. Ele permite que clientes submetam dados e consultem recursos em um servidor \cite{http2022}. \emph{Application Programming Interface} (API) é a interface por meio da qual uma aplicação disponibiliza operações a outras. No trabalho, a API oferece os serviços de recebimento, configuração e consulta.
 
-MQTT é um protocolo de mensageria baseado em publicação e assinatura. Produtores publicam mensagens em tópicos de um intermediário, denominado \emph{broker}, e consumidores assinam os tópicos de interesse \cite{oasisMqtt2019}. No PROBEN, essa entrada permite receber telemetria sem exigir uma requisição HTTP por leitura. O uso de MQTT 5 com QoS 1 admite reentrega, razão pela qual a aplicação precisa tratar duplicatas.
+\emph{Representational State Transfer} (REST) é um estilo arquitetural definido por restrições como separação entre cliente e servidor, comunicação sem estado de sessão no servidor e interface uniforme \cite{fielding2000}. Assim, HTTP é o protocolo empregado e REST descreve uma orientação de organização das interfaces. O emprego de rotas HTTP, por si só, não demonstra atendimento integral a todas as restrições REST.
 
-A coexistência de HTTP e MQTT amplia as opções de comunicação, mas não garante compatibilidade automática com qualquer sensor. A integração de um novo modelo também depende do formato, das grandezas e dos identificadores enviados, tratados por tipos, parâmetros e perfis de mapeamento configuráveis.
+MQTT é um protocolo de mensageria baseado em publicação e assinatura. Um produtor publica mensagens em tópicos de um intermediário, o \emph{broker}, e consumidores recebem as mensagens dos tópicos assinados. A especificação define níveis de \emph{Quality of Service} (QoS), isto é, qualidade do serviço de entrega. Em QoS~1, a entrega é de pelo menos uma vez e admite duplicatas \cite{oasisMqtt2019}. Essa garantia de transporte não demonstra a conclusão das operações de domínio, como registrar uma medição ou atribuir pontos.
 
-\section{Persistência poliglota}
-Bancos relacionais oferecem esquema, integridade referencial e transações. Bancos de documentos acomodam estruturas variáveis. A literatura recomenda escolher mecanismos conforme acesso, consistência e evolução, em vez de assumir uma tecnologia universal \cite{stonebraker2005,grolinger2013,gessert2017}. No PROBEN, MongoDB preserva temporariamente eventos brutos de formatos variáveis, enquanto PostgreSQL mantém relações entre sensores, espaços, pessoas, missões, agregados e recompensas. A escolha decorre dessas necessidades complementares de flexibilidade e integridade, e não apenas da existência de diferentes protocolos. A troca de modelos de sensores depende também dos perfis de integração e da padronização das medições; persistência poliglota, isoladamente, não garante interoperabilidade nem escalabilidade.
+O formato dos dados constitui uma dimensão diferente do protocolo. \emph{JavaScript Object Notation} (JSON) é um formato textual de representação de dados \cite{json2017}. Dois produtores podem usar JSON e ainda assim representar temperatura em campos diferentes. A transformação para uma representação comum, denominada modelo canônico neste trabalho, procura estabilizar a interpretação usada pelas etapas seguintes. Sua realização depende de identificadores, tipos, unidades e mapeamentos explícitos, e não apenas da adoção do mesmo protocolo.
 
-\section{Fluxos, idempotência e janelas}
-Fluxos de sensores são ilimitados e podem chegar fora de ordem. O processamento deve explicitar tempo do evento, janelas e gatilhos \cite{akidau2015}. Intervalos semiabertos evitam dupla contagem nas fronteiras. Idempotência permite repetir operações sem multiplicar efeitos. Workers reservam itens atomicamente, usam \emph{lease} temporário e recuperam trabalho após falhas.
+\section{Persistência poliglota e integridade}
+\emph{Polyglot persistence}, ou persistência poliglota, corresponde ao uso de diferentes mecanismos de armazenamento para diferentes finalidades em uma mesma aplicação. Grolinger et al. \cite{grolinger2013} discutem explicitamente o conceito ao revisar bancos não relacionais e suas possibilidades de uso. Gessert et al. \cite{gessert2017} relacionam a escolha de armazenamento aos requisitos funcionais e não funcionais. Esses estudos permitem fundamentar a escolha pelos dados e operações esperados.
 
-\section{Gamificação e energia}
-Gamificação emprega elementos de jogos em contextos não lúdicos \cite{deterding2011}. Pontos e rankings não bastam: autonomia, competência e relacionamento influenciam a motivação \cite{ryan2000}. Estudos empíricos são majoritariamente positivos, mas dependem do contexto \cite{hamari2014}. Para software gamificado, recomenda-se analisar contexto e usuários, definir objetivos, projetar e avaliar iterativamente \cite{morschheuser2018}. A plataforma oferece missões auditáveis, mas não presume que XP equivale a economia.
+No problema deste TCC, mensagens originais podem ter estruturas variáveis e precisam permanecer disponíveis para inspeção e nova interpretação durante um período. Pessoas, salas, medições, regras e recompensas, por sua vez, estabelecem relações que exigem integridade. Essa diferença motiva a combinação entre armazenamento documental e relacional. Não decorre, entretanto, que um banco relacional seja incapaz de guardar documentos, nem que dois bancos sejam necessariamente superiores a um. A decisão introduz o custo adicional de coordenar estados e preservar referências entre os armazenamentos.
 
-No contexto da plataforma, a pessoa também funciona como fonte de dados: sua participação na aplicação cliente poderá produzir registros de adesão a missões, atividades, feedback e progresso. Esses dados móveis complementam a observação dos sensores ambientais. O backend implementado modela identidades, ocorrências, atividades e lançamentos de XP necessários a essa integração, embora a interface móvel que originará parte das interações permaneça externa ao artefato avaliado.
+\section{Tempo, repetição e recuperação do processamento}
+O instante em que uma observação ocorre pode diferir daquele em que é recebida ou processada. Akidau et al. \cite{akidau2015} mostram a importância dessa distinção para fluxos não limitados e fora de ordem, relacionando tempo do evento, janelas e resultados. Neste trabalho, essas ideias fundamentam a necessidade de explicitar intervalos e políticas de atraso; não implicam adoção integral do modelo Dataflow.
 
-\section{Segurança e observabilidade}
-IoT amplia desafios de autenticação, autorização, integridade e privacidade \cite{roman2013}. A plataforma usa JWT e papéis; o serviço de telemetria não acessa o PostgreSQL. Correlação, estados e métricas permitem observar pipelines assíncronos, sem registrar segredos, dados pessoais ou payloads integrais \cite{probenSeguranca2026,probenObservabilidade2026}.
+Idempotência significa que repetir uma operação não multiplica seu efeito esperado. A semântica de métodos idempotentes é descrita para HTTP em sua especificação \cite{http2022}; no PROBEN, a propriedade também é implementada no domínio por identidades e restrições de unicidade. Uma tentativa repetida com o mesmo conteúdo pode ser reconhecida; conteúdo diferente sob a mesma identidade deve ser tratado como conflito.
 
-\chapter{Trabalhos Relacionados}
-Orland et al. \cite{orland2014} conectaram cargas de tomada monitoradas a um jogo em escritório e relataram redução média de 13\% em relação à linha de base dessas cargas. Morganti et al. \cite{morganti2017} incluíram dez estudos em sua revisão e encontraram potencial, porém evidência ainda limitada. Oppong-Tawiah et al. \cite{oppong2020} aplicaram cinco ciclos de projeto a um aplicativo que monitorava equipamentos. Iria et al. \cite{iria2020} combinaram painéis, competição e mensagens; os resultados da demonstração indicaram economia de 20\%. Beck et al. \cite{beck2019}, analisando 57 aplicativos, observaram subutilização de teoria comportamental. Esses resultados justificam investigar a infraestrutura necessária à intervenção, mas não são transferidos como estimativa de economia para o PROBEN.
+Um processamento assíncrono também precisa distinguir trabalho reservado de trabalho concluído. Neste texto, \emph{claim} designa a reserva atômica de um item e \emph{lease}, a concessão temporária dessa reserva. Ao expirar, ela permite a retomada por outro executor. São mecanismos concretos do artefato, cuja implementação e cenários de verificação serão discutidos adiante; sua presença não garante recuperação sob qualquer falha distribuída.
 
-\begin{table}[htb]\centering\small
-\begin{tabular}{|p{2.6cm}|p{3.2cm}|p{3.2cm}|p{3.2cm}|}\hline
-\textbf{Trabalho} & \textbf{Objeto descrito} & \textbf{Mecanismos pertinentes} & \textbf{Limite da comparação} \\ \hline
-Orland et al. & Intervenção com jogo e cargas monitoradas & Medição, linha de base e retorno ao usuário & Avalia comportamento; não detalha uma arquitetura reproduzível de ingestão. \\ \hline
-Oppong-Tawiah et al. & Aplicativo sustentável desenvolvido em cinco ciclos & DSR, monitoramento de equipamentos e interação & Não permite determinar idempotência ou reprocessamento. \\ \hline
-Iria et al. & Plataforma de gamificação para escritório & Medição real, painéis, competição e mensagens & Proveniência e consistência distribuída não são o objeto da avaliação. \\ \hline
-Grolinger et al. & Levantamento de bancos NoSQL e NewSQL & Seleção por modelo, escalabilidade e consistência & Orienta a persistência, mas não propõe o pipeline PROBEN. \\ \hline
-Akidau et al. & Modelo de processamento de fluxos não limitados & Tempo do evento, janelas, gatilhos e atraso & Fundamenta a semântica temporal; não trata gamificação. \\ \hline
-\end{tabular}\caption{Síntese comportamental e arquitetural dos trabalhos relacionados}\label{tab:relacionados}\end{table}
+\section{Gamificação e uso consciente da energia}
+Gamificação utiliza elementos de projeto de jogos em contextos que não são jogos \cite{deterding2011}. No domínio energético, ela pode combinar metas, retorno sobre comportamento e participação. Morschheuser et al. \cite{morschheuser2018} propõem um método de desenvolvimento que considera análise do contexto e avaliação iterativa. Oppong-Tawiah et al. \cite{oppong2020} exemplificam essa relação em uma aplicação voltada a práticas sustentáveis no escritório.
 
-A Tabela \ref{tab:relacionados} separa mecanismo descrito, mecanismo avaliado e aspecto que a fonte não permite determinar. Essa distinção evita interpretar ausência de descrição como ausência de implementação. A lacuna explorada pelo TCC está na combinação, em um artefato, de retenção bruta delimitada, canonicalização configurável, agregação recuperável e efeitos idempotentes entre evidência, interpretação, evento e recompensa. A contribuição é de engenharia de dados; a efetividade comportamental permanece uma pergunta experimental posterior.
+Para o PROBEN, a relevância está em permitir que uma atividade seja contextualizada e que o participante compreenda o retorno recebido. Pontos são uma representação de progresso, não uma medida física de energia. O projeto institucional pretende favorecer mudanças voluntárias de conduta; o presente artefato fornece os serviços e registros para essa intervenção, mantendo separadas as condições de avaliação técnica e as de avaliação comportamental.
 
-\chapter{Metodologia}
-O trabalho adota Ciência do Projeto, na qual conhecimento é produzido pela construção e avaliação de artefatos relevantes \cite{hevner2004,gregor2013}. O processo foi organizado pelas seis atividades de Peffers et al. \cite{peffers2007}. A Tabela \ref{tab:dsr-execucao} explicita como essas atividades ocorreram, evitando apresentar o método apenas como uma sequência abstrata.
+\section{Conforto térmico adaptativo como requisito de contexto}
+O conforto térmico adaptativo relaciona condições internas às expectativas e à experiência térmica dos ocupantes. De Dear e Brager \cite{deDear2002} apresentam resultados e uma proposta para ambientes naturalmente ventilados, ressaltando o papel das condições externas. Esse fundamento explica por que a temperatura externa pode ser relevante para interpretar uma sala, além da medição interna.
 
-\begin{table}[htb]\centering\small
-\begin{tabular}{|p{2.7cm}|p{5.2cm}|p{5.0cm}|}\hline
-\textbf{Atividade DSR} & \textbf{Execução no projeto} & \textbf{Evidência produzida} \\ \hline
-Identificação do problema & Análise do objetivo institucional e dos riscos de integrar sensores heterogêneos a missões: duplicação, perda da origem, evolução de formato e efeitos repetidos. & Questão de pesquisa e requisitos arquiteturais. \\ \hline
-Definição dos objetivos & Conversão dos riscos em propriedades observáveis: preservação delimitada, canonicalização, idempotência, recuperabilidade, rastreabilidade e autorização. & Objetivos da Seção 1.2 e critérios da avaliação. \\ \hline
-Projeto e desenvolvimento & Construção incremental dos módulos Telemetry, API e Admin, das migrations e dos contratos REST/MQTT. & Código, esquema, documentação e diagramas. \\ \hline
-Demonstração & Exercício dos fluxos de ingestão, consulta, missão e operação por testes automatizados e roteiro HTTP. & Classes de teste, relatório de testes de sanidade e exemplos de fluxo. \\ \hline
-Avaliação & Inspeção de restrições e cenários automatizados; análise do relatório operacional; benchmark dos motores de regras. & Matriz propriedade--evidência e resultados do Capítulo 6. \\ \hline
-Comunicação & Consolidação das decisões, limitações e instruções de reprodução. & Este TCC e documentos técnicos versionados. \\ \hline
-\end{tabular}\caption{Correspondência entre a DSR e as atividades executadas}\label{tab:dsr-execucao}\end{table}
+O conceito não autoriza aplicar uma mesma equação indistintamente a qualquer ambiente climatizado. Para o TCC, importa distinguir a hipótese de domínio, a regra calculada no software e a avaliação real do conforto. O primeiro aspecto é fundamentado na literatura; o segundo depende da implementação e dos dados; o terceiro requer critérios de aplicabilidade e estudo de campo. A infraestrutura desenvolvida atua principalmente no segundo aspecto.
 
-Os requisitos não foram obtidos por entrevistas ou por um protocolo formal com usuários finais. Eles foram reconstruídos a partir do objetivo do projeto institucional, da evolução do artefato e de falhas plausíveis do pipeline. Consequentemente, a avaliação responde se a arquitetura implementa propriedades técnicas selecionadas; ela não valida usabilidade, motivação ou redução de consumo. Os ciclos foram incrementais: a separação entre bruto e canônico antecedeu a inclusão de perfis versionados; em seguida foram introduzidos processamento com \emph{claim}/\emph{lease}, agregação e, por fim, ocorrências, atividades e ledger de XP. O histórico Git e as migrations registram essa evolução, mas não foi mantido um diário experimental que permita atribuir cada mudança a uma sessão formal de avaliação.
+\chapter{Trabalhos Relacionados}\label{cap:relacionados}
+A literatura pertinente ao trabalho pode ser organizada em duas perspectivas complementares: intervenções que utilizam dados para incentivar comportamentos e soluções que tratam a integração e o processamento desses dados. Esta comparação procura identificar o que cada perspectiva informa à construção do artefato, sem supor que estudos com objetivos diferentes devam apresentar os mesmos mecanismos técnicos.
 
-A revisão de literatura foi narrativa, orientada por aderência ao problema, publicações revisadas por pares, DOI e fontes primárias para normas. O Qualis foi consultado apenas como informação auxiliar sobre veículos, pois sua unidade de avaliação, ciclo e critérios não substituem relevância temática nem constituem um protocolo reproduzível de busca \cite{capesQualis2023}. Assim, este trabalho não reivindica revisão sistemática nem exaustividade.
+\section{Dados e participação em intervenções energéticas}
+Orland et al. \cite{orland2014} investigam uma intervenção com jogo em ambiente de escritório, conectando consumo monitorado e participação. Sua relevância para este TCC é a associação entre evidências do ambiente e retorno aos usuários. Os resultados de uma intervenção concreta dependem das cargas e dos participantes estudados, não sendo uma previsão de economia para outra plataforma.
 
-\section{Delimitação do artefato e protocolo de avaliação}\label{sec:protocolo-avaliacao}
-A versão de referência do artefato técnico é o commit \texttt{141db8ccbf63cf3896344fbb90197dfae3618691}, de 2 de novembro de 2026, do backend da plataforma PROBEN. Nesse commit, o repositório e os módulos ainda usavam os identificadores legados \texttt{PROCEL-Back-End}, \texttt{Procel-API}, \texttt{Procel-Telemetry} e \texttt{Procel-Admin}; eles são mantidos nos comandos, caminhos e URLs necessários à reprodução. Evidências posteriores ou oriundas de alterações locais não integram a avaliação. Para cada propriedade, foram procurados quatro tipos de evidência: restrição de armazenamento, cenário automatizado com oráculo explícito, relatório de execução e observação operacional. A presença de código ou de uma anotação \texttt{@Test}, isoladamente, não foi tratada como resultado.
+Oppong-Tawiah et al. \cite{oppong2020} descrevem o desenvolvimento de uma aplicação móvel em cinco ciclos de projeto, combinando acompanhamento de uso de eletricidade e estratégias de engajamento. A relação mais direta com este trabalho é a necessidade de articular construção do sistema e avaliação. O objeto aqui delimitado, contudo, é a infraestrutura de dados que antecede a intervenção móvel.
 
-Os módulos Java podem ser exercitados, a partir da raiz do repositório técnico, com \path{.\Procel-API\mvnw.cmd -f Procel-API/pom.xml test} e \path{.\Procel-Telemetry\mvnw.cmd -f Procel-Telemetry/pom.xml test}; os testes de integração usam Testcontainers para PostgreSQL, MongoDB e HiveMQ. O roteiro de testes de sanidade é executado separadamente contra um ambiente implantado. O benchmark usa o perfil \texttt{drools-benchmark}, com o comando registrado no documento de decisão técnica.
+Iria et al. \cite{iria2020} apresentam uma plataforma para eficiência energética em escritórios que utiliza informação de contexto, painéis e estratégias de participação. A comparação destaca o papel da informação ambiental na comunicação com o usuário. Neste TCC, essa necessidade leva a representar explicitamente fontes locais e externas e os vínculos entre dados e decisões.
 
-O equipamento informado como utilizado nas execuções locais foi inspecionado em 2 de novembro de 2026: Windows 11 Pro de 64 bits, versão 10.0.26300 (build 26300); processador Intel Core i5-11300H a 3,10 GHz, com quatro núcleos e oito processadores lógicos; e 16 GB de memória RAM. O ambiente do projeto aponta, por \texttt{JAVA\_HOME}, para OpenJDK Temurin 21.0.10+7 de 64 bits; o Docker Engine identificado é a versão 28.5.2. Como o executável \texttt{java} disponível primeiro no \texttt{PATH} pertence ao Java 8, a reprodução deve conferir \texttt{JAVA\_HOME} e a saída de \texttt{java -version} usada pelo Maven antes da execução. Versões de software observadas posteriormente podem diferir das presentes na data original de cada relatório.
+Esses trabalhos fundamentam a relevância de integrar medição e participação. Eles não fornecem, apenas pela descrição desses mecanismos, evidência de que o PROBEN evita duplicatas ou recupera uma tarefa interrompida. Essas propriedades precisam ser examinadas no artefato desenvolvido.
 
-A avaliação considerou correção funcional, integridade, interoperabilidade, recuperabilidade, segurança e desempenho. O relatório técnico do próprio projeto não constitui auditoria independente; o relatório de testes de sanidade antecede o commit de referência; e os testes automatizados não representam carga de produção, indisponibilidade prolongada ou todos os entrelaçamentos possíveis de concorrência.
+\section{Representação e processamento dos dados}
+Grolinger et al. \cite{grolinger2013} fornecem uma visão das possibilidades e desafios de bancos com diferentes modelos. Gessert et al. \cite{gessert2017} apresentam orientação de seleção conforme requisitos. Sua contribuição ao TCC está em deslocar a decisão de armazenamento do nome da tecnologia para as operações necessárias. O artefato utiliza essa perspectiva para separar preservação documental e relações de domínio, assumindo o custo de integração entre elas.
 
-\chapter{Arquitetura e Desenvolvimento}
-\section{Visão geral}
-O \texttt{Proben-Telemetry} recebe REST/MQTT e é proprietário do MongoDB; o \texttt{Proben-API} mantém autenticação, domínio, análise e gamificação no PostgreSQL; e o \texttt{Proben-Admin} oferece console React \cite{probenReadme2026}.
+Akidau et al. \cite{akidau2015} abordam o processamento de dados não limitados e fora de ordem, discutindo compromissos entre correção, latência e custo. O PROBEN emprega uma solução mais restrita: janelas persistidas, agregação de medições existentes e recomputação explícita. A comparação torna visíveis tanto a inspiração conceitual quanto a ausência de mecanismos mais amplos de atualização automática de resultados diante de atrasos.
 
-\begin{figure}[htb]\centering
-\resizebox{\textwidth}{!}{%
-\begin{tikzpicture}[
- component/.style={draw, rounded corners, align=center, minimum width=4.1cm, minimum height=1.25cm, font=\scriptsize},
- store/.style={draw, cylinder, shape border rotate=90, aspect=0.25, align=center, minimum width=2.6cm, minimum height=1.25cm, font=\scriptsize},
- actor/.style={draw, dashed, rounded corners, align=center, minimum width=2.8cm, minimum height=9mm, font=\scriptsize},
- flow/.style={-{Stealth[length=2mm]}, thick},
- bi/.style={{Stealth[length=2mm]}-{Stealth[length=2mm]}, thick},
- note/.style={font=\tiny, align=center, fill=white, inner sep=1pt}
-]
-\node[actor] at (0,2.5) (devices) {sensores, gateways\\e produtores externos};
-\node[component] at (5,2.5) (telemetry) {\textbf{Proben-Telemetry}\\receber REST/MQTT; reter bruto;\\deduplicar, reprocessar e operar filas};
-\node[store] at (10,2.5) (mongo) {\textbf{MongoDB}\\eventos brutos\\e histórico};
-
-\node[actor] at (-4,0) (users) {administrador, operador,\\analista e usuário};
-\node[component] at (0,0) (admin) {\textbf{Proben-Admin}\\configurar, operar e consultar};
-
-\node[actor] at (0,-2.5) (canonical) {clientes canônicos\\ADMIN/INGESTOR};
-\node[component] at (5,-2.5) (api) {\textbf{Proben-API}\\autenticar; canonicalizar; qualificar;\\agregar; avaliar missões e conceder XP};
-\node[store] at (10,-2.5) (pg) {\textbf{PostgreSQL}\\domínio, regras,\\análise e gamificação};
-
-\draw[flow] (devices) -- (telemetry);
-\draw[flow] (telemetry) -- (mongo);
-\draw[flow] (users) -- (admin);
-\draw[bi] (admin.north east) -- (telemetry.south west);
-\draw[bi] (admin.south east) -- (api.north west);
-\draw[flow] (canonical) -- (api);
-\draw[flow] (api) -- (pg);
-\draw[flow] ([xshift=2mm]telemetry.south) -- ([xshift=2mm]api.north);
-\draw[flow] ([xshift=-2mm]api.north) -- ([xshift=-2mm]telemetry.south);
-\end{tikzpicture}}
-\caption{Arquitetura do PROBEN, objetivos dos componentes e relações}
-\label{fig:arquitetura-proben}
-\end{figure}
-
-A Figura \ref{fig:arquitetura-proben} explicita quatro relações principais. Primeiro, produtores enviam mensagens ao \texttt{Proben-Telemetry}, cujo objetivo é aceitar heterogeneidade sem perder a evidência original; a gravação no MongoDB antecede o ACK sempre que o protocolo exige confirmação. Segundo, o worker recupera eventos, consulta na API o snapshot dos perfis e parsers e envia o resultado para a rota interna com JWT curto de \texttt{TELEMETRY\_SERVICE}. Terceiro, o \texttt{Proben-API} transforma a entrada em medições canônicas, aplica regras, produz agregados e relaciona eventos de missão a atividades e XP, persistindo o estado transacional no PostgreSQL. Quarto, pessoas operam o sistema por meio do \texttt{Proben-Admin}, que consome as duas APIs com o JWT do usuário; clientes autorizados também podem enviar dados já canônicos diretamente à API. A futura aplicação móvel ocupará essa fronteira de cliente: consumirá missões e recompensas e enviará interações das pessoas como sensores, sem acesso direto aos bancos.
-
-O limite de propriedade é deliberado: \texttt{Proben-Telemetry} não acessa o PostgreSQL, e \texttt{Proben-API} não altera o documento bruto. MongoDB responde por preservação e reprocessamento; PostgreSQL, por integridade referencial e efeitos de domínio. Essa separação permite repetir a transformação sem reescrever a evidência e impede que uma retransmissão técnica gere uma segunda medição ou recompensa.
-
-\section{Console de administração}
-
-O \texttt{Proben-Admin} materializa a camada operacional da arquitetura. As Figuras~\ref{fig:console-medicoes}--\ref{fig:console-missao} apresentam três exemplos do ambiente implantado: inspeção de medições e sua qualificação, configuração das regras aplicadas aos parâmetros dos sensores e definição de uma missão com recompensa. As capturas foram produzidas antes da renomeação e, por isso, ainda exibem ``PROCEL Console''; as funcionalidades representadas correspondem aos mesmos componentes atualmente denominados PROBEN. As imagens demonstram a correspondência entre a interface e os elementos do modelo, mas não substituem os testes funcionais discutidos no Capítulo 6 nem constituem uma avaliação de usabilidade.
-
-\begin{figure}[htb]
-\centering
-\includegraphics[width=\textwidth,trim=0 0 0 75,clip]{imagens/screenshots-do-PROCEL/Screenshot_2.png}
-\caption{Console de administração: medições recebidas por MQTT e resultados de qualificação}
-\label{fig:console-medicoes}
-\end{figure}
-
-\begin{figure}[htb]
-\centering
-\includegraphics[width=\textwidth]{imagens/screenshots-do-PROCEL/Screenshot_4.png}
-\caption{Console de administração: definição de grupos e regras de qualificação}
-\label{fig:console-regras}
-\end{figure}
-
-\begin{figure}[htb]
-\centering
-\includegraphics[width=\textwidth]{imagens/screenshots-do-PROCEL/Screenshot_7.png}
-\caption{Console de administração: edição de missão e recompensa em XP}
-\label{fig:console-missao}
-\end{figure}
-
-\clearpage
-
-\section{Perfis de usuário e controle de acesso}
-
-O controle de acesso segue o modelo RBAC (\emph{Role-Based Access Control}). A entidade \texttt{pessoa} concentra identidade, nome, e-mail, senha armazenada como \emph{hash}, telefone, matrícula e vínculo opcional com curso. Os papéis não são gravados como uma única coluna: a relação \texttt{pessoa} 1:N \texttt{pessoa\_role} permite que a mesma pessoa acumule responsabilidades, por exemplo \texttt{OPERADOR} e \texttt{ANALISTA}. Após a autenticação, esses papéis são incluídos no JWT e verificados nas rotas da API.
-
-\begin{table}[htb]\centering\small
-\begin{tabular}{|p{2.7cm}|p{3.0cm}|p{6.8cm}|}\hline
-\textbf{Papel} & \textbf{Natureza} & \textbf{Responsabilidades principais} \\ \hline
-ADMIN & usuário humano & Administração ampla: pessoas e papéis, integrações, contextos compartilhados, catálogo, telemetria, missões, eventos, regras e jobs analíticos. Também consulta métricas operacionais. \\ \hline
-OPERADOR & usuário humano & Operação cotidiana: cadastro e vínculo de sensores, sincronização de salas, grupos de regras, missões e criação ou acompanhamento de jobs, sem administrar credenciais e papéis globais. \\ \hline
-ANALISTA & usuário humano & Consulta de medições, agregados, jobs, missões e informações operacionais necessárias à análise, sem alterar configurações sensíveis. \\ \hline
-USUARIO & usuário humano & Funcionalidades de participante: autenticação, consulta do catálogo e de missões permitidas, atividades individuais, saldo e lançamentos de XP. \\ \hline
-INGESTOR & identidade técnica & Envio de medições canônicas ou por perfil de integração. Seu escopo reduzido evita conceder privilégios administrativos a produtores de dados. \\ \hline
-\texttt{TELEMETRY\_}\newline\texttt{SERVICE} & identidade técnica & Comunicação interna do \texttt{Proben-Telemetry} com o \texttt{Proben-API}, por JWT de curta duração, para canonicalizar eventos brutos previamente persistidos. \\ \hline
-\end{tabular}
-\caption{Perfis e identidades técnicas do controle de acesso}
-\label{tab:perfis-usuario}
+\begin{table}[htbp]\centering\small
+\caption{Relação entre a literatura e o problema investigado}\label{tab:relacionados}
+\begin{tabularx}{\textwidth}{p{3.1cm}YY}\toprule
+Estudo & Contribuição utilizada & Delimitação no TCC \\\midrule
+Orland et al.; Iria et al. & Relação entre informação ambiental e intervenção gamificada. & Infraestrutura de dados; efeitos comportamentais não avaliados. \\
+Oppong-Tawiah et al. & Desenvolvimento e avaliação iterativos em sustentabilidade. & Artefato de integração, sem cliente móvel. \\
+Grolinger et al.; Gessert et al. & Escolha de armazenamento conforme os requisitos. & Combinação documental e relacional, sem comparação experimental entre bancos. \\
+Akidau et al. & Tempo do evento, janelas e dados fora de ordem. & Janelas e recuperação persistidas, com política limitada de recomputação. \\\bottomrule
+\end{tabularx}
+\caption*{Fonte: síntese do autor a partir dos estudos citados no capítulo.}
 \end{table}
 
-A separação aplica o princípio do menor privilégio. O \texttt{USUARIO} participa da camada de gamificação, enquanto \texttt{ANALISTA} observa dados sem administrar o sistema; \texttt{OPERADOR} modifica configurações operacionais; e \texttt{ADMIN} mantém ações de maior impacto. As identidades técnicas não representam pessoas e não devem ser usadas para acesso interativo. Rotas públicas limitam-se à autenticação, cadastro habilitado, documentação e saúde; as demais combinam autenticação e autorização por papel. No domínio, uma pessoa pode relacionar-se a curso, disciplinas, presenças, atividades e lançamentos de XP, mas seu papel de segurança permanece independente desses vínculos acadêmicos. Assim, ser aluno ou beneficiário de uma missão não concede automaticamente privilégio administrativo.
+\section{Posicionamento da contribuição}
+A Tabela~\ref{tab:relacionados} mostra que a contribuição pretendida não é uma nova teoria de motivação nem um novo banco de dados. Ela está na articulação de mecanismos de integração em um problema institucional: permitir que uma observação heterogênea seja preservada, interpretada, contextualizada e relacionada a efeitos de gamificação de forma inspecionável. Trata-se de uma contribuição aplicada de projeto e desenvolvimento, cujo alcance depende da evidência apresentada para cada propriedade.
 
-\begin{figure}[htb]
-\centering
-\resizebox{0.92\textwidth}{!}{%
-\begin{tikzpicture}[
-  entity/.style={draw, rounded corners, align=left, inner sep=5pt, font=\scriptsize, minimum width=3.3cm},
-  rel/.style={-{Stealth[length=2mm]}, thick},
-  lbl/.style={font=\scriptsize, fill=white, inner sep=1pt}
-]
-\node[entity] (curso) {\textbf{CURSO}\\\underline{id} (PK)\\nome};
-\node[entity, right=1.4cm of curso] (pessoa) {\textbf{PESSOA}\\\underline{id} (PK)\\curso\_id (FK)\\nome, email, matricula\\password, created\_at};
-\node[entity, above right=0.6cm and 1.5cm of pessoa] (role) {\textbf{PESSOA\_ROLE}\\\underline{pessoa\_id + role} (PK)\\pessoa\_id (FK)\\role};
-\node[entity, right=1.5cm of pessoa] (atividade) {\textbf{ATIVIDADE}\\\underline{id} (PK)\\pessoa\_id (FK)\\missao\_id (FK)\\status, chave\_ciclo};
-\node[entity, below=1.1cm of atividade] (xp) {\textbf{XP\_LANCAMENTO}\\\underline{id} (PK)\\pessoa\_id (FK)\\atividade\_id (FK)\\quantidade, created\_at};
-\node[entity, below=1.1cm of pessoa] (presenca) {\textbf{PRESENCA}\\\underline{id} (PK)\\pessoa\_id (FK)\\compartimento\_id (FK)\\checkin/checkout\_at};
+\chapter{Metodologia}\label{cap:metodo}
+A organização da pesquisa procura relacionar o problema institucional às decisões de construção e à avaliação do artefato. Este capítulo explicita essa relação e define como interpretar as evidências utilizadas, distinguindo inspeção da implementação, cenários de teste e resultados de execuções anteriores.
 
-\draw[rel] (curso) -- node[lbl]{1:N} (pessoa);
-\draw[rel] (pessoa) -- node[lbl]{1:N} (role);
-\draw[rel] (pessoa) -- node[lbl]{1:N} (atividade);
-\draw[rel] (pessoa) -- node[lbl]{1:N} (xp);
-\draw[rel] (pessoa) -- node[lbl]{1:N} (presenca);
-\draw[rel] (atividade) -- node[lbl]{1:N} (xp);
-\end{tikzpicture}}
-\caption{Relações entre identidade, autorização e gamificação}
-\label{fig:der-usuarios}
-\end{figure}
+\section{Abordagem de pesquisa}
+O trabalho adota \emph{Design Science Research} (DSR), abordagem em que a construção e avaliação de artefatos se relacionam a problemas relevantes \cite{hevner2004}. As atividades de identificação do problema, definição de objetivos, desenvolvimento, demonstração, avaliação e comunicação seguem a organização de Peffers et al. \cite{peffers2007}. A aplicação do método ao TCC é apresentada na Tabela~\ref{tab:metodo}.
 
-A Figura \ref{fig:der-usuarios} mostra por que papel, contexto e recompensa são conceitos distintos. \texttt{pessoa\_role} autoriza operações; \texttt{curso} e \texttt{presenca} contextualizam a pessoa; \texttt{atividade} registra sua participação em uma missão; e \texttt{xp\_lancamento} forma o histórico imutável da recompensa, ligado simultaneamente à pessoa e à atividade que o originou.
-
-\section{Modelagem relacional do domínio de sensores}
-
-O modelo relacional foi organizado para separar três conceitos que, em mensagens de dispositivos, frequentemente aparecem misturados: o \emph{tipo} de equipamento, a \emph{observação} realizada em um instante e a \emph{interpretação} dessa observação. A Figura \ref{fig:der-sensores} apresenta esse núcleo. Ela foi reconstruída a partir das entidades JPA e das migrations Flyway atuais; campos secundários foram omitidos para preservar a legibilidade.
-
-\begin{figure}[htb]
-\centering
-\resizebox{\textwidth}{!}{%
-\begin{tikzpicture}[
-  entity/.style={draw, rounded corners, align=left, inner sep=5pt, font=\scriptsize, minimum width=3.4cm},
-  rel/.style={-{Stealth[length=2mm]}, thick}
-]
-\node[entity] at (0,4) (tipo) {\textbf{TIPO\_DE\_SENSOR}\\\underline{nome} (PK)};
-\node[entity] at (0,2) (sensor) {\textbf{SENSOR}\\\underline{external\_id} (PK)\\nome, ativo\\tipo\_nome (FK)\\compartimento\_id (FK)\\contexto\_compartilhado\_id (FK)};
-\node[entity] at (0,0) (sgr) {\textbf{SENSOR\_GRUPO\_REGRA}\\\underline{id} (PK)\\sensor\_external\_id (FK)\\grupo\_regra\_id (FK)\\status, valido\_de/ate};
-
-\node[entity] at (4.5,4) (pdef) {\textbf{PARAMETRO\_DEF}\\\underline{id} (PK)\\tipo\_nome (FK)\\nome, data\_type\\numeric\_unit, ativo};
-\node[entity] at (4.5,2) (med) {\textbf{MEDICAO}\\\underline{id} (PK)\\sensor\_external\_id (FK)\\timestamp, recebido\_em\\source};
-\node[entity] at (4.5,0) (grupo) {\textbf{GRUPO\_REGRA}\\\underline{id} (PK)\\nome, descricao, ativo};
-
-\node[entity] at (9,2) (pval) {\textbf{PARAMETRO\_VALOR}\\\underline{id} (PK)\\medicao\_id (FK)\\parametro\_def\_id (FK)\\numeric/boolean/text\_value};
-\node[entity] at (9,0) (regra) {\textbf{REGRA\_PARAMETRO}\\\underline{id} (PK)\\grupo\_regra\_id (FK)\\parametro\_def\_id (FK)\\operador, limiares\\resultado, severidade};
-\node[entity] at (13.5,0) (aval) {\textbf{AVALIACAO\_PARAMETRO\_VALOR}\\\underline{id} (PK)\\parametro\_valor\_id (FK)\\regra\_parametro\_id (FK)\\resultado, severidade\\mensagem, avaliado\_em};
-
-\draw[rel] (tipo) -- (sensor);
-\draw[rel] (tipo) -- (pdef);
-\draw[rel] (sensor) -- (med);
-\draw[rel] (med) -- (pval);
-\draw[rel] (pdef) -- (pval);
-\draw[rel] (sensor) -- (sgr);
-\draw[rel] (grupo) -- (sgr);
-\draw[rel] (grupo) -- (regra);
-\draw[rel] (pdef.north) -- ++(0,0.6) -| (11.1,0.7) -- (regra.north east);
-\draw[rel] (pval) -- (aval);
-\draw[rel] (regra) -- (aval);
-\end{tikzpicture}}
-\caption{DER do núcleo de sensores, regras e qualificação; todas as relações indicadas são 1:N}
-\label{fig:der-sensores}
-\end{figure}
-
-Os diagramas são deliberadamente divididos por domínio para manter as relações legíveis; eles não devem ser interpretados como inventários isolados de todo o banco. A inspeção das 32 migrations identificou 44 tabelas no PostgreSQL. Destas, 36 possuem classe JPA anotada com \texttt{@Entity}; as demais são tabelas associativas ou estruturas operadas diretamente por JDBC e coleções JPA. O MongoDB acrescenta a coleção documental \texttt{raw\_telemetry\_events}. A Tabela \ref{tab:catalogo-entidades} resume o inventário; nomes, chaves, retenção e produtores de cada estrutura constam no \emph{Catálogo de Dados} versionado \cite{probenCatalogo2026}.
-
-\begin{table}[htb]\centering\small
-\begin{tabular}{|p{3.2cm}|r|p{7.5cm}|}\hline
-\textbf{Domínio} & \textbf{Estruturas} & \textbf{Objetivo} \\ \hline
-Espacial e acadêmico & 11 & Localizar sensores e relacionar pessoas, turmas, aulas e ocupação. \\ \hline
-Sensores, valores e regras & 10 & Representar observações canônicas, idempotência e qualificação. \\ \hline
-Perfis de integração & 4 & Converter formatos externos de maneira versionada e configurável. \\ \hline
-Análise & 3 & Planejar janelas recuperáveis e armazenar agregados numéricos. \\ \hline
-Missões e gamificação & 11 & Transformar evidências em ocorrências, progresso e recompensas auditáveis. \\ \hline
-Contextos compartilhados & 5 & Reutilizar observações externas e controlar coleta, fonte e vigência. \\ \hline
-Telemetria bruta (MongoDB) & 1 & Reter payload, identidade, hash, estados, tentativas e histórico de reprocessamento. \\ \hline
-\end{tabular}
-\caption{Resumo das estruturas persistentes identificadas}
-\label{tab:catalogo-entidades}
+\begin{table}[htbp]\centering\small
+\caption{Atividades de pesquisa e sua realização no trabalho}\label{tab:metodo}
+\begin{tabularx}{\textwidth}{p{3.4cm}Y}\toprule
+Atividade & Realização e produto \\\midrule
+Identificar o problema & Caracterização do cenário, das fontes e dos riscos de integrar observações e participação. \\
+Definir objetivos & Formulação dos requisitos de integração, integridade, contexto e rastreabilidade. \\
+Projetar e desenvolver & Construção incremental de recebimento, representação comum, fontes compartilhadas, consultas, missões e regras de ambiente. \\
+Demonstrar & Exemplos de percurso dos dados, cenários automatizados e registros operacionais disponíveis. \\
+Avaliar & Confronto entre requisito, mecanismo implementado, cenário de teste e evidência de execução. \\
+Comunicar & Texto do TCC, figuras, documentação técnica e referências versionadas. \\\bottomrule
+\end{tabularx}
+\caption*{Fonte: elaboração do autor.}
 \end{table}
 
-\subsection{Tipo, instância e localização do sensor}
+Os requisitos foram reconstruídos a partir do escopo institucional, das discussões de desenvolvimento e da evolução documentada do sistema. Não foi realizado um protocolo formal de entrevistas com usuários finais. O histórico auxilia a explicar as necessidades, mas não permite afirmar que todas as alternativas foram comparadas experimentalmente. Quando uma decisão é discutida por suas vantagens e custos, trata-se de análise do projeto; a existência de um experimento é indicada separadamente.
 
-\texttt{tipo\_de\_sensor} funciona como um catálogo de capacidades. Uma instância física ou lógica é representada por \texttt{sensor}, cuja chave \texttt{external\_id} corresponde ao identificador reconhecido fora do banco, como serial, MAC ou identificador do gateway. Assim, vários sensores do tipo \texttt{SII\_SMART} compartilham definições de parâmetros, mas mantêm identidade e histórico independentes.
+\section{Requisitos e critérios de observação}
+O conjunto da Tabela~\ref{tab:requisitos} preserva os objetivos de recebimento, transformação, análise e gamificação e incorpora as necessidades de fontes externas e regras de ambiente da versão atual. A numeração organiza a argumentação deste TCC; não corresponde a um catálogo histórico de requisitos aprovado em uma única etapa.
 
-Cada sensor referencia exatamente um tipo. Quanto ao escopo espacial, a restrição \texttt{ck\_sensor\_exactly\_one\_scope} exige exatamente uma das alternativas: um \texttt{compartimento} interno ou um \texttt{contexto\_compartilhado}, usado por observações externas, como condições meteorológicas comuns a várias salas. Essa exclusão evita associar simultaneamente o mesmo sensor a uma sala e a um contexto global.
-
-\subsection{Definição e valor de parâmetros}
-
-\texttt{parametro\_def} descreve o contrato do dado: nome canônico, descrição, tipo \texttt{NUMERIC}, \texttt{BOOLEAN} ou \texttt{TEXT}, unidade e estado ativo. A unicidade de \texttt{tipo\_nome + nome} impede duas definições com o mesmo significado dentro de um tipo de sensor. Uma definição possível é \texttt{temperatura}, numérica, medida em $^{\circ}$C; outra é \texttt{presenca}, booleana e sem unidade.
-
-\texttt{medicao} representa o envelope temporal produzido por um sensor. Uma medição pode conter vários \texttt{parametro\_valor}; por exemplo, temperatura, umidade e presença observadas no mesmo instante. O par \texttt{medicao\_id + parametro\_def\_id} é único, logo uma mesma medição não pode conter duas temperaturas canônicas.
-
-O valor usa três colunas mutuamente interpretadas segundo \texttt{data\_type}: \texttt{numeric\_value}, \texttt{boolean\_value} ou \texttt{text\_value}. Esse modelo evita converter todos os valores para texto, preserva comparações numéricas e permite validar a compatibilidade entre definição, regra e valor.
-
-\begin{table}[htb]\centering\small
-\begin{tabular}{|p{3.1cm}|p{3.0cm}|p{2.5cm}|p{4.1cm}|}\hline
-\textbf{Definição} & \textbf{Tipo/unidade} & \textbf{Coluna usada} & \textbf{Exemplos} \\ \hline
-temperatura & NUMERIC / $^{\circ}$C & numeric\_value & 22,5; 29,1 \\ \hline
-presenca & BOOLEAN & boolean\_value & verdadeiro; falso \\ \hline
-estado\_porta & TEXT & text\_value & ABERTA; FECHADA \\ \hline
-\end{tabular}
-\caption{Exemplos de parâmetros tipados no modelo canônico}
-\label{tab:parametros-tipados}
+\begin{table}[htbp]\centering\small
+\caption{Requisitos utilizados para orientar a análise do artefato}\label{tab:requisitos}
+\begin{tabularx}{\textwidth}{p{0.7cm}p{3.2cm}Y}\toprule
+Id. & Necessidade & Critério observável \\\midrule
+R1 & Receber fontes diversas & Entradas HTTP e MQTT, identificação de origem e tratamento de formatos. \\
+R2 & Preservar e reinterpretar & Conteúdo bruto temporário, histórico e vínculo com a medição resultante. \\
+R3 & Evitar efeitos repetidos & Unicidade e distinção entre repetição equivalente e conflito. \\
+R4 & Adaptar modelos de sensores & Tipos, parâmetros e perfis de integração configuráveis. \\
+R5 & Contextualizar observações & Relações com salas, fontes compartilhadas, horários e pessoas. \\
+R6 & Analisar períodos & Janelas definidas, agregados consultáveis e política de recomputação. \\
+R7 & Apoiar gamificação & Evidências, ocorrências, atividades e pontos relacionados. \\
+R8 & Recuperar processamento & Estados persistidos, reserva temporária e controle de concorrência. \\
+R9 & Administrar e proteger & Console, autenticação e autorização de operações. \\
+R10 & Avaliar o ambiente & Regras locais e padrões, dados válidos, contexto e beneficiários. \\\bottomrule
+\end{tabularx}
+\caption*{Fonte: elaboração do autor.}
 \end{table}
 
-\section{Modelagem das regras de qualificação}
+\section{Versões e fontes de evidência}\label{sec:versoes}
+A descrição atual da arquitetura está vinculada ao commit \path{5e2a1e27d2f4ceb31217867259a303eee84b3c0f}, consultado em 12 de novembro de 2026, do repositório \path{ravilon/PROCEL-Back-End}. Os módulos dessa versão são \path{Proben-API}, \path{Proben-Telemetry} e \path{Proben-Admin}. Foram inspecionados código de serviços, cenários de testes, migrations de fontes compartilhadas e regras de ambiente, além dos documentos técnicos indicados no Apêndice~\ref{ap:evidencias} \cite{probenAtual2026}.
 
-Uma regra não é ligada diretamente ao sensor. \texttt{grupo\_regra} reúne uma política coerente, como ``Conforto térmico de salas de aula''. A entidade associativa \texttt{sensor\_grupo\_regra} cria a relação muitos-para-muitos entre sensores e grupos, acrescentando estado e intervalo de validade. Essa modelagem permite ativar a mesma política em vários sensores, substituir uma política ao longo do tempo e manter vínculos em rascunho sem aplicá-los.
+A inspeção examina o que está implementado e quais oráculos os testes expressam. A etapa atual de avaliação não inclui uma nova execução das suítes Java ou do console web. Portanto, a presença de um teste não é apresentada como aprovação do caso. O relatório operacional de setembro e os números do experimento de motores são tratados como evidências históricas, com o alcance de suas próprias fontes. A versão histórica anteriormente utilizada no TCC, \path{141db8ccbf63cf3896344fbb90197dfae3618691}, é mantida nas referências históricas e não substituída pelo hash atual \cite{probenReadme2026,probenSmoke2026,probenDrools2026}.
 
-Cada \texttt{regra\_parametro} pertence a um grupo e referencia exatamente uma \texttt{parametro\_def}. Ela contém operador, limiar(es), resultado, severidade, prioridade e estado. Os operadores implementados são \texttt{GT}, \texttt{GTE}, \texttt{LT}, \texttt{LTE}, \texttt{EQ}, \texttt{NEQ}, \texttt{BETWEEN}, \texttt{OUTSIDE} e \texttt{CONTAINS}. A compatibilidade depende do tipo: números aceitam comparações e intervalos; booleanos, igualdade ou diferença; textos, igualdade, diferença ou contenção.
+Essa separação é necessária porque atualizar o texto de uma funcionalidade não atualiza os resultados de seu teste. Contagens de classes, migrations ou anotações de teste também não demonstram correção. A análise utiliza a cadeia requisito--mecanismo--cenário--evidência, indicando onde existe apenas inspeção, onde há registro de execução anterior e onde permanece uma lacuna.
 
-O processo de qualificação é mostrado na Figura \ref{fig:fluxo-qualificacao}. Para cada valor persistido, o serviço procura grupos do sensor com status \texttt{ATIVO} e vigentes no instante da medição. Em cada grupo, seleciona regras ativas da mesma definição de parâmetro. Toda regra satisfeita gera uma linha em \texttt{avaliacao\_parametro\_valor}.
+\section{Seleção de literatura e tratamento dos termos}
+A revisão de literatura é narrativa, orientada pela relação entre conceito e decisão de projeto. Foram priorizados artigos revisados por pares e fontes originais, com verificação de título, autoria e identificador digital quando disponível. Trabalhos sobre integração, armazenamento, fluxos, gamificação e conforto foram utilizados segundo o aspecto que efetivamente sustentam. Normas e especificações fundamentam protocolos e formatos; documentação do sistema fundamenta o comportamento implementado.
 
-\begin{figure}[htb]\centering
-\resizebox{0.96\textwidth}{!}{%
-\begin{tikzpicture}[node distance=7mm and 8mm,
- box/.style={draw, rounded corners, align=center, font=\scriptsize, minimum height=9mm, minimum width=2.8cm},
- flow/.style={-{Stealth[length=2mm]}, thick}]
-\node[box] (raw) {payload externo\\22,5 $^{\circ}$C};
-\node[box, right=of raw] (parser) {perfil + parser\\mapeiam campos};
-\node[box, right=of parser] (canon) {medição e valor\\canônicos};
-\node[box, right=of canon] (groups) {grupos ativos\\e vigentes};
-\node[box, right=of groups] (rules) {regras do mesmo\\parâmetro};
-\node[box, right=of rules] (eval) {avaliações\\persistidas};
-\draw[flow] (raw)--(parser); \draw[flow] (parser)--(canon); \draw[flow] (canon)--(groups); \draw[flow] (groups)--(rules); \draw[flow] (rules)--(eval);
-\end{tikzpicture}}
-\caption{Fluxo de canonicalização e qualificação de um valor}
-\label{fig:fluxo-qualificacao}
-\end{figure}
+A reputação e a classificação dos veículos são critérios auxiliares, não substitutos da leitura. Não se atribuem estratos Qualis sem consulta identificada de periódico e período. A CAPES esclarece que o Qualis Periódicos 2021--2024 tem finalidade e período específicos e não será atualizado para o ciclo 2025--2028 \cite{capes2026}. Nesta revisão não foi concluída uma classificação individual dos veículos; assim, não se afirma que todas as referências pertencem a determinado estrato. A matriz de referências e verificações acompanha o texto no repositório do TCC.
 
-\subsection{Exemplo completo de qualificação}
+Termos em português são empregados quando consolidados. Nos demais casos, mantém-se a expressão original e apresenta-se sua função em português. Siglas são definidas na primeira ocorrência pertinente. Essa escolha busca permitir que o argumento seja compreendido sem exigir familiaridade prévia com os nomes de componentes de software.
 
-Considere o sensor \texttt{SII-002}, do tipo \texttt{SII\_SMART}, associado à sala 393. O tipo declara o parâmetro \texttt{temperatura} como numérico em $^{\circ}$C. O sensor possui vínculo ativo com o grupo ``Conforto térmico'', contendo as regras da Tabela \ref{tab:exemplo-regras}.
+\chapter{Da Origem dos Dados ao Apoio à Gamificação}\label{cap:desenvolvimento}
+A arquitetura é apresentada neste capítulo pelo percurso dos dados. Primeiro são identificadas suas origens e os espaços aos quais se referem. Em seguida, são discutidos recebimento, preservação, transformação e contextualização. Finalmente, mostram-se as formas de consulta e os mecanismos pelos quais observações podem participar de regras, atividades e registros de pontos. Cada etapa explicita o desafio que motivou sua organização e os limites da solução.
 
-\begin{table}[htb]\centering\small
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{|p{3.3cm}|p{2.0cm}|p{2.5cm}|p{2.0cm}|p{1.5cm}|}\hline
-\textbf{Regra} & \textbf{Operador} & \textbf{Limiares} & \textbf{Resultado} & \textbf{Nível} \\ \hline
-Faixa confortável & BETWEEN & 20,0 e 24,0 & IDEAL & 0 \\ \hline
-Calor moderado & GT & 24,0 & ALERTA & 1 \\ \hline
-Temperatura extrema & OUTSIDE & 16,0 e 28,0 & CRITICO & 3 \\ \hline
-\end{tabular}
-\caption{Exemplo de regras para o parâmetro temperatura}
-\label{tab:exemplo-regras}
-\end{table}
+\section{Visão do percurso e responsabilidades}
+A Figura~\ref{fig:fluxo-dados} apresenta uma visão conceitual dos principais caminhos. As setas representam transferências ou relações de uso dos dados; não representam uma única transação nem exigem que todas as fontes percorram todas as etapas. A separação é importante porque o conteúdo bruto de telemetria, a coleta de uma fonte externa e a confirmação de presença têm naturezas diferentes.
 
-Se o payload externo contiver \texttt{"temp": 22.5}, o parser converte \texttt{temp} para a definição canônica \texttt{temperatura}; cria uma medição e um \texttt{parametro\_valor} com \texttt{numeric\_value = 22.5}. Apenas \texttt{BETWEEN 20.0 24.0} é satisfeita, produzindo uma avaliação \texttt{IDEAL}. Para 29,1, as regras ``Calor moderado'' e ``Temperatura extrema'' são ambas verdadeiras, produzindo \texttt{ALERTA} e \texttt{CRITICO} separados.
-
-Esse comportamento é deliberadamente não exclusivo: o avaliador percorre todas as regras e não interrompe no primeiro acerto. A restrição única \texttt{parametro\_valor\_id + regra\_parametro\_id} impede repetir a mesma avaliação, mas não impede resultados diferentes para o mesmo valor. A coluna \texttt{prioridade} existe no modelo, porém o serviço atual não a utiliza para escolher um único resultado. Caso a interface necessite de uma qualificação consolidada, deve adotar uma política explícita, por exemplo maior severidade, e preservá-la separadamente das avaliações elementares.
-
-\subsection{Relação entre qualificação e missões}
-
-Uma condição de evento pode operar de duas formas. Em \texttt{PARAMETRO\_VALOR}, compara diretamente o dado canônico; em \texttt{AVALIACAO\_REGRA}, referencia uma regra e o resultado esperado. Assim, a missão pode depender de uma política de domínio sem copiar seus limiares. Por exemplo, ``Luz na Medida'' pode exigir que luminosidade tenha avaliação \texttt{IDEAL} e presença seja verdadeira durante uma janela. A evidência da ocorrência mantém referência à avaliação que justificou a decisão, formando a cadeia mostrada na Figura \ref{fig:rastreabilidade-modelo}.
-
-\begin{figure}[htb]\centering
-\begin{tikzpicture}[node distance=5mm,
- box/.style={draw, rounded corners, align=center, font=\scriptsize, minimum width=6.5cm, minimum height=7mm},
- flow/.style={-{Stealth[length=2mm]}, thick}]
-\node[box] (a) {evento bruto MongoDB: payload, hash e identidade};
-\node[box, below=of a] (b) {medição $\rightarrow$ parâmetro valor canônico};
-\node[box, below=of b] (c) {avaliação do valor pela regra aplicável};
-\node[box, below=of c] (d) {evidência $\rightarrow$ ocorrência do evento de missão};
-\node[box, below=of d] (e) {progresso da atividade $\rightarrow$ lançamento de XP};
-\draw[flow] (a)--(b); \draw[flow] (b)--(c); \draw[flow] (c)--(d); \draw[flow] (d)--(e);
+\begin{figure}[htbp]\centering
+\caption{Visão conceitual dos caminhos dos dados na versão examinada. Os registros humanos incluem interações previstas para o futuro cliente móvel.}
+\label{fig:fluxo-dados}
+\begin{tikzpicture}[x=1cm,y=1cm,
+ src/.style={draw,dashed,rounded corners,align=center,text width=3.8cm,minimum height=0.95cm,font=\small},
+ proc/.style={draw,rounded corners,align=center,text width=3.8cm,minimum height=1cm,font=\small},
+ dat/.style={draw,double,align=center,text width=3.8cm,minimum height=0.9cm,font=\small},
+ arr/.style={-{Stealth[length=2mm]},thick},
+ lab/.style={font=\scriptsize,fill=white,inner sep=2pt,align=center}]
+\node[src] (s) at (0,0) {Sensores e produtores};
+\node[src] (x) at (6.5,0) {Fontes ambientais\\externas};
+\node[proc] (t) at (0,-1.9) {Recebimento HTTP/MQTT\\Proben-Telemetry};
+\node[proc] (h) at (6.5,-1.9) {Coleta HTTP\\Proben-API};
+\node[dat] (b) at (0,-3.7) {Eventos originais\\MongoDB};
+\node[proc] (i) at (6.5,-5.5) {Integração e transformação\\Proben-API};
+\node[dat] (c) at (6.5,-7.4) {Medições padronizadas\\PostgreSQL};
+\node[src] (u) at (0,-5.5) {Dados acadêmicos e\\registros de participação};
+\node[dat] (d) at (0,-7.4) {Espaços, pessoas\\e atividades\\PostgreSQL};
+\node[proc] (r) at (3.25,-9.5) {Consulta e agregação;\\avaliação de condições};
+\node[dat] (e) at (3.25,-11.5) {Agregados e evidências;\\efeitos de gamificação};
+\draw[arr] (s)--(t); \draw[arr] (t)--(b);
+\draw[arr] (x)--(h); \draw[arr] (h)--(i);
+\draw[arr] (b.east)-|node[lab,pos=.25]{entrega assíncrona} (i.north);
+\draw[arr] (s.west)--++(-.65,0)|-(4.1,-4.55)--(i.north west);
+\node[lab] at (1,-4.55) {ingestão HTTP direta};
+\draw[arr] (i)--(c); \draw[arr] (u)--(d);
+\draw[arr] (c.south)|-(r.east); \draw[arr] (d.south)|-(r.west);
+\draw[arr] (r)--(e);
 \end{tikzpicture}
-\caption{Rastreabilidade do dado bruto ao efeito de gamificação}
-\label{fig:rastreabilidade-modelo}
+\caption*{Fonte: elaboração do autor a partir do código da versão examinada.}
 \end{figure}
 
-Essa cadeia não depende apenas da proximidade conceitual das entidades. O documento MongoDB guarda \texttt{processing.canonicalMeasurementId}; no sentido inverso, \texttt{medicao\_ingestao\_metadata} registra \texttt{raw\_telemetry\_event\_id}, produtor, mensagem, perfil e versão de parser. No PostgreSQL, chaves estrangeiras conectam medição a valores, evidências a ocorrências, ocorrências a atividades e lançamentos de XP. A ligação MongoDB--PostgreSQL é lógica, não uma chave estrangeira distribuída; sua consistência depende da gravação dos identificadores pelos dois serviços.
+O serviço \path{Proben-Telemetry} recebe telemetria e mantém os documentos brutos no MongoDB. O \path{Proben-API} mantém no PostgreSQL as medições padronizadas e os domínios acadêmico, analítico e de gamificação. O \path{Proben-Admin} é o console pelo qual usuários autorizados configuram e consultam os serviços. A futura aplicação móvel utilizará interfaces da aplicação, sem acesso direto aos bancos \cite{probenAtual2026}.
 
-Há ainda um limite histórico. Ocorrências de missão preservam um \emph{snapshot} de contexto e referências às evidências, e versões de parser deixam de ser editáveis após ativação. As regras de qualificação, entretanto, podem ser alteradas sem que todos os seus limiares sejam copiados para a avaliação já persistida. Logo, a implementação permite explicar qual evidência e qual regra foram usadas, mas não garante reconstrução integral da política histórica em todos os casos. Versionar ou copiar os critérios de cada regra para a avaliação é trabalho futuro.
+O desafio arquitetural é atribuir uma responsabilidade clara a cada representação. O documento original serve à inspeção e à reinterpretação temporária; a representação comum serve a consultas e relações de domínio. A separação admite evolução independente, mas exige coordenação: não há uma transação única que inclua MongoDB e PostgreSQL. Por isso, identidade, repetição e referências entre as etapas fazem parte da solução, e não apenas detalhes de transporte.
 
-\section{Telemetria bruta e MQTT}
-\texttt{raw\_telemetry\_events} registra produtor, origem, mensagem, sensor, instantes, payload, hash, estado e tentativas. A chave \texttt{producerId + source + messageId} implementa idempotência. Conteúdo divergente sob a mesma identidade gera conflito \cite{probenMongo2026}.
+\section{Identificar a origem: sensores, espaços e pessoas}
+\subsection{Modelagem de dispositivos e grandezas}
+O primeiro desafio é representar modelos de sensores sem construir uma tabela diferente para cada fabricante. A solução separa o tipo de sensor, os parâmetros que ele pode informar, o dispositivo concreto e as medições produzidas. Uma medição reúne valores numéricos, booleanos ou textuais associados a definições de parâmetro. Assim, temperatura, presença e estado de um equipamento mantêm tipos próprios, embora possam participar do mesmo fluxo de integração \cite{probenAtual2026}.
 
-O ciclo vai de \texttt{RECEIVED} a \texttt{PROCESSING} e então a aceito, duplicado, conflito, falho ou descartado. O worker usa \emph{claim} e \emph{lease}; falhas transitórias recebem repetição. O reprocessamento preserva payload, identidade e hash, mas seleciona a versão ativa do parser no novo processamento. Portanto, ele é uma \emph{reinterpretação auditada}, não a reprodução garantida da transformação original. A entrada anterior, inclusive a versão de parser, permanece no histórico; se a nova interpretação colidir com a identidade canônica já persistida, a API deve responder como duplicata equivalente ou conflito, sem sobrescrita silenciosa.
+O identificador externo permite relacionar o dispositivo ao produtor que o conhece. O tipo descreve as grandezas esperadas; a configuração da integração estabelece onde encontrá-las na mensagem. Substituir um modelo exige verificar esses vínculos e sua semântica, e não apenas cadastrar um nome novo. A flexibilidade do esquema não resolve, sozinha, incompatibilidades de unidade ou calibração.
 
-Eventos brutos possuem TTL configurável: o padrão geral é 30 dias e o perfil de \emph{staging} usa 7 dias, salvo configuração externa. Medições canônicas, metadados e buckets não têm expiração automática nesta etapa. Após o TTL, permanecem a medição e seu contexto de ingestão no PostgreSQL, mas o payload integral deixa de estar disponível para nova interpretação. Assim, ``preservação'' neste trabalho significa preservação durante a janela de retenção, e não arquivo permanente.
+Considere, como exemplo hipotético, dois sensores de temperatura: um envia o campo \texttt{temp} e outro envia \texttt{ambient.temperature}. Se ambos expressarem graus Celsius, mapeamentos distintos podem conduzir ao mesmo parâmetro do domínio. Se uma das fontes informar outra unidade, será necessária uma transformação explicitamente suportada e validada; mudar o nome do campo não constitui conversão física. O exemplo acompanhará as etapas seguintes, sem representar uma medição de campo realizada no Centro de Artes.
 
-No MQTT, o produtor vem do tópico. O ACK manual ocorre após persistência ou decisão permanente; falha transitória do MongoDB fica sem ACK para permitir nova entrega \cite{probenMqtt2026,oasisMqtt2019}. Essa confirmação encerra a responsabilidade da etapa MQTT, não de todo o pipeline até o XP. Como o tópico participa da identidade, autenticidade depende de TLS, credenciais e ACL do broker que restrinja cada cliente ao próprio \texttt{producerId}. A aplicação documenta essa ACL, mas não consegue garanti-la quando o broker é implantado com configuração diferente \cite{probenSeguranca2026}.
+\subsection{Contexto institucional e participação}
+Uma observação também precisa de referência espacial. A estrutura institucional relaciona campus, prédio, unidade e compartimento, enquanto horários de aula e vínculos de estudantes permitem resolver o uso acadêmico de uma sala em determinado instante. O sistema consulta esse contexto por data e intervalo de horário e rejeita ambiguidades, em vez de escolher silenciosamente uma aula entre sobreposições \cite{probenAtual2026}.
 
-\section{Domínio canônico e análise}
-No PostgreSQL, sensores, tipos, parâmetros, medições e valores formam o núcleo. Valores numéricos, booleanos e textuais são tipados. Metadados guardam contexto e idempotência. Perfis, versões de parser, mapeamentos e bindings transformam fontes sem ambiguidade \cite{probenCatalogo2026}.
+O problema aqui é distinguir vínculo previsto de presença efetiva. Um estudante matriculado na turma pode ser elegível a uma atividade, mas isso não comprova que esteja fisicamente na sala. A versão atual mantém políticas diferentes para alunos vinculados ao uso agendado e para presença confirmada por registro de entrada e saída. Essa distinção permite que a política de beneficiários seja uma decisão explícita do domínio.
 
-Jobs analíticos dividem períodos em janelas semiabertas $[t_i,t_f)$ e recuperáveis. Buckets armazenam média, mínimo, máximo e número de amostras por sensor, parâmetro, intervalo e versão. A média é aritmética por amostra; ao combinar buckets, ela é ponderada pela quantidade de amostras, não pela duração representada por cada leitura. Sensores com frequências diferentes, portanto, não devem ter suas amostras interpretadas como observações temporalmente equivalentes sem tratamento adicional. Mensagens atrasadas incluídas no intervalo podem ser incorporadas por recomputação explícita; não há \emph{watermark} nem recálculo automático de bucket já encerrado. A API oferece consultas filtradas e paginadas; a cobertura visual do Admin não é usada como evidência da semântica de agregação.
+Os dados de participação não são convertidos artificialmente em leituras de sensor. Eles permanecem relacionados a pessoas, presenças, missões e atividades. A integração ocorre na interpretação: uma condição ambiental e um registro humano podem contribuir para a mesma decisão, mantendo origens identificáveis. A infraestrutura implementada dá suporte a essa relação, enquanto a experiência de interação da futura aplicação móvel permanece uma etapa separada.
 
-\section{Missões e XP}
-Eventos configuráveis referenciam parâmetros canônicos. Solicitações, ocorrências e evidências persistem a decisão. Janelas temporais usam intervalos semiabertos, lacuna máxima configurável e estados persistentes para duração, transição e encerramento. Ocorrências progridem atividades de modo idempotente. XP é um ledger append-only, cujo saldo é calculado por soma. O motor simples é padrão; Drools é opt-in, isolado da persistência e mantido experimental atrás de configuração \cite{probenDrools2026}.
+\section{Receber mensagens e preservar sua identidade}
+\subsection{Três caminhos de entrada}
+O sistema oferece um caminho de telemetria bruta por HTTP ou MQTT, um caminho HTTP direto para medições ou formatos configurados e um coletor HTTP para fontes externas. No primeiro, o conteúdo original é registrado no MongoDB antes da entrega ao domínio. Nos demais, a integração ocorre na API e produz medições no PostgreSQL; não se deve afirmar que todas as entradas são arquivadas no MongoDB \cite{probenAtual2026}.
 
-\chapter{Avaliação e Discussão}
-\section{Critérios e resultados funcionais}
-A avaliação foi organizada pelas propriedades derivadas do problema de pesquisa, não pelo tamanho do código. Contagens de 32 migrations, 30 controladores e 358 anotações JUnit descrevem a extensão do artefato, mas não são usadas como prova de correção ou cobertura. A Tabela \ref{tab:matriz-avaliacao} apresenta os cenários encontrados e o alcance efetivo da evidência.
+O caminho bruto atende ao desafio de aceitar uma estrutura externa e preservar a evidência antes de concluir sua interpretação. O caminho direto atende produtores já integrados à representação comum ou a um perfil conhecido. O coletor atende situações em que a iniciativa de consultar a fonte é do próprio sistema. A coexistência decorre dessas diferenças de interação, não de uma hierarquia em que um protocolo substitua os demais.
 
-\begin{table}[htb]\centering\scriptsize
-\begin{tabular}{|p{2.2cm}|p{4.0cm}|p{4.2cm}|p{2.5cm}|}\hline
-\textbf{Propriedade} & \textbf{Cenário e oráculo} & \textbf{Evidência observada} & \textbf{Conclusão delimitada} \\ \hline
-Idempotência bruta e de XP & Ingestões concorrentes equivalentes devem criar um vencedor; conteúdo divergente deve conflitar; repetição de recompensa deve manter um lançamento. & \path{TelemetryMongoIntegrationTest} exercita concorrência e conflito; \path{XpRewardServiceIntegrationTest} exercita repetição, concorrência e conteúdo divergente. & Sustentada nos componentes testados; falta ensaio único de ponta a ponta até XP. \\ \hline
-Recuperabilidade & Dois workers não devem reclamar o mesmo item; lease expirado deve permitir retomada; rollback não deve deixar janela parcial. & Testes de telemetria e \path{EventoJanelaAvaliacaoServiceTest} cobrem claim concorrente, lease, repetição, reinício simulado e rollback. & Sustentada no nível de serviço e banco; não equivale a teste de queda real dos processos. \\ \hline
-Consistência entre serviços & Falha após o commit da API e antes da atualização do MongoDB deve resultar em repetição reconhecida, sem nova medição. & A fronteira transacional e as respostas \texttt{CREATED}/\texttt{DUPLICATE}/\texttt{CONFLICT} têm testes separados. Não foi localizado um teste que interrompa exatamente entre os dois commits. & Parcial; o cenário distribuído permanece experimento necessário. \\ \hline
-Integração de formatos & Formatos externos diferentes para a mesma grandeza devem produzir valores canônicos equivalentes. & Há testes de seleção de perfil, mapeamento, tipo e versão de parser, mas não uma matriz publicada de fabricantes e payloads equivalentes. & Parcial; valida o mecanismo, não ampla interoperabilidade. \\ \hline
-Janelas e agregação & Início deve ser incluído, fim excluído; repetição não deve duplicar buckets; atraso deve seguir política conhecida. & \path{NumericBucketAggregationTest} cobre intervalo semiaberto, precisão, recomputação, concorrência e rollback; janelas de missão cobrem lacuna e estados. & Sustentada para os casos testados; atraso exige recomputação explícita. \\ \hline
-Autorização & Papéis permitidos devem obter sucesso e papéis proibidos, HTTP 403. & Testes de controladores exercitam ADMIN, ANALISTA, OPERADOR e USUARIO; o teste de sanidade confirma acesso do usuário às próprias atividades e rejeição de atividade alheia. & Sustentada nas rotas exercitadas, não como auditoria completa de segurança. \\ \hline
-\end{tabular}\caption{Matriz de propriedades, cenários e alcance das evidências}\label{tab:matriz-avaliacao}\end{table}
+\subsection{Repetição, conflito e retenção}
+Na telemetria bruta, a identidade combina produtor, origem e identificador de mensagem. A gravação conserva conteúdo, instantes e estado de processamento. Uma retransmissão equivalente é reconhecida; conteúdo divergente sob a mesma identidade gera conflito. No MQTT, o produtor é obtido do tópico, e a identificação da mensagem da aplicação não é substituída pelo identificador de pacote do protocolo \cite{probenAtual2026,oasisMqtt2019}.
 
-Os relatórios Surefire correspondentes aos cinco conjuntos destacados registram 40 casos sem falhas: 8 de telemetria bruta, 10 de XP, 2 de fronteira transacional da ingestão, 9 de agregação e 11 de janelas de missão. Eles foram gerados em execuções distintas entre setembro e novembro de 2026, e não em uma única execução limpa e arquivada do commit de referência. Por isso, sustentam os cenários específicos, mas não autorizam afirmar que toda a suíte da versão foi aprovada.
+O desafio de confiabilidade é que uma confirmação de transporte encerra apenas uma etapa. O recebimento MQTT usa confirmação manual após persistência ou decisão permanente; falha transitória de armazenamento permite reentrega. Isso não significa que a interpretação, a missão ou a recompensa tenham terminado. A identidade precisa atravessar as etapas para que a repetição necessária à recuperação não multiplique efeitos de domínio.
 
-\section{Relatório de testes de sanidade}
-O relatório de 17 de setembro de 2026 registra 112 verificações aprovadas, cinco avisos e zero falhas em 71,6 segundos contra o ambiente identificado como produção \cite{probenSmoke2026}. Os avisos foram: timeout de 45,2 segundos na sincronização de salas; HTTP 401 ao consultar o status do job de horários; verificação de persistência desse job ignorada em consequência; HTTP 409 ao tentar recriar um usuário já existente; e HTTP 404 na limpeza de uma presença que já não estava aberta. Os dois últimos eram estados tolerados pelo roteiro; os três primeiros revelam uma lacuna real na sincronização assíncrona e na renovação ou propagação do token.
+A preservação é temporária. \emph{Time to Live} (TTL) é o prazo de retenção utilizado para expirar os documentos brutos; a configuração geral documentada é de 30 dias. Depois desse período, a medição e seus metadados podem permanecer no modelo relacional, mas o conteúdo original deixa de estar disponível para nova interpretação. Auditoria permanente do conteúdo bruto exigiria outra política de armazenamento.
 
-Esse relatório antecede o commit avaliado e não contém o hash da versão implantada. Ele demonstra que um conjunto de rotas respondeu conforme o roteiro naquele ambiente e instante, mas não valida automaticamente a versão de novembro. O tempo total também não é medida de desempenho: mais de 60\% dele corresponde ao timeout de uma única operação, e as etapas misturam rede, autenticação, persistência e verificações locais.
+\section{Transformar a mensagem em uma medição comum}
+\subsection{Integração configurável e versões de interpretação}
+O próximo desafio é impedir que o formato de cada dispositivo se propague pelas consultas e regras. Perfis de integração descrevem seleção de sensor, campos de tempo e valores e vínculos com dispositivos. O \emph{parser}, componente que interpreta a estrutura recebida, utiliza uma versão identificada; mapeamentos por JSON Pointer permitem apontar campos do documento \cite{jsonpointer2013,probenAtual2026}.
 
-\section{Experimento dos motores de regras}
-O benchmark JMH foi executado no equipamento descrito na Seção~\ref{sec:protocolo-avaliacao}, com Windows 11, OpenJDK 21.0.10, processador Intel Core i5-11300H de quatro núcleos e oito processadores lógicos e 16 GB de RAM. A configuração empregou dois forks, cinco iterações de aquecimento, dez de medição, um segundo por iteração, uma thread nos resultados principais e o \emph{profiler} de coleta de lixo. Foram usados os modos \texttt{SampleTime} e \texttt{Throughput}; os percentis vieram das amostras do primeiro. A persistência, a rede e os workers não participam da medição \cite{probenDrools2026}.
+No exemplo, os campos \texttt{temp} e \texttt{ambient.temperature} são interpretados por configurações diferentes, mas a leitura resultante passa a ser um valor numérico de um parâmetro definido. O domínio não precisa conhecer o nome externo do campo para consultar a temperatura. Essa separação é a contribuição prática da representação comum: estabilizar a relação entre grandeza, sensor e instante.
 
-Os cenários instantâneos usam a mesma definição simples e o mesmo conjunto de fatos. ``Drools frio'' cria um novo motor por operação e inclui geração/compilação da regra, construção da \texttt{KieBase} e avaliação; ``Drools quente'' reutiliza a base em cache, mas cria uma \texttt{KieSession} por avaliação. Cada operação avalia um lote completo, não um único fato. Com 1000 fatos, o motor simples teve média de 0,016 ms e p99 de 0,049 ms; Drools frio, 44,619 ms e 97,750 ms; Drools quente, 1,502 ms e 3,011 ms. O resultado sustenta apenas que o motor simples apresentou menor latência para as regras instantâneas medidas.
+Versões e vínculos também precisam continuar válidos no momento da gravação. O código atual revalida o perfil, a versão ativa e o vínculo do dispositivo dentro da operação de ingestão. Esse cuidado procura tratar a alteração concorrente de uma configuração entre sua consulta e seu uso. A versão utilizada fica associada aos metadados da ingestão, apoiando a explicação posterior do resultado.
 
-No cenário de duração, Drools processou 5000 fatos com média de 6,907 ms e p99 de 11,026 ms. Não existe resultado equivalente do motor simples para esse cenário; portanto, esse número demonstra viabilidade local, não superioridade. A decisão de manter Drools opcional decorre de sua expressividade temporal, combinada com limites, cache e isolamento, e permanece condicionada a benchmark em hardware representativo e a um SLO definido.
+\subsection{Idempotência na fronteira relacional}
+A medição e os metadados são persistidos em uma transação local. O orquestrador distingue ingestão direta, por perfil e originada na telemetria, com restrições próprias para as respectivas identidades. A comparação de uma impressão do conteúdo, ou \emph{fingerprint}, permite distinguir repetição equivalente de conflito \cite{probenAtual2026}.
 
-\section{Discussão e ameaças à validade}
-A combinação entre documento bruto, metadados canônicos, evidências, atividades e ledger torna a cadeia tecnicamente inspecionável durante a retenção do bruto. Restrições únicas e transações locais reduzem duplicação, enquanto estados persistidos e leases permitem retomada. Essas observações apoiam a viabilidade da arquitetura, mas não provam disponibilidade, correção universal ou adequação sob carga real.
+Esse mecanismo responde a um caso concreto: a API pode concluir a gravação e a resposta não chegar ao serviço de telemetria. Repetir a entrega é necessário, mas criar uma nova medição seria incorreto. A solução combina identidade persistida e leitura do resultado já existente. O desenho trata essa fronteira por repetição segura; sua comprovação sob interrupção real exatamente entre os dois bancos permanece um cenário experimental específico.
 
-As principais ameaças à validade interna são relatórios produzidos pela própria equipe, execuções não consolidadas em um pacote imutável e ausência do cenário exato de falha entre os dois bancos. O benchmark foi executado em um único computador de uso geral; processos concorrentes, políticas de energia e variações térmicas não foram registrados, o que limita sua comparação externa. Para validade externa, foram avaliados poucos formatos de dispositivos, um único contexto institucional e nenhuma carga representativa de uma edificação ocupada. Para validade de construto, sucesso técnico, XP e economia de energia são conceitos distintos: o estudo mede propriedades do software, não mudança comportamental nem consumo evitado. Permanecem pendentes backup e restauração ensaiados, rate limiting, carga contínua, caos, auditoria independente de segurança e estudo com usuários.
+\subsection{Retomada e reinterpretação}
+O processamento assíncrono registra trabalho pendente, reservado, concluído ou falho. Reservas temporárias permitem recuperar itens interrompidos; tentativas e espera crescente reduzem a repetição imediata de falhas transitórias. No reprocessamento administrativo, o conteúdo original e a identidade são preservados, com registro do pedido e do estado anterior \cite{probenAtual2026}.
 
-\chapter{Conclusão}
-Este trabalho materializou a proposta inicial em uma arquitetura com três aplicações e dois modelos de persistência. O armazenamento bruto retém eventos REST/MQTT por prazo configurável; o modelo canônico estabiliza sensores e medições; perfis desacoplam produtores; janelas apoiam análise recuperável; e missões relacionam evidências, atividades e XP com mecanismos de idempotência. Assim, o backend integra estruturas documentais e relacionais, fontes ambientais heterogêneas e os registros de participação que a futura aplicação móvel produzirá com pessoas atuando como sensores.
+Reprocessar não é necessariamente reproduzir a interpretação original: a seleção pode usar a configuração ativa no novo processamento. Essa diferença deve ser visível ao operador e ao leitor. O resultado pode ser equivalente, conflitante ou falho, mas não deve sobrescrever silenciosamente uma medição anterior. A flexibilidade obtida pela preservação documental exige, em contrapartida, governança das versões e das decisões de reinterpretação.
 
-As evidências sustentam propriedades específicas nos cenários automatizados inspecionados e justificam o motor simples como padrão nas regras instantâneas medidas. Elas não constituem prova de ausência de defeitos, consistência sob toda falha distribuída ou desempenho de produção. A contribuição central é integrar evidência bruta, interpretação canônica e efeitos de gamificação rastreáveis; não afirmar economia já alcançada.
+\section{Acrescentar contexto externo sem replicar observações}
+\subsection{Fontes compartilhadas e localização}
+A temperatura externa não pertence exclusivamente a uma sala. Replicá-la como leitura independente de cada compartimento criaria dados redundantes e obscureceria sua origem. A solução atual representa um contexto compartilhado, com vínculos explícitos às salas e uma seleção de fonte por compartimento e parâmetro. O sensor pertence a um compartimento ou a um contexto compartilhado, sem criar salas fictícias para acomodar uma fonte externa \cite{probenAtual2026}.
 
-Trabalhos futuros incluem executar e arquivar a matriz completa em um commit limpo; interromper o pipeline entre os commits MongoDB/PostgreSQL; versionar integralmente políticas históricas; validar novos fabricantes; testar carga, caos, backup e restauração; definir SLOs e alertas; repetir o benchmark em infraestrutura representativa; desenvolver e integrar a aplicação móvel prevista; e realizar estudo de campo com linha de base e grupo de comparação.
+O coletor consulta um serviço externo por HTTP, interpreta a resposta e utiliza o mesmo núcleo de ingestão das medições. Método, parâmetros, cabeçalhos, mapeamentos e interpretação do tempo são configuráveis. As credenciais administradas são armazenadas de forma cifrada, e a interface oferece teste de configuração. A flexibilidade do coletor amplia as possibilidades de integração, mas cada serviço ainda exige configuração e validação de seu contrato.
 
-\chapter{Artefatos técnicos consultados}
-Foram consultados, no commit \texttt{141db8ccbf63cf3896344fbb90197dfae3618691}, o README do projeto e os documentos \texttt{Catalogo-Dados.md}, \texttt{Modelo-Telemetria-MongoDB.md}, \texttt{MQTT.md}, \texttt{Seguranca-e-Operacao.md}, \texttt{Observabilidade.md}, \texttt{Decisao-Drools-POC.md} e \texttt{ApiSmokeReport-latest.md}, além de código, migrations, contratos HTTP, classes de teste e relatórios Surefire locais. A autoria ``Santos (2026a--h)'' nas referências designa o autor deste TCC como responsável pela documentação técnica do artefato; os títulos e o hash distinguem cada item. Para preservação de longo prazo, a versão entregue deve receber uma tag ou arquivo permanente contendo código, relatórios e resultados brutos do benchmark.
+A localização é parte da identidade da observação. As coordenadas podem pertencer ao próprio contexto ou ser obtidas do campus. O registro de coleta associa a medição à localização utilizada e a uma impressão geográfica. Consultas atuais rejeitam observações de uma localização antiga quando as coordenadas mudam. Isso evita que uma série aparentemente contínua combine dados referentes a lugares diferentes.
 
+Uma nova observação compartilhada é um fato disponível às próximas avaliações; ela não é multiplicada em novas medições por sala. Na ingestão atual, somente sensores locais criam diretamente a solicitação de avaliação de missão. A distinção entre disponibilizar contexto e disparar uma avaliação evita interpretar um dado meteorológico como ação independente de cada sala.
+
+\subsection{Validade e cobertura temporal}
+Uma ausência de resposta não representa temperatura zero. A consulta de uma fonte compartilhada distingue informação disponível, desatualizada e ausente. Regras que dependem de dados sem validade suficiente recebem um motivo de não avaliação. Esse tratamento protege a interpretação: atribuir um valor numérico à ausência alteraria médias e decisões sem que houvesse uma observação correspondente.
+
+Para a referência externa de sete dias, a implementação calcula uma média por tempo coberto. Considerando observações ordenadas $(t_i,v_i)$ dentro da janela, a política utiliza:
+\begin{equation}\label{eq:media-externa}
+\overline{T}_{e,7d}=\frac{\sum_i v_i\Delta_i}{\sum_i\Delta_i},\qquad
+\Delta_i=\min(t_{i+1}-t_i,3600\,\mathrm{s}).
+\end{equation}
+Instantes repetidos são consolidados; cada observação contribui até a próxima, limitada a uma hora. O cálculo requer pelo menos 120 horas cobertas nas 168 horas da janela. Não há extensão implícita do último ponto até o fim. Essa é uma política de disponibilidade e agregação implementada no projeto, não uma prescrição geral da literatura de conforto \cite{probenAtual2026}.
+
+O limite de uma hora procura impedir que uma única leitura cubra uma interrupção longa. O mínimo de cobertura evita apresentar uma média de poucos pontos como representativa de sete dias. Essas escolhas têm custos: uma sequência com lacunas pode impedir a avaliação mesmo contendo algumas leituras recentes. Sua adequação às condições reais do provedor e do prédio deverá ser examinada na operação.
+
+\section{Consultar e resumir as medições}
+Uma vez padronizadas, as medições podem ser consultadas ou agrupadas por período. O desafio é definir o que cada resumo representa e permitir retomar seu cálculo. A agregação é organizada em janelas persistidas, com início incluído e fim excluído, representadas por $[t_i,t_f)$. Essa convenção impede que uma leitura na fronteira seja incluída em duas janelas adjacentes \cite{akidau2015,probenAtual2026}.
+
+Os agregados numéricos armazenam média, mínimo, máximo e quantidade de amostras. A média de uma janela é aritmética por amostra. Ao combinar agregados, a média é ponderada por essa quantidade, e não pela duração de cada leitura. Trata-se de uma política diferente da Equação~\ref{eq:media-externa}; confundi-las levaria a conclusões incorretas sobre sensores com frequências distintas.
+
+As janelas de agregação também usam estados, reserva temporária e repetição. Uma medição atrasada pode exigir recomputação explícita de um resultado já encerrado. O sistema não é apresentado como um mecanismo completo de processamento contínuo que atualiza automaticamente todos os agregados diante de qualquer atraso. O console disponibiliza filtros e visualização de agregados, mas sua existência não substitui a análise da semântica do cálculo.
+
+\section{Interpretar condições e relacioná-las às atividades}
+\subsection{Qualificação de valores e eventos de missão}
+O dado padronizado permite expressar condições sem depender do formato do fabricante. Uma regra de qualificação pode comparar uma temperatura a limites e registrar o resultado associado ao valor. Uma condição de evento de missão pode utilizar o valor diretamente ou uma avaliação de regra. Assim, a interpretação pode ser reutilizada, desde que a política aplicável permaneça identificável \cite{probenAtual2026}.
+
+As avaliações elementares não precisam ser mutuamente exclusivas. Uma temperatura pode satisfazer simultaneamente um limiar de alerta e outro mais severo. A versão inspecionada não deve ser descrita como escolhendo automaticamente um único resultado apenas pela existência de uma coluna de prioridade. Consolidar resultados exige uma política explícita, diferente de registrar cada regra satisfeita.
+
+Missões relacionam condições, ocorrências, atividades e beneficiários. Algumas condições são instantâneas; outras dependem de duração, transição ou encerramento de uma janela. Nesses casos, tempo e lacunas fazem parte da interpretação. Estados e evidências persistidos permitem explicar o progresso e retomar uma janela, sem reduzir uma condição temporal à comparação da última leitura.
+
+O motor simples permanece a opção padrão para as regras instantâneas. Drools é uma alternativa experimental para avaliação temporal, habilitada por configuração. A lógica de comparação fica separada dos efeitos persistentes, evitando que a avaliação de uma regra execute diretamente operações de recompensa. O experimento histórico que motivou essa escolha é analisado no Capítulo~\ref{cap:avaliacao}.
+
+\subsection{Regras de ambiente e precedência de escopo}
+A versão atual acrescenta um fluxo próprio de regras de ambiente. Ele reutiliza medições locais, fontes compartilhadas, contexto acadêmico e registro de pontos, mas não exige transformar cada verificação agendada em uma missão ou atividade. As categorias iniciais incluem ar-condicionado, iluminação e equipamentos; a configuração aceita operadores declarativos, sem código arbitrário fornecido pelo usuário \cite{probenAtual2026}.
+
+O desafio de replicação institucional aparece na escolha da regra efetiva. Para cada sala e categoria, uma regra específica tem precedência; na ausência dela, aplica-se o padrão do campus e, depois, o padrão global. A regra de menor abrangência substitui o padrão nesse contexto, evitando executá-los como se fossem verificações independentes equivalentes. Ambiguidades e conflitos de escopo são tratados explicitamente.
+
+Cada execução registra uma cópia da configuração utilizada, ou \emph{snapshot}, além do instante previsto e das evidências. Alterar a regra posteriormente não altera essa cópia. A conclusão da execução e a concessão de pontos verificam a posse válida da reserva temporária. Essa organização procura impedir que um executor antigo, após perder a reserva, conclua o trabalho que já foi retomado por outro.
+
+\subsection{Faixa adaptativa: dados, cálculo e limites}\label{sec:conforto}
+A configuração de conforto adaptativo combina uma temperatura interna com a referência externa de sete dias. O componente atual calcula a temperatura neutra $T_n$ e os limites $L$ e $U$ por:
+\begin{align}
+T_n &=17{,}8+0{,}31\overline{T}_{e,7d},\\
+L &=T_n-d_{\mathrm{inf}},\qquad U=T_n+d_{\mathrm{sup}}.
+\end{align}
+As diferenças inferior e superior são configuráveis e assumem $3{,}5\,^{\circ}\mathrm{C}$ como valor padrão. A comparação implementada inclui os dois limites. Esses valores descrevem o código examinado; o fundamento adaptativo remete à relação entre experiência térmica externa e condições internas discutida por De Dear e Brager \cite{deDear2002,probenAtual2026}.
+
+Se a média externa for $20\,^{\circ}\mathrm{C}$, o cálculo produz $T_n=24\,^{\circ}\mathrm{C}$ e, com os afastamentos configurados por padrão, a faixa de $20{,}5$ a $27{,}5\,^{\circ}\mathrm{C}$. A temperatura interna de $22{,}5\,^{\circ}\mathrm{C}$ do exemplo está nessa faixa. Isso descreve uma condição aritmética; não comprova conforto de um ocupante, nem economia de energia.
+
+A aplicação científica do modelo exige cautela. O estudo de referência trata ambientes naturalmente ventilados e utiliza temperatura operativa em sua avaliação. O software opera com os parâmetros fornecidos pela integração e uma política própria de média externa. Não há verificação automática de todas as condições ambientais e de ocupação exigidas para uma aplicação normativa. A variável interna configurada também não é automaticamente equivalente à temperatura operativa. Assim, a infraestrutura torna o cálculo disponível e rastreável, mas sua utilização em uma intervenção requer validação de domínio.
+
+Condições adicionais, como estado de um equipamento e ocupação, continuam necessárias quando configuradas. A faixa adaptativa não as substitui. Dados ausentes, antigos ou com cobertura insuficiente impedem o uso da condição correspondente; a execução registra o motivo, em vez de preencher lacunas com zero ou conceder pontos a partir de uma informação inexistente.
+
+\section{Dos resultados aos efeitos de gamificação}
+O último desafio do percurso é relacionar uma decisão a pessoas sem perder sua evidência nem repetir seu efeito. Em missões, ocorrências podem progredir atividades e gerar pontos. Em regras de ambiente, a execução identifica contexto, beneficiários e resultado antes de registrar o efeito. O saldo de \emph{Experience Points} (XP), pontos de experiência, é calculado pela soma de lançamentos em um \emph{ledger}, registro de movimentações preservadas, em vez de substituir continuamente um saldo na pessoa \cite{probenAtual2026}.
+
+\begin{figure}[htbp]\centering
+\caption{Relações conceituais necessárias para explicar um efeito de gamificação. A implementação concreta difere entre missões e regras de ambiente.}
+\label{fig:rastreabilidade}
+\begin{tikzpicture}[node distance=7mm,
+ box/.style={draw,rounded corners,align=center,text width=10.4cm,minimum height=9mm,font=\small},
+ arr/.style={-{Stealth[length=2mm]},thick}]
+\node[box] (a) {Origem e observação: sensor, tempo e valor};
+\node[box,below=of a] (b) {Interpretação: parâmetro, perfil e contexto aplicável};
+\node[box,below=of b] (c) {Decisão: condição, evidência e resultado};
+\node[box,below=of c] (d) {Participação: atividade ou beneficiários identificados};
+\node[box,below=of d] (e) {Efeito: lançamento de pontos com identidade própria};
+\draw[arr] (a)--(b);\draw[arr] (b)--(c);\draw[arr] (c)--(d);\draw[arr] (d)--(e);
+\end{tikzpicture}
+\caption*{Fonte: elaboração do autor a partir do código da versão examinada.}
+\end{figure}
+
+A Figura~\ref{fig:rastreabilidade} sintetiza o argumento: um ponto deve estar relacionado à decisão que o produziu, e a decisão aos dados que a sustentaram. Na telemetria, identificadores relacionam documento bruto e medição; no domínio relacional, referências conectam valores, evidências, ocorrências e atividades. As regras de ambiente acrescentam cópia da configuração de execução e referências aos seus lançamentos.
+
+Essa rastreabilidade tem limites diferentes. O conteúdo bruto desaparece após a retenção; a ligação entre bancos é lógica, não uma chave estrangeira distribuída; e regras elementares de qualificação não necessariamente preservam todos os limiares históricos dentro de cada avaliação. O \emph{snapshot} das regras de ambiente melhora a explicação nesse fluxo, mas não autoriza afirmar que todas as políticas históricas de todo o sistema são integralmente reconstruíveis.
+
+\section{Operação e proteção ao longo do percurso}
+O console permite configurar sensores, integrações, fontes compartilhadas, missões e regras, além de consultar medições e agregados. Esse suporte operacional é relevante porque a adaptação de fontes precisa ser realizável sem alterar o código a cada configuração. As capturas do Apêndice~\ref{ap:console} ilustram funcionalidades já documentadas; por serem anteriores à atualização, não são apresentadas como prova visual de todas as telas atuais.
+
+A identidade e os papéis controlam quais operações cada cliente pode executar. \emph{JSON Web Token} (JWT) é o formato de token empregado para transportar informações da autenticação \cite{jwt2015}. Há separação entre usuários humanos, produtores de ingestão e a identidade técnica de comunicação entre serviços. O \emph{Role-Based Access Control}, controle por papéis, organiza responsabilidades administrativas, operacionais, analíticas e de participação. Seu emprego responde à necessidade de impedir que receber dados implique também poder alterar usuários ou configurações sensíveis.
+
+Estados, métricas e registros de execução tornam o processamento observável. O problema é localizar uma falha sem depender de um resultado final ausente. Por isso, identificar se um item foi recebido, interpretado, rejeitado ou retomado faz parte do percurso. As políticas de proteção e observação também têm limites de implantação: a autenticidade do produtor MQTT depende da configuração do intermediário, e a existência de autenticação na aplicação não substitui uma auditoria completa de segurança \cite{probenAtual2026}.
+
+\chapter{Avaliação e Discussão}\label{cap:avaliacao}
+A avaliação retoma os desafios do percurso para examinar o que o artefato permite demonstrar. São separados três níveis de evidência: mecanismos e cenários identificados no código atual, registros históricos de execução e resultados de um experimento anterior. A separação evita que uma ampliação funcional seja interpretada como aprovação automática de toda a versão.
+
+\section{Inspeção da versão atual}
+A Tabela~\ref{tab:avaliacao} relaciona requisitos, mecanismos e cenários localizados no commit definido na Seção~\ref{sec:versoes}. ``Cenário localizado'' significa leitura do código de teste e de seu oráculo; não uma nova execução aprovada. As classes são identificadas no Apêndice~\ref{ap:evidencias}, mantendo os nomes de implementação fora do argumento principal.
+
+\begin{table}[htbp]\centering\small
+\caption{Mecanismos e cenários identificados na versão atual}\label{tab:avaliacao}
+\begin{tabularx}{\textwidth}{p{1.2cm}p{2.9cm}YY}\toprule
+Req. & Propriedade & Mecanismo ou cenário localizado & Alcance da evidência \\\midrule
+R1--R4 & Integração e identidade & Recebimento bruto, ingestão direta e por perfil, comparação de conteúdo e validação transacional. & Estrutura inspecionada; diversidade real de fabricantes não demonstrada. \\
+R5 & Fonte compartilhada & Seleção explícita, mesma observação usada por várias salas, rejeição de localização antiga e cobertura insuficiente. & Código de serviço e de testes; execução atual não aferida. \\
+R6 & Agregação temporal & Persistência de janelas e agregados; distinção entre média por amostra e média externa ponderada no tempo. & Semântica descrita; carga e atraso contínuo não medidos. \\
+R7--R8 & Efeitos e recuperação & Reserva recuperável, posse da execução e identidade de lançamento por beneficiário. & Cenários de concorrência e perda de reserva localizados, sem ensaio distribuído completo. \\
+R9 & Operação e proteção & Separação de serviços e identidades; cenários de proteção do coletor. & Não equivale a auditoria de segurança ou usabilidade. \\
+R10 & Regras de ambiente & Precedência de escopo, contexto, presença, cópia de configuração e limites adaptativos. & Consistência do desenho examinada; efeito em campo não avaliado. \\\bottomrule
+\end{tabularx}
+\caption*{Fonte: inspeção do código e dos testes no commit de referência \cite{probenAtual2026}.}
+\end{table}
+
+Os testes atuais de conforto incluem comparações nos limites da faixa e condições imediatamente externas, exigência de fatos adicionais e ausência de informação. Os de fontes compartilhadas distinguem validade, localização, reutilização da observação e cobertura da média. Os de regras de ambiente incluem precedência entre sala, campus e padrão global, preservação da configuração e recuperação de reserva. Esses oráculos correspondem aos riscos discutidos no desenvolvimento, mas precisam ser executados e arquivados no mesmo commit para produzir um resultado consolidado \cite{probenAtual2026}.
+
+Há uma diferença entre impedir repetição por restrição local e demonstrar consistência de ponta a ponta. O caso em que a API conclui e o serviço de telemetria perde a confirmação é tratado pelo desenho de ingestão, mas permanece necessária uma execução controlada com interrupção nessa fronteira. Da mesma forma, uma simulação de perda de reserva não equivale a uma indisponibilidade longa envolvendo processos, rede e bancos.
+
+\section{Registros históricos de verificação}
+O relatório de testes de sanidade de 17 de setembro de 2026 registra 112 verificações aprovadas, cinco avisos e zero falhas em 71,6 segundos, contra um ambiente identificado como produção. Entre os avisos estavam timeout na sincronização de salas, falha de autenticação ao consultar um processamento de horários e a verificação de persistência não realizada em consequência, além de estados tolerados de usuário já existente e presença já encerrada \cite{probenSmoke2026}.
+
+O relatório é uma evidência operacional daquele roteiro e instante. Ele não identifica o hash implantado e antecede a versão atual; por isso, não valida as novas fontes externas ou as regras de ambiente. O tempo total mistura rede, espera e operações distintas e não é tratado como medida de desempenho da arquitetura.
+
+\section{Experimento histórico dos motores de regras}
+O documento de decisão sobre Drools registra um experimento com \emph{Java Microbenchmark Harness}, ferramenta para medição de operações Java em condições controladas. A configuração utilizou dois processos de execução independentes, cinco iterações de aquecimento e dez de medição, de um segundo cada, com OpenJDK 21.0.10 em Windows 11. O próprio documento informa que o hardware não foi identificado automaticamente. O registro não vincula de modo suficiente todos os resultados a um hash executado e a um ambiente dedicado; esses limites são preservados nesta análise \cite{probenDrools2026}.
+
+O experimento compara um motor simples com Drools em dois estados. Na operação fria, a criação e compilação da base de regras são incluídas. Na operação quente, a base compilada é reutilizada, mas uma sessão é criada para cada avaliação. Cada operação avalia um lote completo de fatos, sem rede, persistência e demais executores da aplicação. A Tabela~\ref{tab:benchmark} reproduz apenas os resultados do cenário instantâneo com mil fatos, para o qual existe comparação entre as três configurações.
+
+\begin{table}[htbp]\centering\small
+\caption{Resultados históricos para um lote de mil fatos instantâneos}\label{tab:benchmark}
+\begin{tabularx}{\textwidth}{Yrr}\toprule
+Configuração & Latência média (ms) & Percentil 99 (ms) \\\midrule
+Motor simples & 0,016 & 0,049 \\
+Drools com compilação por operação & 44,619 & 97,750 \\
+Drools com base reutilizada & 1,502 & 3,011 \\\bottomrule
+\end{tabularx}
+\caption*{Fonte: documento de decisão técnica do projeto \cite{probenDrools2026}.}
+\end{table}
+
+O percentil 99 é o valor abaixo do qual se encontram aproximadamente 99\% das amostras de latência do cenário. Os números apoiam a escolha do motor simples para as regras instantâneas medidas. Não demonstram que ele seja superior em toda regra temporal nem representam tempo de resposta de uma missão completa. O documento também relata Drools em cenários de duração, mas sem resultado equivalente do motor simples; essa parte não sustenta uma comparação de superioridade.
+
+O resultado é relevante como justificativa de uma decisão anterior, não como medição da versão atual. Para reavaliar a escolha, é necessário fixar código e ambiente, repetir o experimento e incluir regras representativas do uso esperado. O cálculo de regras de ambiente, por sua vez, é um fluxo próprio e não deve receber os números desse experimento como se medisse o mesmo mecanismo.
+
+\section{Discussão por desafio de projeto}
+\subsection{Flexibilidade de integração e custo de coordenação}
+A separação entre mensagem original e representação comum permite interpretar formatos sem alterar cada consumidor. Perfis e parâmetros tornam essa flexibilidade operável. Entretanto, a necessidade de dois armazenamentos acrescenta fronteiras de falha, referências lógicas e políticas de retenção. A contribuição do desenho é explicitar e tratar essas fronteiras; a avaliação disponível não prova vantagem de desempenho em relação a uma arquitetura com banco único.
+
+\subsection{Contexto e qualidade da decisão}
+Os dados compartilhados reduzem replicação e preservam origem, enquanto validade e cobertura impedem preencher lacunas como se fossem observações. Em contrapartida, uma decisão pode deixar de ser executada por falta de dados, e a alteração de localização pode exigir reconstruir o histórico disponível. Esses resultados não são defeitos necessariamente: tornam explícita a dependência entre qualidade da entrada e possibilidade de interpretação.
+
+A relação entre matrícula, horário e presença também impede equiparar automaticamente participantes previstos e presentes. O sistema oferece políticas distintas, mas o projeto institucional ainda precisa decidir qual delas é adequada para cada atividade. A infraestrutura torna a escolha representável e auditável; sua legitimidade pedagógica e comportamental depende da intervenção.
+
+\subsection{Rastreabilidade e limites de comprovação}
+Identidades, referências e cópias de configuração permitem inspecionar por que um resultado foi produzido. Isso sustenta a explicabilidade técnica de partes do percurso. A preservação temporária do bruto e as diferenças de versionamento entre tipos de regra limitam a reconstrução completa. É necessário avaliar explicitamente o que deve ser retido, por quanto tempo e em qual nível de detalhe antes de afirmar auditoria integral.
+
+\section{Ameaças à validade e avaliação ainda necessária}
+A validade interna é limitada pela autoria comum do sistema e de seus testes, pela ausência de nova execução consolidada na versão atual e pela falta de um ensaio completo de falha entre os bancos. A inspeção confirma mecanismos e intenções de teste, mas não todos os comportamentos em execução.
+
+A validade externa é limitada ao contexto institucional e aos formatos examinados no desenvolvimento. Não foi demonstrada carga representativa de um prédio ocupado nem operação prolongada em múltiplas unidades. Modularidade e configurações favorecem a intenção de expansão, mas não constituem medição de escalabilidade.
+
+A validade de construto exige distinguir condição calculada, conforto, engajamento e economia. Pontos não medem consumo evitado, uma matrícula não comprova presença e uma faixa térmica implementada não comprova conforto percebido. O estudo de campo deverá definir linha de base, métricas, critérios de aplicação do modelo e instrumentos apropriados aos objetivos institucionais.
+
+Para fortalecer a avaliação técnica, são necessários um pacote de execução vinculado ao commit atual, testes de interrupção entre serviços, comparação de formatos equivalentes, carga contínua e ensaios de restauração. A avaliação de segurança e usabilidade exige procedimentos próprios. Essas lacunas delimitam o que se pode concluir a partir do artefato apresentado.
+
+\chapter{Conclusão}\label{cap:conclusao}
+Este trabalho investigou a construção de uma infraestrutura capaz de relacionar observações ambientais heterogêneas e registros de participação para apoiar a gamificação da eficiência energética. O cenário do Centro de Artes da UFPel permitiu formular o problema como um percurso de integração: identificar a origem, receber dados, preservar evidências, produzir uma representação comum, acrescentar contexto e utilizar as informações em análises e decisões.
+
+A solução implementada combina preservação documental temporária e persistência relacional, perfis configuráveis de integração, fontes externas compartilhadas e relações acadêmicas e de participação. Agregação, missões e regras de ambiente utilizam essa base com mecanismos de identidade, estados e recuperação. A versão atual também registra configurações e evidências de execução de regras de ambiente, incluindo o cálculo de uma faixa adaptativa a partir de dados internos e externos.
+
+Em resposta à questão de pesquisa, o artefato mostra uma forma concreta de separar a variabilidade das fontes das relações estáveis necessárias ao domínio, mantendo vínculos entre observações e efeitos. A principal contribuição não está em uma tecnologia isolada, mas na articulação desses mecanismos e na explicitação dos desafios de integração, tempo, contexto e repetição.
+
+A avaliação disponível sustenta conclusões delimitadas. A inspeção atual identifica mecanismos e cenários; o relatório operacional e o experimento de motores constituem evidências históricas. Eles não substituem uma execução consolidada da versão atual nem demonstram economia, conforto em campo ou escalabilidade institucional. O motor simples permanece justificado nos cenários instantâneos historicamente medidos, sem transferir esse resultado para todos os fluxos.
+
+A continuidade do trabalho deve priorizar a consolidação das evidências técnicas, o versionamento das políticas históricas e os ensaios de carga e recuperação. Em paralelo, a integração da aplicação móvel permitirá avaliar a participação no uso real. A validação do conforto e do impacto energético deverá ocorrer no projeto institucional, com critérios de domínio e desenho de avaliação apropriados. A infraestrutura apresentada constitui a base de dados e serviços para essa etapa.
+
+\appendix
+\chapter{Fontes Técnicas e Reprodução da Análise}\label{ap:evidencias}
+Este apêndice identifica o material de implementação utilizado para fundamentar a descrição do sistema. Os caminhos são relativos ao repositório técnico e pertencem ao commit \path{5e2a1e27d2f4ceb31217867259a303eee84b3c0f}. A lista organiza a conferência do percurso; não constitui um relatório de execução das suítes.
+
+\begin{longtable}{p{3.1cm}p{9.8cm}}
+\caption{Componentes utilizados na inspeção do fluxo atual}\label{tab:fontes-codigo}\\
+\toprule Etapa & Evidência de implementação \\\midrule\endfirsthead
+\toprule Etapa & Evidência de implementação \\\midrule\endhead
+Recebimento e entrega & \path{Proben-Telemetry/src/main/java/com/proben/telemetry/service/canonical/CanonicalTelemetryWorker.java}; \path{RawTelemetryClaimService.java} no mesmo pacote; \path{Documentos/MQTT.md}. \\
+Integração & \path{Proben-API/src/main/java/com/proben/api/service/sensors/SensorIngestOrchestrator.java}; \path{SensorCanonicalIngestionTransaction.java}; \path{SensorIngestionService.java}. \\
+Fontes externas & \path{Proben-API/src/main/java/com/proben/api/service/shared/SharedContextService.java}; \path{SharedContextCollector.java}; \path{CredentialEncryptionService.java}. \\
+Contexto acadêmico & \path{Proben-API/src/main/java/com/proben/api/service/academic/AcademicContextResolver.java}; \path{service/missions/beneficiaries/DefaultMissionBeneficiaryResolver.java}. \\
+Regras de ambiente & \path{Proben-API/src/main/java/com/proben/api/service/environment/EnvironmentRuleService.java}; \path{EnvironmentRuleWorker.java}; \path{AdaptiveComfortCalculator.java}. \\
+Estrutura persistida & \path{Proben-API/src/main/resources/db/migration/}, especialmente V29 a V33 para contextos, coleta e regras de ambiente. \\
+Documentação & \path{README.md}; \path{Documentos/Catalogo-Dados.md}; \path{Documentos/Modelo-MongoDB/Modelo-Telemetria-MongoDB.md}; \path{Documentos/Organizacao-do-Codigo.md}. \\\bottomrule
+\end{longtable}
+{\footnotesize Fonte: inspeção do repositório técnico pelo autor \cite{probenAtual2026}.\par}
+
+No diretório de testes de regras de ambiente foram examinados cenários de resolução, histórico, concorrência, integração acadêmica, fontes compartilhadas e conforto adaptativo. Em particular, \path{EnvironmentRuleResolutionIntegrationTest} trata precedência e reserva; \path{EnvironmentRuleSharedContextIntegrationTest} trata localização e cobertura; \path{EnvironmentRuleAdaptiveComfortIntegrationTest} trata limites e fatos obrigatórios. O conjunto de fontes compartilhadas também contém cenários de falha, posse de reserva e proteção da coleta. A presença de Testcontainers com opção de ignorar testes sem Docker exige registrar separadamente casos executados e ignorados em uma futura execução.
+
+Para reprodução da análise, deve-se obter o commit identificado e conferir os módulos \path{Proben-API}, \path{Proben-Telemetry} e \path{Proben-Admin}. Uma execução de testes pode utilizar \path{./Proben-API/mvnw -f Proben-API/pom.xml test} e \path{./Proben-API/mvnw -f Proben-Telemetry/pom.xml test}, com ambiente Java e Docker compatíveis; o console utiliza seus comandos definidos no arquivo de dependências. O benchmark é uma etapa separada, descrita em \path{Documentos/Decisao-Drools-POC.md}. Os resultados precisam registrar hash, ambiente, comando, falhas e casos ignorados.
+
+Os documentos históricos continuam identificados pelo commit antigo nas respectivas referências. Resultados locais sem arquivo preservado não são convertidos em evidência atual. Uma versão de entrega deverá arquivar relatórios e resultados brutos junto de uma identificação permanente do código correspondente.
+
+\chapter{Exemplos Documentados do Console}\label{ap:console}
+As capturas a seguir, já presentes no material anterior do TCC, ilustram a relação entre conceitos do domínio e operação. Elas foram produzidas antes da renomeação e mostram ``PROCEL Console''. São registros históricos de interface, não capturas da versão atual nem evidência de usabilidade. As novas telas de fontes compartilhadas e regras de ambiente não são inferidas a partir delas.
+
+\begin{figure}[htbp]\centering
+\caption{Registro histórico do console: medições e qualificação.}
+\includegraphics[width=\textwidth,trim=0 0 0 75,clip]{imagens/screenshots-do-PROCEL/Screenshot_2.png}
+\caption*{Fonte: captura histórica do console fornecida pelo autor.}
+\end{figure}
+\begin{figure}[htbp]\centering
+\caption{Registro histórico do console: grupos e regras de qualificação.}
+\includegraphics[width=\textwidth]{imagens/screenshots-do-PROCEL/Screenshot_4.png}
+\caption*{Fonte: captura histórica do console fornecida pelo autor.}
+\end{figure}
+\begin{figure}[htbp]\centering
+\caption{Registro histórico do console: configuração de missão e recompensa.}
+\includegraphics[width=\textwidth]{imagens/screenshots-do-PROCEL/Screenshot_7.png}
+\caption*{Fonte: captura histórica do console fornecida pelo autor.}
+\end{figure}
+\clearpage
 \bibliographystyle{abnt}
 \bibliography{bibliografia}
-
 \end{document}

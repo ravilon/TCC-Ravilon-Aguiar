@@ -1,126 +1,44 @@
-# Modelos LaTeX para Trabalhos Acadêmicos – UFPel
+# TCC — Rávilon Aguiar dos Santos
 
-Este repositório disponibiliza **modelos LaTeX oficiais e exemplos práticos** para a elaboração de trabalhos acadêmicos da **Universidade Federal de Pelotas (UFPel)**, seguindo as normas da **ABNT** e diretrizes institucionais.
+**Gerenciamento Multi-Estruturado de Dados Móveis Gamificados: Integrando Fontes Heterogêneas**
 
-O objetivo é facilitar a escrita, padronização e formatação de documentos acadêmicos, oferecendo modelos prontos e arquivos auxiliares amplamente utilizados e mantidos ao longo dos anos.
+Trabalho de Conclusão de Curso de Ciência da Computação da Universidade Federal de Pelotas.
 
----
+- Orientador: Anderson Priebe Ferrugem.
+- Coorientadora: Ana Marilza Pernas Fleischmann.
+- Cenário inicial: Centro de Artes da UFPel.
+- Recorte: infraestrutura de dados e serviços da plataforma PROBEN para apoiar análise e futura aplicação de gamificação.
 
-## 📁 Estrutura do Repositório
+## Texto e compilação
 
-### 📌 Arquivos principais
+O documento principal é `TCC-Ravilon.tex`; as referências estão em `bibliografia.bib`. A classe `texufpel.cls` e o estilo `abnt.bst` acompanham o projeto. Os exemplos de modelos existentes são preservados como material auxiliar.
 
-- **`texufpel.cls`**  
-  Classe LaTeX principal da UFPel. Responsável pela padronização de capa, margens, fontes, espaçamentos, elementos pré-textuais e estrutura geral do documento.
+No Overleaf, envie os arquivos e selecione **TCC-Ravilon.tex** como documento principal, com compilador **pdfLaTeX**. Preserve a pasta `imagens/`.
 
-- **`abnt.bst`**  
-  Estilo bibliográfico no padrão ABNT para uso com BibTeX.
+Em uma instalação completa do TeX Live ou equivalente, com suporte ao português e os pacotes usados no preâmbulo:
 
-- **`bibliografia.bib`**  
-  Arquivo de exemplo para organização das referências bibliográficas.
+```bash
+make
+```
 
-- **`Makefile`**  
-  Arquivo para automatizar o processo de compilação dos documentos LaTeX via linha de comando.
+Ou:
 
----
+```bash
+latexmk -pdf -interaction=nonstopmode -halt-on-error TCC-Ravilon.tex
+```
 
-## 📄 Exemplos de documentos
+`make clean` remove auxiliares e mantém o PDF. Para outro documento, utilize `make FILE=nome-sem-extensao`.
 
-Os arquivos abaixo são **modelos completos e funcionais**, prontos para adaptação conforme o tipo de trabalho acadêmico.
+## Versão do sistema descrita
 
-### 🎓 Trabalhos acadêmicos
+A revisão de 12/11/2026 utiliza o backend no commit [`5e2a1e27d2f4ceb31217867259a303eee84b3c0f`](https://github.com/ravilon/PROCEL-Back-End/tree/5e2a1e27d2f4ceb31217867259a303eee84b3c0f). A versão atual é analisada por inspeção; relatórios e números de benchmark anteriores conservam sua identificação histórica. A atualização do texto não representa nova execução das suítes do backend.
 
-- **`exemplo-tcc.tex`** – Trabalho de Conclusão de Curso  
-- **`exemplo-tcc-proposta.tex`** – Proposta de Trabalho de Conclusão de Curso  
+## Material de revisão
 
-- **`exemplo-diss.tex`** – Dissertação de Mestrado  
-- **`exemplo-diss-proposta.tex`** – Proposta de Dissertação  
+- [Diretrizes](AGENTS.md).
+- [Organização narrativa](revisao/Plano-narrativa-dados.md).
+- [Matriz de fundamentação](revisao/Matriz-fundamentacao.md).
+- [Registro da revisão e validação](revisao/Revisao-2026-11-12.md).
+- `revisao/TCC-Ravilon-revisado.pdf`: PDF de conferência.
 
-- **`exemplo-tese.tex`** – Tese de Doutorado  
-- **`exemplo-tese-proposta.tex`** – Proposta de Tese  
-
-- **`exemplo-qualificacao.tex`** – Exame de Qualificação  
-
-- **`exemplo-ti.tex`** – Trabalho de Iniciação Científica ou Trabalho Técnico  
-
----
-
-## 📊 Slides
-
-- **`exemplo-slides/`**  
-  Diretório contendo exemplos de apresentações acadêmicas desenvolvidas em LaTeX.
-
----
-
-## 🛠️ Arquivos auxiliares e tutoriais
-
-Documentos explicativos com orientações sobre funcionalidades específicas e formatações recorrentes em trabalhos acadêmicos.
-
-- **`como_fazer_apud_footcite.txt`**  
-  Orientações para utilização de *apud* e citações em notas de rodapé.
-
-- **`como_incluir_ficha_catalografica.txt`**  
-  Instruções para inclusão da ficha catalográfica em PDF no documento LaTeX.
-
-- **`como_incluir_lista_de_quadros.txt`**  
-  Procedimentos para criação e inclusão da lista de quadros.
-
-- **`como_incluir_tooltip_abreviacoes.txt`**  
-  Uso de tooltips para exibição de abreviações e siglas.
-
----
-
-## 🖼️ Arquivos de apoio
-
-- **`figura.pdf`**  
-  Arquivo de exemplo para inserção e formatação de figuras.
-
-- **`ufpel.pdf`**  
-- **`ufpelw.pdf`**  
-  Arquivos gráficos institucionais da Universidade Federal de Pelotas.
-
----
-
-## 🚀 Como utilizar
-
-1. Escolha o arquivo de exemplo correspondente ao seu tipo de trabalho acadêmico.
-2. Edite o arquivo `.tex` com o conteúdo do seu trabalho.
-3. Compile o documento utilizando uma das opções abaixo:
-   - **Overleaf**
-   - **TeXstudio**
-   - **VS Code com LaTeX Workshop**
-   - **Linha de comando**:
-     ```bash
-     make
-     ```
-     ou
-     ```bash
-     pdflatex arquivo.tex
-     ```
-
----
-
-## 👥 Público-alvo
-
-- Estudantes de graduação e pós-graduação da UFPel  
-- Docentes e pesquisadores  
-- Usuários LaTeX interessados em modelos acadêmicos no padrão ABNT  
-
----
-
-## 🤝 Contribuições
-
-Contribuições são bem-vindas e incentivadas.
-
-- Correções e ajustes  
-- Atualizações conforme normas vigentes  
-- Inclusão de novos exemplos  
-- Melhorias na classe LaTeX  
-
-### Utilize **issues** ou envie **pull requests**.
----
-
-## 📜 Licença
-
-Uso livre para fins acadêmicos e educacionais.
-
+O desenvolvimento acompanha origem, recebimento, transformação, contexto, consulta e efeitos de gamificação. Os apêndices reúnem caminhos técnicos e capturas históricas. O cliente móvel e a avaliação do impacto comportamental e energético pertencem à continuidade do projeto institucional.

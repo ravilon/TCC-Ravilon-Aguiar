@@ -1,17 +1,12 @@
-LATEX = pdflatex --interaction=batchmode
-BIBTEX = bibtex
-RM = rm -f
-FILE = exemplo-tese-proposta
+FILE ?= TCC-Ravilon
+LATEXMK ?= latexmk
 
-all:	
-		$(LATEX) $(FILE)
-		$(BIBTEX) $(FILE)
-		$(LATEX) $(FILE)
-		$(LATEX) $(FILE)
-		@echo ---------------------------------------------------
-		@echo Ps: done.
+.PHONY: all pdf clean
 
-clean:	
-		$(RM) $(FILE).aux $(FILE).log $(FILE).out $(FILE).ps $(FILE).pdf $(FILE).toc $(FILE).dvi $(FILE).lof $(FILE).bbl $(FILE).lot $(FILE).blg *~ *backup
-		@echo ---------------------------------------------------
-		@echo Directory cleaned
+all: pdf
+
+pdf:
+	$(LATEXMK) -pdf -interaction=nonstopmode -halt-on-error $(FILE).tex
+
+clean:
+	$(LATEXMK) -c $(FILE).tex
