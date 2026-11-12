@@ -7,6 +7,9 @@
 - Usar Centro de Artes da UFPel como identificação do cenário inicial.
 - Orientador: Anderson Priebe Ferrugem. Coorientadora: Ana Marilza Pernas Fleischmann.
 - O recorte é a infraestrutura de dados e serviços que dará suporte à aplicação de gamificação. Distinguir o sistema implementado, funcionalidades previstas e a avaliação do projeto institucional.
+- PROBEN designa exclusivamente o Programa de Bom Uso Energético da UFPel, não a plataforma de software. Distinguir programa institucional, projeto de gamificação e artefato de infraestrutura de dados.
+- Na narrativa acadêmica, denominar componentes por suas responsabilidades: serviço de coleta e persistência de dados brutos (Proben-Telemetry), serviço de integração, processamento e disponibilização de dados (Proben-API) e interface de administração e configuração (Proben-Admin). Usar nomes históricos de diretórios apenas quando necessários à rastreabilidade técnica.
+- A coleta e persistência de mensagens de sensores não exigem que o dispositivo ou perfil de interpretação já esteja configurado. Diferenciar aceitar e preservar dados brutos de interpretá-los e produzir medições canônicas; não confundir recebimento com integração concluída.
 
 ## Terminologia e referências
 - Utilizar conceitos reconhecidos na literatura. Buscar e ler artigos que sustentem a definição e sua aplicação ao problema antes de incorporar conceitos ou afirmações novas.
