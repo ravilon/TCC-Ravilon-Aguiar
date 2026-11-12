@@ -147,6 +147,8 @@ MQTT é um protocolo de mensageria baseado em publicação e assinatura. Um prod
 O formato dos dados constitui uma dimensão diferente do protocolo. \emph{JavaScript Object Notation} (JSON) é um formato textual de representação de dados \cite{json2017}. Dois produtores podem usar JSON e ainda assim representar temperatura em campos diferentes. A transformação para uma representação comum, denominada modelo canônico neste trabalho, procura estabilizar a interpretação usada pelas etapas seguintes. Sua realização depende de identificadores, tipos, unidades e mapeamentos explícitos, e não apenas da adoção do mesmo protocolo.
 
 \section{Persistência poliglota e integridade}
+Armazenar uma observação envolve decidir qual representação conservar, por quanto tempo e sob quais vínculos ela será utilizada. A mensagem recebida precisa sustentar a inspeção de sua origem; a medição interpretada precisa estabelecer relações com sensores, espaços e atividades. A persistência poliglota articula essas necessidades por meio de mecanismos complementares, enquanto a integridade assegura que a passagem entre representações preserve identidade e significado. A escolha do armazenamento deve, portanto, considerar conjuntamente a estrutura dos dados, as operações esperadas e seu ciclo de vida.
+
 \subsection{Modelos de dados e critérios de escolha}
 \emph{Polyglot persistence}, ou persistência poliglota, designa o uso de diferentes mecanismos de armazenamento para diferentes finalidades em uma mesma aplicação. \citet{grolinger2013} apresentam o conceito ao discutir a diversidade de bancos e modelos de dados. A escolha não se resume a combinar produtos: é necessário identificar quais representações, consultas e garantias cada parte da aplicação demanda.
 
@@ -346,6 +348,8 @@ A distinção entre bancos tampouco elimina dados documentais no PostgreSQL. As 
 No exemplo da temperatura, o documento bruto conserva o campo externo; a medição relacional conserva o valor associado ao sensor, ao parâmetro e ao instante. A referência ao identificador da medição no documento e os metadados da ingestão no PostgreSQL conectam essas representações. Trata-se de um vínculo lógico entre bancos, enquanto as relações internas do modelo relacional são verificadas por suas próprias restrições. Essa organização explica tanto a possibilidade de seguir a observação ao longo do processamento quanto a necessidade de recuperação diante de falhas parciais.
 
 \section{Identificar a origem: sensores, espaços e pessoas}
+O percurso começa pela identificação do que foi observado e do contexto ao qual a observação pertence. Um identificador de dispositivo permite reconhecer a fonte, mas sua utilidade para a gamificação depende também da grandeza informada, do espaço e das relações de participação. Separar esses elementos permite trocar formatos de entrada preservando referências compreensíveis para consultas e atividades.
+
 \subsection{Modelagem de dispositivos e grandezas}
 O primeiro desafio é representar modelos de sensores sem construir uma tabela diferente para cada fabricante. A solução separa o tipo de sensor, os parâmetros que ele pode informar, o dispositivo concreto e as medições produzidas. Uma medição reúne valores numéricos, booleanos ou textuais associados a definições de parâmetro. Assim, temperatura, presença e estado de um equipamento mantêm tipos próprios, embora possam participar do mesmo fluxo de integração.
 
@@ -383,6 +387,8 @@ A Figura~\ref{fig:der-academico} mostra como o espaço conecta essas fontes. O c
 
 
 \section{Receber mensagens e preservar sua identidade}
+Depois de identificar as fontes, o recebimento precisa estabelecer o que constitui uma nova observação. Uma mesma mensagem pode chegar mais de uma vez, enquanto entradas distintas podem utilizar formatos semelhantes. Preservar conteúdo, origem e identidade permite distinguir esses casos e acompanhar o processamento desde a chegada, mesmo quando a interpretação ainda depende de configuração.
+
 \subsection{Três caminhos de entrada}
 O sistema oferece um caminho de telemetria bruta por HTTP ou MQTT, um caminho HTTP direto para medições ou formatos configurados e um coletor HTTP para fontes externas. No primeiro, o conteúdo original é registrado no MongoDB antes da entrega ao domínio. Nos demais, a integração ocorre na API e produz medições no PostgreSQL; não se deve afirmar que todas as entradas são arquivadas no MongoDB.
 
@@ -396,6 +402,8 @@ O desafio de confiabilidade é que uma confirmação de transporte encerra apena
 A preservação é temporária. \emph{Time to Live} (TTL) é o prazo de retenção utilizado para expirar os documentos brutos; a configuração geral documentada é de 30 dias. Depois desse período, a medição e seus metadados podem permanecer no modelo relacional, mas o conteúdo original deixa de estar disponível para nova interpretação. Auditoria permanente do conteúdo bruto exigiria outra política de armazenamento.
 
 \section{Transformar a mensagem em uma medição comum}
+A informação recebida torna-se utilizável pelo domínio quando seus campos passam a expressar grandezas, valores e instantes identificados. Essa passagem concentra as diferenças entre produtores em uma fronteira de interpretação, permitindo que consultas e regras operem sobre referências comuns. Ao mesmo tempo, conserva a relação com a entrada e com a configuração utilizada, necessária para explicar o resultado e retomar seu processamento.
+
 \subsection{Integração configurável e versões de interpretação}
 O próximo desafio é impedir que o formato de cada dispositivo se propague pelas consultas e regras. Perfis de integração descrevem seleção de sensor, campos de tempo e valores e vínculos com dispositivos. O \emph{parser}, componente que interpreta a estrutura recebida, utiliza uma versão identificada; mapeamentos por JSON Pointer permitem apontar campos do documento \cite{jsonpointer2013}.
 
@@ -426,6 +434,8 @@ O processamento assíncrono registra trabalho pendente, reservado, concluído ou
 Reprocessar não é necessariamente reproduzir a interpretação original: a seleção pode usar a configuração ativa no novo processamento. Registrar essa diferença permite compreender por que uma mesma mensagem pode receber outra interpretação após uma mudança de configuração. O resultado pode ser equivalente, conflitante ou falho, mas não deve sobrescrever silenciosamente uma medição anterior. A flexibilidade obtida pela preservação documental exige, em contrapartida, governança das versões e das decisões de reinterpretação.
 
 \section{Acrescentar contexto externo sem replicar observações}
+A interpretação de uma condição interna pode depender de uma observação que se refere a uma área mais ampla que a sala. Incorporar essa fonte exige representar tanto sua cobertura espacial quanto o período em que pode sustentar uma decisão. O compartilhamento permite utilizar a mesma referência em diferentes ambientes, mantendo sua origem e distinguindo a disponibilidade do dado de sua aplicação em cada avaliação.
+
 \subsection{Fontes compartilhadas e localização}
 A temperatura externa não pertence exclusivamente a uma sala. Replicá-la como leitura independente de cada compartimento criaria dados redundantes e obscureceria sua origem. A solução atual representa um contexto compartilhado, com vínculos explícitos às salas e uma seleção de fonte por compartimento e parâmetro. O sensor pertence a um compartimento ou a um contexto compartilhado, sem criar salas fictícias para acomodar uma fonte externa.
 
@@ -478,6 +488,8 @@ A Figura~\ref{fig:der-analitico} relaciona a solicitação de análise ao result
 
 
 \section{Interpretar condições e relacioná-las às atividades}
+Medições e contexto passam a apoiar decisões quando são relacionados às condições definidas para o ambiente e para as atividades. O significado da avaliação depende dos valores disponíveis, de sua validade temporal e da política aplicável à sala e aos participantes. Manter esses elementos associados permite explicar como uma observação contribui para um evento, para o progresso de uma missão ou para o resultado de uma regra de ambiente.
+
 \subsection{Qualificação de valores e eventos de missão}
 O dado padronizado permite expressar condições sem depender do formato do fabricante. Uma regra de qualificação pode comparar uma temperatura a limites e registrar o resultado associado ao valor. Uma condição de evento de missão pode utilizar o valor diretamente ou uma avaliação de regra. Assim, a interpretação pode ser reutilizada, desde que a política aplicável permaneça identificável.
 
