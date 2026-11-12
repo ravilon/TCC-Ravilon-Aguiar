@@ -31,6 +31,10 @@
 - Exemplos: Application Programming Interface (API), explicando sua função; claim e lease devem ser explicados como reserva de trabalho e concessão temporária de processamento, se forem necessários ao argumento.
 
 ## Narrativa científica
+- O objeto é o problema de pesquisa e a contribuição da arquitetura, não uma versão do repositório. Hashes, inventários de arquivos e registros de revisão ficam no material de reprodução.
+- Explicar funcionalidade, decisão e implicação para o uso dos dados. Não estruturar capítulos como auditoria do código, inventário de testes ou histórico de entregas.
+- Concentrar limites metodológicos em uma discussão proporcional; não interromper cada contribuição com uma ressalva repetida.
+
 - Estruturar a apresentação pelo percurso dos dados, desde sua origem até seu uso, com caminhos distintos para sensores, fontes externas, contexto acadêmico e participação humana.
 - Para cada etapa, apresentar: necessidade ou problema; desafio; alternativas consideradas quando houver registro; decisão e fundamento; funcionamento em nível conceitual; evidência disponível; limitações.
 - Não inventar alternativas avaliadas, cronologia ou motivações históricas. Uma justificativa reconstruída deve ser distinguida de uma decisão documentada na época.
