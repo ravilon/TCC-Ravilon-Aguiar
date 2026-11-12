@@ -22,6 +22,7 @@
 - Não transformar objetivos de escalabilidade, conforto ou economia em resultados comprovados.
 
 ## Idioma e siglas
+- Definir telemetria na primeira ocorrência como obtenção e transmissão remota de medições e reservar o termo ao fluxo dos sensores. Usar coleta e integração de dados para a arquitetura geral e mensagens dos sensores ou mensagens brutas quando tornar a leitura mais clara.
 - Usar pontos e pontuação para o sistema; não denominar a pontuação atual como XP ou pontos de experiência. Manter nomes antigos somente em referências históricas e identificadores de migrations já aplicadas, quando necessários à rastreabilidade.
 
 - Empregar traduções em português quando consolidadas na área; evitar traduções improvisadas.
