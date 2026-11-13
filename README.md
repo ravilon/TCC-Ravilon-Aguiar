@@ -41,7 +41,7 @@ A revisão de 12/11/2026 utiliza o backend no commit [`b7192907eeb602a02cc3413f0
 - [Registro da revisão e validação](revisao/Revisao-2026-11-12.md).
 - `revisao/TCC-Ravilon-revisado.pdf`: PDF de conferência de uma revisão anterior. Para obter a avaliação integrada e os espaços de captura, recompile os fontes atuais; o PDF atualizado também foi disponibilizado na conversa de revisão.
 
-O desenvolvimento acompanha origem, recebimento, transformação, contexto, consulta e efeitos de gamificação. Os apêndices reúnem caminhos técnicos e capturas históricas. O cliente móvel e a avaliação do impacto comportamental e energético pertencem à continuidade do projeto institucional.
+O desenvolvimento acompanha origem, recebimento, transformação, contexto, consulta e efeitos de gamificação. Os apêndices reúnem caminhos técnicos e exemplos de configuração e consulta no console. O cliente móvel e a avaliação do impacto comportamental e energético pertencem à continuidade do projeto institucional.
 
 
 A [atualização de pontuação](revisao/Atualizacao-pontos-2026-11-12.md) acompanha a refatoração para pontos, incluindo contratos, serviços e a migration V34.
@@ -50,4 +50,15 @@ A [atualização de pontuação](revisao/Atualizacao-pontos-2026-11-12.md) acomp
 
 A metodologia e os resultados incorporam a campanha controlada de 12/11/2026: 12 execuções, 720 mensagens, 9.360 valores de parâmetros e igual quantidade de qualificações, com evidências de agregação, atividades e pontos. A terceira repetição de duração permanece identificada como resultado divergente. O apêndice fixa os artefatos publicados no backend no commit `57b7c3baed3324d43b4d6eb50be6ec99f2a82781`, sem atribuí-lo ao código implantado durante o ensaio.
 
-Foram reservados cinco espaços para capturas. O [roteiro de capturas](imagens/capturas-experimento/README.md) indica os arquivos e os elementos a mostrar. Ao incluir cada PNG no caminho previsto, a compilação substitui automaticamente a moldura pela imagem. Os espaços são intencionais nesta revisão e devem ser preenchidos antes da entrega final.
+As 11 capturas com nomes descritivos foram incorporadas ao texto. A mensagem bruta e a medição qualificada aparecem junto dos resultados; os exemplos de configuração e consulta compõem o apêndice. Os recortes são feitos pelo LaTeX, preservando os PNGs originais. As referências às imagens removidas foram substituídas.
+
+Permanecem quatro espaços para evidências específicas. Salve os arquivos abaixo em `imagens/screenshots-do-PROCEL/`; a compilação substitui automaticamente a moldura pela imagem correspondente.
+
+| Arquivo esperado | Conteúdo necessário |
+|---|---|
+| `configuracao-missao.png` | Missão de duração da campanha: presença verdadeira, duração de 10 s, lacuna de 10 s, política de atribuição e recompensa de 5 pontos. |
+| `consulta-agregados.png` | Consulta restrita ao intervalo e modelo da campanha, com janela, amostras e média/mínimo/máximo. |
+| `atividade-pontos.png` | Uma ocorrência, atividade concluída e lançamento de 5 pontos da mesma missão, com seus vínculos. |
+| `janela-duracao.png` | Janela invalidada de `duracao-r3`: início, fim previsto, última medição e motivo, relacionados às amostras de presença. |
+
+A captura de gatilho fornecida mostra uma missão instantânea de uma rodada anterior; as capturas analíticas abrangem períodos diferentes do ensaio. Elas ilustram o funcionamento e não substituem as evidências quantitativas da campanha. As imagens específicas pendentes devem mostrar os históricos correspondentes; suas legendas devem descrever o material efetivamente apresentado.
