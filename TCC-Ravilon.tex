@@ -4,6 +4,7 @@
 \usepackage{lmodern}
 \renewcommand{\sfdefault}{phv}
 \usepackage{graphicx}
+\usepackage{float}
 \usepackage{url}
 \usepackage{xurl}
 \usepackage{array}
@@ -35,19 +36,19 @@
 
 % Inserir a captura no caminho indicado: a moldura é substituída automaticamente.
 \newcommand{\capturaexperimento}[2]{%
-  \IfFileExists{imagens/capturas-experimento/#1}{%
-    \includegraphics[width=\textwidth,height=.36\textheight,keepaspectratio]{imagens/capturas-experimento/#1}%
+  \IfFileExists{imagens/screenshots-do-PROCEL/#1}{%
+    \includegraphics[width=\textwidth,height=.36\textheight,keepaspectratio]{imagens/screenshots-do-PROCEL/#1}%
   }{%
     \fbox{\begin{minipage}[c][4.2cm][c]{.92\textwidth}
       \centering\sffamily\small
       \textbf{Espaço reservado para captura de tela}\par\medskip
       #2\par\medskip
-      {\footnotesize Arquivo: \path{imagens/capturas-experimento/#1}}
+      {\footnotesize Arquivo: \path{imagens/screenshots-do-PROCEL/#1}}
     \end{minipage}}%
   }%
 }
 \newcommand{\fontecapturaexperimento}[1]{%
-  \IfFileExists{imagens/capturas-experimento/#1}{%
+  \IfFileExists{imagens/screenshots-do-PROCEL/#1}{%
     \caption*{Fonte: captura do sistema pelo autor.}%
   }{%
     \caption*{Fonte: espaço destinado à documentação visual pelo autor.}%
@@ -629,7 +630,7 @@ A Figura~\ref{fig:der-pontos} explicita as relações persistidas que sustentam 
 \end{figure}
 
 \section{Operação e proteção ao longo do percurso}
-O console permite configurar sensores, integrações, fontes compartilhadas, missões e regras, além de consultar medições e agregados. Esse suporte operacional é relevante porque a adaptação de fontes precisa ser realizável sem alterar o código a cada configuração. As capturas do Apêndice~\ref{ap:console} ilustram funcionalidades já documentadas; por serem anteriores à atualização, não são apresentadas como prova visual de todas as telas atuais.
+O console permite configurar sensores, integrações, fontes compartilhadas, missões e regras, além de consultar medições e agregados. Esse suporte operacional é relevante porque a adaptação de fontes precisa ser realizável sem alterar o código a cada configuração. As capturas do Apêndice~\ref{ap:console} relacionam essas operações aos conceitos apresentados: espaços e sensores, regras de qualificação, fontes compartilhadas e consultas analíticas. Elas documentam exemplos de configuração e uso da interface, enquanto os resultados experimentais são sustentados pelos registros da campanha.
 
 A identidade e os papéis controlam quais operações cada cliente pode executar. \emph{JSON Web Token} (JWT) é o formato de token empregado para transportar informações da autenticação \cite{jwt2015}. Há separação entre usuários humanos, produtores de ingestão e a identidade técnica de comunicação entre serviços. O \emph{Role-Based Access Control}, controle por papéis, organiza responsabilidades administrativas, operacionais, analíticas e de participação. Seu emprego responde à necessidade de impedir que receber dados implique também poder alterar usuários ou configurações sensíveis.
 
@@ -702,12 +703,20 @@ Alertas para valores introduzidos fora da faixa & 72 & 72 \\\bottomrule
 \caption*{Fonte: elaboração do autor a partir dos registros da campanha.}
 \end{table}
 
-Os alertas corresponderam às alterações previstas nas faixas sintéticas: em cada repetição, foram observados dois para temperatura, dois para umidade, um para ruído e um para dióxido de carbono. As demais 774 avaliações de cada repetição resultaram em condição normal. Esse resultado explicita a diferença funcional entre armazenar e qualificar: um valor fora da faixa permanece disponível, acompanhado de sua interpretação, em vez de desaparecer do histórico. A Figura~\ref{fig:captura-medicao} deverá ilustrar essa associação entre observação, parâmetros e resultado de qualificação.
+A Figura~\ref{fig:captura-bruto} mostra um documento da terceira repetição de janela encerrada, com o identificador da mensagem, seu conteúdo original e o vínculo com a medição canônica. O horário, o sensor e os valores exibidos permitem acompanhar a observação até a consulta qualificada. A presença desses vínculos exemplifica a rastreabilidade entre representações; as contagens do ensaio permanecem fundamentadas nos registros estruturados.
 
-\begin{figure}[htbp]\centering
-\caption{Medição canônica e qualificação de um valor fora da faixa configurada}\label{fig:captura-medicao}
-\capturaexperimento{medicao-qualificada.png}{Exibir o sensor e a sala, o horário da medição, os parâmetros recebidos e um alerta correspondente a uma anomalia sintética da campanha.}
-\fontecapturaexperimento{medicao-qualificada.png}
+\begin{figure}[H]\centering
+\caption{Mensagem bruta e vínculo com a medição canônica após o processamento}\label{fig:captura-bruto}
+\includegraphics[width=.85\textwidth,height=.70\textheight,keepaspectratio,trim=414.06bp 40.51bp 418.56bp 35.25bp,clip]{imagens/screenshots-do-PROCEL/telemetria.png}
+\caption*{Fonte: captura do sistema fornecida pelo autor. Consulta ao evento final da terceira repetição de janela encerrada, com estado de aceitação canônica.}
+\end{figure}
+
+Os alertas corresponderam às alterações previstas nas faixas sintéticas: em cada repetição, foram observados dois para temperatura, dois para umidade, um para ruído e um para dióxido de carbono. As demais 774 avaliações de cada repetição resultaram em condição normal. Esse resultado explicita a diferença funcional entre armazenar e qualificar: um valor fora da faixa permanece disponível, acompanhado de sua interpretação, em vez de desaparecer do histórico. A Figura~\ref{fig:captura-medicao} ilustra essa associação: a umidade de 91\% recebe um alerta, enquanto os demais parâmetros do registro continuam disponíveis. A classificação visual da medição não representa rejeição de sua persistência.
+
+\begin{figure}[H]\centering
+\caption{Valores preservados e alerta de umidade em uma medição sintética}\label{fig:captura-medicao}
+\includegraphics[width=.85\textwidth,height=.70\textheight,keepaspectratio,trim=0.00bp 0.00bp 555.83bp 0.00bp,clip]{imagens/screenshots-do-PROCEL/medicao_reprovada.png}
+\caption*{Fonte: captura do sistema fornecida pelo autor. Recorte da medição de 12/11/2026 às 18h58min08s; a indicação de reprovação sintetiza a qualificação.}
 \end{figure}
 
 A etapa de agregação também produziu informação consultável. O processamento das dezoito janelas, com duração nominal de um minuto e último intervalo parcial, foi concluído, e a consulta filtrada pelo modelo de sensor e pelo intervalo da campanha informou 540 registros de agregação. Cada registro relaciona sensor, parâmetro, intervalo e quantidade de amostras a seus valores médio, mínimo e máximo. Desse modo, uma sequência de observações passa a oferecer uma representação resumida para análise, conservando os critérios de agrupamento. A Figura~\ref{fig:captura-agregacao} destina-se a mostrar essa transformação em uma consulta do sistema.
@@ -854,7 +863,7 @@ O resumo de cada publicador também contém interpretações locais das regras d
 
 O estado inicial registra seleção do motor simples e habilitação da avaliação temporal com Drools. Os executores de avaliação e janelas têm intervalo de cinco segundos e lote de vinte itens. Para duração, as evidências da terceira repetição preservam 25 janelas invalidadas, nenhuma ocorrência e nenhuma concessão de pontos. Os arquivos \path{preexisting-active-events.json}, \path{setup-attempts.json} e \path{cleanup.json} documentam o isolamento de eventos existentes, tentativas de configuração descartadas e desativação das missões temporárias após a coleta, com preservação dos registros produzidos.
 
-Os espaços de captura da Figura~\ref{fig:captura-configuracao} e das Figuras~\ref{fig:captura-medicao} a~\ref{fig:captura-janela} são substituídos automaticamente ao incluir as imagens nos caminhos indicados. As capturas deverão mostrar os filtros, horários e vínculos pertinentes aos registros da campanha, ocultando credenciais e dados pessoais desnecessários. Elas complementam os dados estruturados de reprodução, que constituem a fonte das contagens e dos tempos apresentados.
+As capturas das Figuras~\ref{fig:captura-bruto} e~\ref{fig:captura-medicao} ilustram a relação entre mensagem e medição qualificada. Permanecem espaços para a configuração de duração, a consulta restrita ao intervalo da campanha, a atividade com seus pontos e o diagnóstico temporal; eles serão substituídos automaticamente ao incluir as imagens nos caminhos indicados. As capturas deverão mostrar os filtros, horários e vínculos pertinentes aos registros da campanha, ocultando credenciais e dados pessoais desnecessários. Elas complementam os dados estruturados de reprodução, que constituem a fonte das contagens e dos tempos apresentados.
 
 \subsection{Registros históricos de verificação}
 O relatório de testes de sanidade de 17 de setembro de 2026 \cite{probenSmoke2026} registra 112 verificações aprovadas, cinco avisos e zero falhas em 71,6 segundos, contra um ambiente identificado como produção. Entre os avisos estavam timeout na sincronização de salas, falha de autenticação ao consultar um processamento de horários e a verificação de persistência não realizada em consequência, além de estados tolerados de usuário já existente e presença já encerrada.
@@ -881,23 +890,85 @@ O percentil 99 é o valor abaixo do qual se encontram aproximadamente 99\% das a
 
 O resultado é relevante como justificativa de uma decisão anterior, não como medição da versão atual. Para reavaliar a escolha, é necessário fixar código e ambiente, repetir o experimento e incluir regras representativas do uso esperado. O cálculo de regras de ambiente, por sua vez, é um fluxo próprio e não deve receber os números desse experimento como se medisse o mesmo mecanismo.
 
-\chapter{Exemplos Documentados do Console}\label{ap:console}
-As capturas a seguir, já presentes no material anterior do TCC, ilustram a relação entre conceitos do domínio e operação. Elas foram produzidas antes da renomeação e mostram ``PROCEL Console''. São registros históricos de interface, não capturas da versão atual nem evidência de usabilidade. As novas telas de fontes compartilhadas e regras de ambiente não são inferidas a partir delas.
+\chapter{Exemplos de Configuração e Uso do Console}\label{ap:console}
+As capturas deste apêndice acompanham o percurso dos dados pela interface de administração e configuração. Elas mostram como relações do domínio se tornam opções de configuração e formas de consulta. As imagens foram fornecidas pelo autor e preservam os registros e filtros efetivamente exibidos. A denominação ``PROBEN Console'' é a identificação histórica visível na interface; neste trabalho, PROBEN continua a designar o programa institucional.
 
-\begin{figure}[htbp]\centering
-\caption{Registro histórico do console: medições e qualificação.}
-\includegraphics[width=\textwidth,trim=0 0 0 75,clip]{imagens/screenshots-do-PROCEL/Screenshot_2.png}
-\caption*{Fonte: captura histórica do console fornecida pelo autor.}
+As telas reúnem exemplos de configurações, consultas e rodadas distintas. O exemplo de gatilho pertence a uma rodada anterior, e as consultas analíticas abrangem períodos diferentes do intervalo da campanha integrada. Por isso, as figuras esclarecem funcionalidades e representações, sem substituir as evidências quantitativas apresentadas no Capítulo~\ref{cap:avaliacao}. As capturas específicas de documento bruto e medição qualificada estão junto da discussão experimental.
+
+\section{Relacionar espaços, sensores e critérios de qualificação}
+O navegador conserva o contexto da sala durante a consulta de sensores, medições e fontes externas. Na Figura~\ref{fig:console-sala}, uma sala de demonstração aparece relacionada a um sensor virtual e a uma referência compartilhada de temperatura. A informação externa é exibida com horário de observação e validade, tornando visível a diferença entre possuir um valor e dispor de uma referência ainda válida.
+
+\begin{figure}[H]\centering
+\caption{Sala, sensor e referência externa no navegador de dados}\label{fig:console-sala}
+\includegraphics[width=\textwidth,height=.70\textheight,keepaspectratio,trim=180.03bp 93.76bp 321.79bp 155.27bp,clip]{imagens/screenshots-do-PROCEL/navegador_salas.png}
+\caption*{Fonte: captura do sistema fornecida pelo autor. Recorte do painel da sala, com os horários da referência externa.}
 \end{figure}
-\begin{figure}[htbp]\centering
-\caption{Registro histórico do console: grupos e regras de qualificação.}
-\includegraphics[width=\textwidth]{imagens/screenshots-do-PROCEL/Screenshot_4.png}
-\caption*{Fonte: captura histórica do console fornecida pelo autor.}
+
+A associação de um sensor a um grupo de regras torna os critérios de interpretação administráveis. A Figura~\ref{fig:console-arvore} mostra os vínculos de sensores virtuais com um grupo de qualificação; a Figura~\ref{fig:console-regra} apresenta um critério numérico. Nesse exemplo, uma temperatura fora do intervalo de 18 a 30 graus produz um alerta, separando a observação recebida de sua classificação.
+
+\begin{figure}[H]\centering
+\caption{Sensores virtuais e seus vínculos com o grupo de qualificação}\label{fig:console-arvore}
+\includegraphics[width=\textwidth,height=.70\textheight,keepaspectratio,trim=0.00bp 11.25bp 532.57bp 144.02bp,clip]{imagens/screenshots-do-PROCEL/arvores_regras_por_sensor.png}
+\caption*{Fonte: captura do sistema fornecida pelo autor. Recorte dos vínculos e de sua vigência.}
 \end{figure}
-\begin{figure}[htbp]\centering
-\caption{Registro histórico do console: configuração de missão e recompensa.}
-\includegraphics[width=\textwidth]{imagens/screenshots-do-PROCEL/Screenshot_7.png}
-\caption*{Fonte: captura histórica do console fornecida pelo autor.}
+
+\begin{figure}[H]\centering
+\caption{Configuração de uma regra de alerta para temperatura fora da faixa}\label{fig:console-regra}
+\includegraphics[width=\textwidth,height=.70\textheight,keepaspectratio,trim=3.75bp 29.25bp 434.31bp 211.53bp,clip]{imagens/screenshots-do-PROCEL/configuracao_regras.png}
+\caption*{Fonte: captura do sistema fornecida pelo autor. Recorte dos campos que definem parâmetro, operador, limites e resultado.}
+\end{figure}
+
+\section{Compartilhar referências e configurar sua interpretação}
+Um contexto compartilhado permite vincular salas a uma mesma origem de informação externa. A Figura~\ref{fig:console-contexto} mostra essa associação e a seleção da fonte. O vínculo expressa uma relação de uso da referência; não corresponde à criação de uma observação independente para cada sala.
+
+\begin{figure}[H]\centering
+\caption{Contexto compartilhado, seleção de salas e fonte externa}\label{fig:console-contexto}
+\includegraphics[width=\textwidth,height=.70\textheight,keepaspectratio,trim=0.00bp 16.50bp 497.32bp 0.00bp,clip]{imagens/screenshots-do-PROCEL/contexto_compartilhado.png}
+\caption*{Fonte: captura do sistema fornecida pelo autor. Recorte da configuração do contexto e de sua fonte.}
+\end{figure}
+
+O teste de integração HTTP permite examinar a resposta antes de persistir uma medição. Na Figura~\ref{fig:console-http}, a consulta à WeatherAPI retorna um documento que pode ser inspecionado e mapeado. O aviso de teste sem persistência distingue essa operação de uma coleta efetiva. A temperatura exibida nessa consulta pertence ao instante do teste e não substitui os valores externos fixos utilizados na campanha.
+
+\begin{figure}[H]\centering
+\caption{Teste de consulta HTTP e inspeção da resposta externa}\label{fig:console-http}
+\includegraphics[width=\textwidth,height=.70\textheight,keepaspectratio,trim=0.00bp 4.50bp 513.07bp 252.79bp,clip]{imagens/screenshots-do-PROCEL/integracao_externa_REST.png}
+\caption*{Fonte: captura do sistema fornecida pelo autor. Recorte do estado do teste, resposta original e mapeamento; a consulta indicada não persistiu medições.}
+\end{figure}
+
+A Figura~\ref{fig:console-ambiente} relaciona os dados externos às condições de uma regra de ambiente. A tela apresenta escopo, periodicidade, política de beneficiários e parâmetros da faixa adaptativa, além da representação declarativa resultante. Trata-se de uma configuração: sua presença na interface é distinta de uma avaliação executada ou de uma concessão de pontos.
+
+\begin{figure}[H]\centering
+\caption{Configuração de regra de ambiente com referência adaptativa}\label{fig:console-ambiente}
+\includegraphics[width=\textwidth,height=.70\textheight,keepaspectratio,trim=414.81bp 15.75bp 417.81bp 14.25bp,clip]{imagens/screenshots-do-PROCEL/configuracao_regra_ambiente.png}
+\caption*{Fonte: captura do sistema fornecida pelo autor. Recorte do formulário; as opções exibidas pertencem ao exemplo de configuração.}
+\end{figure}
+
+\section{Das condições das missões à consulta de agregados}
+O formulário de gatilho representa a condição que pode contribuir para uma atividade. A Figura~\ref{fig:console-gatilho} apresenta um exemplo instantâneo que compara a temperatura a 25 graus, com atribuição aos alunos vinculados. A imagem identifica uma terceira repetição de uma rodada anterior à campanha integrada. Ela ilustra a expressão da condição; a configuração de duração do protocolo permanece identificada por seu próprio espaço de captura.
+
+\begin{figure}[H]\centering
+\caption{Gatilho instantâneo e condição de temperatura de uma missão}\label{fig:console-gatilho}
+\includegraphics[width=\textwidth,height=.70\textheight,keepaspectratio,trim=489.07bp 39.76bp 355.55bp 57.76bp,clip]{imagens/screenshots-do-PROCEL/gatilhos_missoes.png}
+\caption*{Fonte: captura do sistema fornecida pelo autor. Recorte do editor do gatilho e da condição; exemplo de rodada anterior, com limite de 25 graus.}
+\end{figure}
+
+A consulta analítica transforma conjuntos de medições em uma representação resumida. A Figura~\ref{fig:console-resumo} apresenta o cartão de um sensor virtual, com parâmetro, período, quantidade de intervalos, amostras e estatísticas. A média e os extremos exibidos pertencem ao filtro da consulta, cujo período é mais amplo que o da campanha integrada.
+
+\begin{figure}[H]\centering
+\caption{Resumo de agregados de energia para um sensor virtual}\label{fig:console-resumo}
+\includegraphics[width=.92\textwidth,height=.70\textheight,keepaspectratio,trim=146.27bp 79.51bp 860.37bp 508.57bp,clip]{imagens/screenshots-do-PROCEL/analysis.png}
+\caption*{Fonte: captura do sistema fornecida pelo autor. Recorte de um cartão do resumo; valores relativos ao período mostrado na própria captura.}
+\end{figure}
+
+Na Figura~\ref{fig:console-serie}, a série temporal organiza médias dos agregados em linhas por sensor, e a tabela explicita os intervalos e as quantidades de amostras. A tela informa que o gráfico está limitado à página consultada. Essa delimitação é relevante para interpretar a visualização como uma seleção de resultados, preservando a diferença entre a página exibida e o conjunto completo de agregados.
+
+\begin{figure}[H]\centering
+\caption{Série temporal de médias e registros de agregação consultados}\label{fig:console-serie}
+{\small\textbf{(a) Médias por sensor na página consultada}}\par\smallskip
+\includegraphics[width=\textwidth,trim=150.02bp 350.30bp 13.50bp 90.01bp,clip]{imagens/screenshots-do-PROCEL/serie_temporal_analysis.png}
+\par\medskip{\small\textbf{(b) Ampliação das estatísticas dos primeiros registros}}\par\smallskip
+\includegraphics[width=\textwidth,trim=926.38bp 171.77bp 21.00bp 397.56bp,clip]{imagens/screenshots-do-PROCEL/serie_temporal_analysis.png}
+\caption*{Fonte: captura do sistema fornecida pelo autor. Recortes do gráfico e das estatísticas da mesma consulta; intervalo distinto da campanha.}
 \end{figure}
 \clearpage
 \bibliographystyle{abnt}
