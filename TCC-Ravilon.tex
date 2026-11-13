@@ -34,27 +34,6 @@
 }
 \hypersetup{hidelinks,unicode=true,linktoc=all}
 
-% Inserir a captura no caminho indicado: a moldura é substituída automaticamente.
-\newcommand{\capturaexperimento}[2]{%
-  \IfFileExists{imagens/screenshots-do-PROCEL/#1}{%
-    \includegraphics[width=\textwidth,height=.36\textheight,keepaspectratio]{imagens/screenshots-do-PROCEL/#1}%
-  }{%
-    \fbox{\begin{minipage}[c][4.2cm][c]{.92\textwidth}
-      \centering\sffamily\small
-      \textbf{Espaço reservado para captura de tela}\par\medskip
-      #2\par\medskip
-      {\footnotesize Arquivo: \path{imagens/screenshots-do-PROCEL/#1}}
-    \end{minipage}}%
-  }%
-}
-\newcommand{\fontecapturaexperimento}[1]{%
-  \IfFileExists{imagens/screenshots-do-PROCEL/#1}{%
-    \caption*{Fonte: captura do sistema pelo autor.}%
-  }{%
-    \caption*{Fonte: espaço destinado à documentação visual pelo autor.}%
-  }%
-}
-
 \unidade{Centro de Desenvolvimento Tecnológico}
 \curso{Ciência da Computação}
 \nomecurso{Bacharelado em Ciência da Computação}
@@ -328,13 +307,8 @@ Cada mensagem contém treze parâmetros: temperatura, presença, iluminação, e
 
 A qualificação utiliza faixas sintéticas cadastradas para os parâmetros. Em cada repetição, seis mensagens recebem um valor deliberadamente fora de faixa: duas para temperatura, duas para umidade, uma para ruído e uma para dióxido de carbono. Assim, são esperadas 780 avaliações e seis resultados de alerta por repetição. O alerta é uma interpretação do valor recebido; a medição continua a fazer parte do conjunto cuja persistência deve ser conferida.
 
-As missões utilizam condições que representam diferentes relações com o tempo. A avaliação instantânea compara a temperatura com o limite de $25\,^{\circ}\mathrm{C}$; a transição observa a mudança para presença verdadeira; a duração requer a manutenção dessa presença por dez segundos, com lacuna máxima configurada de dez segundos; e a avaliação no encerramento de uma janela de dez segundos considera o último valor de presença. Cada missão é de ciclo único, requer um progresso para conclusão automática e concede cinco pontos por atividade concluída. Os vinte estudantes de teste são vinculados a cada missão; sua elegibilidade decorre da configuração acadêmica, não de identificação física realizada pelo sensor. A Figura~\ref{fig:captura-configuracao} reserva a documentação visual dessa relação entre condição, tempo e recompensa.
+As missões utilizam condições que representam diferentes relações com o tempo. A avaliação instantânea compara a temperatura com o limite de $25\,^{\circ}\mathrm{C}$; a transição observa a mudança para presença verdadeira; a duração requer a manutenção dessa presença por dez segundos, com lacuna máxima configurada de dez segundos; e a avaliação no encerramento de uma janela de dez segundos considera o último valor de presença. Cada missão é de ciclo único, requer um progresso para conclusão automática e concede cinco pontos por atividade concluída. Os vinte estudantes de teste são vinculados a cada missão; sua elegibilidade decorre da configuração acadêmica, não de identificação física realizada pelo sensor.
 
-\begin{figure}[htbp]\centering
-\caption{Configuração da condição temporal e da recompensa da missão experimental}\label{fig:captura-configuracao}
-\capturaexperimento{configuracao-missao.png}{Exibir a condição de presença, a duração mínima, a lacuna admitida, a política de atribuição e a recompensa de cinco pontos.}
-\fontecapturaexperimento{configuracao-missao.png}
-\end{figure}
 
 A confirmação do intermediário MQTT é medida no publicador, enquanto medições e efeitos das missões são conferidos por consultas autenticadas ao serviço de dados. O atraso até a representação canônica corresponde à diferença entre o horário de origem e o horário de recebimento da medição; depende, portanto, dos relógios envolvidos. Os tempos são resumidos pela média e pelo desvio padrão amostral das três médias de repetição em cada modo. As contagens são apresentadas por repetição, preservando resultados divergentes. A taxa configurada caracteriza uma carga controlada de integração, e não um ensaio de saturação. O protocolo e os artefatos de reprodução estão identificados na Seção~\ref{ap:campanha-integrada}.
 
@@ -719,13 +693,8 @@ Os alertas corresponderam às alterações previstas nas faixas sintéticas: em 
 \caption*{Fonte: captura do sistema fornecida pelo autor. Recorte da medição de 12/11/2026 às 18h58min08s; a indicação de reprovação sintetiza a qualificação.}
 \end{figure}
 
-A etapa de agregação também produziu informação consultável. O processamento das dezoito janelas, com duração nominal de um minuto e último intervalo parcial, foi concluído, e a consulta filtrada pelo modelo de sensor e pelo intervalo da campanha informou 540 registros de agregação. Cada registro relaciona sensor, parâmetro, intervalo e quantidade de amostras a seus valores médio, mínimo e máximo. Desse modo, uma sequência de observações passa a oferecer uma representação resumida para análise, conservando os critérios de agrupamento. A Figura~\ref{fig:captura-agregacao} destina-se a mostrar essa transformação em uma consulta do sistema.
+A etapa de agregação também produziu informação consultável. O processamento das dezoito janelas, com duração nominal de um minuto e último intervalo parcial, foi concluído, e a consulta filtrada pelo modelo de sensor e pelo intervalo da campanha informou 540 registros de agregação. Cada registro relaciona sensor, parâmetro, intervalo e quantidade de amostras a seus valores médio, mínimo e máximo. Desse modo, uma sequência de observações passa a oferecer uma representação resumida para análise, conservando os critérios de agrupamento.
 
-\begin{figure}[htbp]\centering
-\caption{Consulta de valores agregados para sensores e intervalo da campanha}\label{fig:captura-agregacao}
-\capturaexperimento{consulta-agregados.png}{Exibir os filtros de sensor ou modelo e período, uma janela de agregação, a quantidade de amostras e os valores médio, mínimo e máximo.}
-\fontecapturaexperimento{consulta-agregados.png}
-\end{figure}
 
 \subsection{Da condição avaliada às atividades e aos pontos}
 As consequências das condições foram conferidas nos registros de ocorrências, atividades e lançamentos de pontos associados às missões. A Tabela~\ref{tab:efeitos-integrados} preserva os valores de cada repetição, na ordem de execução dentro do modo. A distinção entre ocorrência e atividade é relevante: várias condições podem ser detectadas ao longo das medições, enquanto uma atividade de ciclo único deve produzir sua recompensa uma única vez.
@@ -742,23 +711,13 @@ Janela encerrada & 20 / 28 / 22 & 20 / 20 / 20 & 100 / 100 / 100 \\\bottomrule
 \caption*{Fonte: elaboração do autor. Cada célula apresenta as repetições 1, 2 e 3.}
 \end{table}
 
-Nos modos instantâneo, transição e janela encerrada, as vinte atividades foram concluídas em cada repetição, com cem pontos por missão. Em conjunto com as duas primeiras repetições de duração, foram registrados 220 lançamentos de concessão, totalizando 1.100 pontos. Cada lançamento correspondeu a cinco pontos associados à respectiva missão. A diferença entre as contagens de ocorrências e de lançamentos mostra que a detecção de condições e a recompensa da atividade são etapas distintas do fluxo. A Figura~\ref{fig:captura-pontos} deverá tornar visível a relação entre uma ocorrência, a atividade concluída e seu lançamento.
+Nos modos instantâneo, transição e janela encerrada, as vinte atividades foram concluídas em cada repetição, com cem pontos por missão. Em conjunto com as duas primeiras repetições de duração, foram registrados 220 lançamentos de concessão, totalizando 1.100 pontos. Cada lançamento correspondeu a cinco pontos associados à respectiva missão. A diferença entre as contagens de ocorrências e de lançamentos mostra que a detecção de condições e a recompensa da atividade são etapas distintas do fluxo.
 
-\begin{figure}[htbp]\centering
-\caption{Relação entre ocorrência, conclusão da atividade e concessão de pontos}\label{fig:captura-pontos}
-\capturaexperimento{atividade-pontos.png}{Exibir a missão da campanha, uma atividade concluída e seu lançamento de cinco pontos, com identificadores ou filtros que permitam relacionar os registros.}
-\fontecapturaexperimento{atividade-pontos.png}
-\end{figure}
 
 O modo duração apresentou um resultado divergente: as duas primeiras repetições produziram cinco e quatro ocorrências, respectivamente, enquanto a terceira não produziu ocorrências, conclusões ou pontos. Nessa terceira repetição, as 25 janelas foram invalidadas com a indicação de que a condição não permaneceu satisfeita por dez segundos. O fluxo enviado, entretanto, contém quatro amostras consecutivas de presença verdadeira por sala, espaçadas em cinco segundos e cobrindo quinze segundos entre a primeira e a última. Essa diferença exige examinar a disponibilidade das amostras no instante de avaliação, além da sequência em tempo de origem.
 
-A divergência evidencia um desafio central da integração temporal: preservar as medições não equivale a torná-las disponíveis para uma decisão no mesmo instante. Os resultados de reconciliação sustentam a continuidade até a representação canônica; o modo duração acrescenta a necessidade de relacionar o horário da observação, sua chegada e o momento da decisão. A causa da invalidação não foi estabelecida pela campanha. Por isso, o resultado permanece individualizado e orienta uma investigação das janelas e de suas evidências, conforme o espaço da Figura~\ref{fig:captura-janela}.
+A divergência evidencia um desafio central da integração temporal: preservar as medições não equivale a torná-las disponíveis para uma decisão no mesmo instante. Os resultados de reconciliação sustentam a continuidade até a representação canônica; o modo duração acrescenta a necessidade de relacionar o horário da observação, sua chegada e o momento da decisão. A causa da invalidação não foi estabelecida pela campanha. Por isso, o resultado permanece individualizado e orienta uma investigação das janelas e de suas evidências.
 
-\begin{figure}[htbp]\centering
-\caption{Evidências temporais de uma janela invalidada no ensaio de duração}\label{fig:captura-janela}
-\capturaexperimento{janela-duracao.png}{Exibir início, término previsto, última medição e motivo de invalidação de uma janela da terceira repetição de duração; relacionar os horários às amostras de presença.}
-\fontecapturaexperimento{janela-duracao.png}
-\end{figure}
 
 \subsection{Tempos observados e significado da carga}
 A confirmação da publicação e a disponibilidade canônica correspondem a fronteiras diferentes da arquitetura. A primeira acompanha a interação do publicador com o intermediário MQTT. A segunda acrescenta a espera e o processamento até o recebimento da medição no serviço de dados. A Tabela~\ref{tab:tempos-integrados} apresenta a média e o desvio padrão entre as três médias de repetição de cada modo, evitando reunir todas as mensagens como se fossem repetições independentes do experimento.
@@ -863,7 +822,7 @@ O resumo de cada publicador também contém interpretações locais das regras d
 
 O estado inicial registra seleção do motor simples e habilitação da avaliação temporal com Drools. Os executores de avaliação e janelas têm intervalo de cinco segundos e lote de vinte itens. Para duração, as evidências da terceira repetição preservam 25 janelas invalidadas, nenhuma ocorrência e nenhuma concessão de pontos. Os arquivos \path{preexisting-active-events.json}, \path{setup-attempts.json} e \path{cleanup.json} documentam o isolamento de eventos existentes, tentativas de configuração descartadas e desativação das missões temporárias após a coleta, com preservação dos registros produzidos.
 
-As capturas das Figuras~\ref{fig:captura-bruto} e~\ref{fig:captura-medicao} ilustram a relação entre mensagem e medição qualificada. Permanecem espaços para a configuração de duração, a consulta restrita ao intervalo da campanha, a atividade com seus pontos e o diagnóstico temporal; eles serão substituídos automaticamente ao incluir as imagens nos caminhos indicados. As capturas deverão mostrar os filtros, horários e vínculos pertinentes aos registros da campanha, ocultando credenciais e dados pessoais desnecessários. Elas complementam os dados estruturados de reprodução, que constituem a fonte das contagens e dos tempos apresentados.
+As capturas das Figuras~\ref{fig:captura-bruto} e~\ref{fig:captura-medicao} ilustram a relação entre mensagem e medição qualificada. As capturas complementam os dados estruturados de reprodução, que constituem a fonte das contagens e dos tempos apresentados.
 
 \subsection{Registros históricos de verificação}
 O relatório de testes de sanidade de 17 de setembro de 2026 \cite{probenSmoke2026} registra 112 verificações aprovadas, cinco avisos e zero falhas em 71,6 segundos, contra um ambiente identificado como produção. Entre os avisos estavam timeout na sincronização de salas, falha de autenticação ao consultar um processamento de horários e a verificação de persistência não realizada em consequência, além de estados tolerados de usuário já existente e presença já encerrada.
@@ -944,7 +903,7 @@ A Figura~\ref{fig:console-ambiente} relaciona os dados externos às condições 
 \end{figure}
 
 \section{Das condições das missões à consulta de agregados}
-O formulário de gatilho representa a condição que pode contribuir para uma atividade. A Figura~\ref{fig:console-gatilho} apresenta um exemplo instantâneo que compara a temperatura a 25 graus, com atribuição aos alunos vinculados. A imagem identifica uma terceira repetição de uma rodada anterior à campanha integrada. Ela ilustra a expressão da condição; a configuração de duração do protocolo permanece identificada por seu próprio espaço de captura.
+O formulário de gatilho representa a condição que pode contribuir para uma atividade. A Figura~\ref{fig:console-gatilho} apresenta um exemplo instantâneo que compara a temperatura a 25 graus, com atribuição aos alunos vinculados. A imagem identifica uma terceira repetição de uma rodada anterior à campanha integrada. Ela ilustra a expressão da condição; a configuração de duração permanece descrita no protocolo experimental.
 
 \begin{figure}[H]\centering
 \caption{Gatilho instantâneo e condição de temperatura de uma missão}\label{fig:console-gatilho}
