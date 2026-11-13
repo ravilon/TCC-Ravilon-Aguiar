@@ -52,13 +52,4 @@ A metodologia e os resultados incorporam a campanha controlada de 12/11/2026: 12
 
 As 11 capturas com nomes descritivos foram incorporadas ao texto. A mensagem bruta e a medição qualificada aparecem junto dos resultados; os exemplos de configuração e consulta compõem o apêndice. Os recortes são feitos pelo LaTeX, preservando os PNGs originais. As referências às imagens removidas foram substituídas.
 
-Permanecem quatro espaços para evidências específicas. Salve os arquivos abaixo em `imagens/screenshots-do-PROCEL/`; a compilação substitui automaticamente a moldura pela imagem correspondente.
-
-| Arquivo esperado | Conteúdo necessário |
-|---|---|
-| `configuracao-missao.png` | Missão de duração da campanha: presença verdadeira, duração de 10 s, lacuna de 10 s, política de atribuição e recompensa de 5 pontos. |
-| `consulta-agregados.png` | Consulta restrita ao intervalo e modelo da campanha, com janela, amostras e média/mínimo/máximo. |
-| `atividade-pontos.png` | Uma ocorrência, atividade concluída e lançamento de 5 pontos da mesma missão, com seus vínculos. |
-| `janela-duracao.png` | Janela invalidada de `duracao-r3`: início, fim previsto, última medição e motivo, relacionados às amostras de presença. |
-
-A captura de gatilho fornecida mostra uma missão instantânea de uma rodada anterior; as capturas analíticas abrangem períodos diferentes do ensaio. Elas ilustram o funcionamento e não substituem as evidências quantitativas da campanha. As imagens específicas pendentes devem mostrar os históricos correspondentes; suas legendas devem descrever o material efetivamente apresentado.
+As figuras sem captura foram removidas. O texto preserva somente imagens efetivamente disponíveis, com suas legendas e referências correspondentes. As evidências quantitativas continuam fundamentadas nos registros estruturados da campanha.
