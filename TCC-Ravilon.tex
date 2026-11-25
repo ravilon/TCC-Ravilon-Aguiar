@@ -16,10 +16,16 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,fit,shapes.geometric}
 
-\usepackage[color=yellow!40]{todonotes}
-\newcommand {\AF} {\todo[inline, color=red!40]}
-\newcommand{\AP} {\todo[inline, color=yellow!40]}
-\newcommand{\RA} {\todo[inline, color=green!40]}
+% Marcas editoriais da rodada de orientação. Use \emrevisaofalse para a versão limpa.
+\usepackage{etoolbox}
+\newcommand{\referenciasrevistas}{}
+\newif\ifemrevisao
+\emrevisaotrue
+\definecolor{correvisao}{HTML}{144F91}
+\newcommand{\tintarevisao}{\ifemrevisao\color{correvisao}\fi}
+\DeclareRobustCommand{\rev}[1]{{\tintarevisao #1}}
+\pdfstringdefDisableCommands{\def\rev#1{#1}}
+
 
 % Padrão visual dos diagramas: tipografia fixa, sem redução ou quebra automática.
 \tikzset{
@@ -59,7 +65,6 @@
 \sloppy
 % Substituir por \includepdf{ficha.pdf} após a emissão da ficha no Cobalto.
 
-
 \begin{dedicatoria}
 \thispagestyle{empty}
 Aos meus pais, Wanderley Alves e Maria de Fátima Aguiar, por sempre me incentivarem e me apoiarem no caminho da educação, mesmo sem terem tido a oportunidade de percorrê-lo da mesma forma.
@@ -77,7 +82,30 @@ O projeto de gamificação do Programa de Bom Uso Energético da Universidade Fe
 The gamification project of the energy-use program at the Federal University of Pelotas aims to encourage voluntary changes in energy-use behavior while considering occupant comfort. Planned sensors in rooms at the Center for Arts and people's participation in missions require infrastructure that integrates heterogeneous sources and relates observations, spaces, users, and activities. This work presents the design and implementation of the data architecture and supporting services developed for the institutional gamification system. Design Science Research guided artifact development and evaluation. The presentation follows the data lifecycle: receiving sensor messages, temporarily preserving original content, transforming it into standardized measurements, integrating external environmental sources and academic context, querying aggregates, and evaluating conditions associated with gamification. The solution combines document and relational storage through polyglot persistence, accommodating variable messages and structured domain relationships. Configurable integration profiles support different sensor formats, while idempotency and recovery mechanisms address repeated effects and interrupted processing. Shared outdoor-temperature sources and environmental rules relate local measurements, temporal conditions, and beneficiaries. Evaluation combines artifact analysis with an integrated experiment involving 720 virtual-sensor messages, reconciled with 9,360 parameter values and their qualifications. The records relate conditions, activities, and 220 point awards, while retaining a divergent result in duration-based evaluation. The results show how separating data reception, interpretation, and use supports tracing the relationships required for gamification. The contribution is traceable integration infrastructure for heterogeneous sources, intended to support analysis and future institutional gamification interventions.
 \end{englishabstract}
 
-\listoftodos
+\ifemrevisao
+\chapter*{Guia de leitura da revisão}
+\rev{O azul identifica as passagens acrescentadas ou reescritas, inclusive em notas de rodapé e referências. Nos títulos, o azul também indica mudança de posição ou de nível. As tabelas e figuras revistas trazem a legenda em azul.}
+
+Os números abaixo seguem a ordem das observações na versão anotada. As remissões levam ao trecho correspondente.
+
+\begin{center}\small
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\linewidth}{@{}p{2.5cm}Y@{}}
+\toprule
+Observações & Onde conferir a alteração \\\midrule
+1 a 5 & Escolhas da arquitetura, objetivos da gamificação e protocolos de comunicação nas Seções~\ref{sec:objetivos} e~\ref{sec:protocolos}. \\
+6 a 9 & Modelos de dados e função dos dois gerenciadores na Seção~\ref{sec:modelos}. Datas de acesso nas referências eletrônicas, inclusive no guia da 18F. \\
+10 & Requisitos temporais das missões e evidência de conforto térmico na Seção~\ref{sec:jogo}. \\
+11 & Comparação com as soluções dos estudos e nova posição da Tabela~\ref{tab:relacionados}. \\
+12 e 13 & Identificação do ambiente do ensaio e documentação da WeatherAPI na Seção~\ref{sec:protocolo-integrado}. \\
+14 a 17 & Novo título do Capítulo~\ref{cap:desenvolvimento}, visão geral, origens e caminhos dos dados antes das tecnologias. \\
+18 e 19 & Justificativas e documentação das tecnologias na Seção~\ref{sec:tecnologias}. \\
+20 e 21 & Chaves, atributos e relacionamentos nas Figuras~\ref{fig:der-medicoes}, \ref{fig:der-academico}, \ref{fig:der-pontos} e~\ref{fig:der-analitico}. \\
+22 e 23 & Caminhos de entrada reunidos na Seção~\ref{sec:entradas}. Identidade, repetição e retenção reunidas na Seção~\ref{sec:retencao}. \\
+24 a 27 & Missão e atividade definidas antes das regras, com o modelo da Figura~\ref{fig:der-pontos}. A Seção~\ref{sec:regras} retoma o modelo e identifica o serviço que avalia as condições. \\\bottomrule
+\end{tabularx}
+\end{center}
+\fi
 
 \listoffigures
 \listoftables
@@ -88,11 +116,11 @@ The gamification project of the energy-use program at the Federal University of 
 \item[\textbf{DSR}] Design Science Research
 \item[\textbf{HTTP}] Hypertext Transfer Protocol
 \item[\textbf{IoT}] Internet of Things
-\item[\textbf{JPA}] Jakarta Persistence API
+\item[\textbf{JPA}] \rev{Jakarta Persistence (originalmente Java Persistence API)}
 \item[\textbf{JSON}] JavaScript Object Notation
 \item[\textbf{JWT}] JSON Web Token
 \item[\textbf{LIMS}] Laboratory Information Management Systems
-\item[\textbf{MQTT}] MQTT --- protocolo de publicação e assinatura de mensagens
+\item[\textbf{MQTT}] \rev{MQ Telemetry Transport (denominação histórica)}
 \item[\textbf{PROBEN}] Programa de Bom Uso Energético
 \item[\textbf{QoS}] Quality of Service
 \item[\textbf{REST}] Representational State Transfer
@@ -117,25 +145,21 @@ As pessoas constituem outra origem de registros. A adesão a uma missão, a conf
 
 O título deste trabalho expressa esse recorte. ``Arquitetura para gerenciamento multi-estruturado de dados'' designa a organização dos mecanismos que integram mensagens documentais, entidades relacionais, séries de medições e registros de gamificação. ``Sistemas gamificados'' identifica o domínio no qual esses dados dão suporte à participação e às atividades dos usuários. ``Fontes heterogêneas'' abrange as diferenças de origem, estrutura e significado entre sensores, serviços externos e registros das pessoas.
 
-\section{Questão de pesquisa e objetivos}
+\section{Questão de pesquisa e objetivos}\label{sec:objetivos}
 A questão investigada é: \emph{como projetar uma infraestrutura de dados que integre observações ambientais heterogêneas e registros de participação, preserve sua rastreabilidade e sustente análises e mecanismos de gamificação da eficiência energética?}
 
-\AP{Aqui entre a questão de pesquisa e os objetivos acho que faltou falar a respeito das escolhas feitas para desenvolvimento do trabalho - persistência poliglota, intercomunicação de dados por meios de sensores e protocolos que apoiam essas ações. Acho que 1 a 2 parágrafos identificando e justificando rapidamente as soluções escolhidas para o trabalho vai dar uma luz à teoria que é apresentada no Capítulo 2. Os objetivos virão para delimitar a aplicação dessas soluções no contexto apresentado na subseção 1.1}
+\rev{Dois sensores instalados em uma sala podem informar a temperatura em formatos diferentes. Para receber essas observações, a arquitetura admite o \emph{Hypertext Transfer Protocol} (HTTP), em que o dispositivo envia uma requisição e recebe uma resposta, e o MQTT, historicamente denominado \emph{MQ Telemetry Transport}, em que o dispositivo publica a mensagem em um tópico acompanhado pelo serviço de coleta \cite{http2022,mqttHistorico2010,oasisMqtt2019}. Preservar a mensagem recebida permite inspecionar seu conteúdo mesmo quando o dispositivo ainda precisa ser cadastrado ou seu formato precisa ser configurado.}
 
-O objetivo geral é projetar, implementar e examinar uma arquitetura de dados e serviços que responda a essa questão no contexto do PROBEN. Os objetivos específicos são:
+\rev{Avaliar uma missão baseada em sensores exige saber o que foi medido, em qual sala e a quem a condição observada se aplica. A arquitetura emprega persistência poliglota para atender a essas duas necessidades \cite{grolinger2013,royhubara2022}. O MongoDB, um gerenciador de bancos de dados orientado a documentos, conserva temporariamente a mensagem original. O PostgreSQL, um gerenciador de bancos de dados objeto-relacional, mantém a medição interpretada e seus vínculos com sensores, salas e atividades. Uma regra pode, assim, utilizar a temperatura da sala mesmo que o modelo de sensor ou o nome do campo de origem varie.}
 
-\AP{Ainda acho que a questão da gamificação precisa aparecer melhor aqui. Que seja depois dos objetivos. Porque podes propor o desenvolvimento de uma arquitetura de dados, mas ela é dependente da aplicação. No caso, a tua arquitetura irá atender uma aplicação de gamificação. Precisa aparecer nos objetivos.}
+\rev{O objetivo geral é desenvolver e avaliar uma arquitetura de dados e serviços que permita à futura aplicação de gamificação associada ao PROBEN relacionar condições ambientais das salas à participação das pessoas em missões de uso consciente da energia. O trabalho tem quatro objetivos específicos.}
 
-\AP{acho que tens objetivos específicos que na verdade seriam etapas de metodologia. Os objetivos específicos são produtos por si. possivelmente a analise e interpretacao dos dados para configuração de formato e modelos de sensores seja um objetivo específico só. Ficou quebrado. Projeto e modelo das interfaces de consulta com base nos requisitos da aplicação possivelmente seja outro específico. Dá uma olhada.}
 \begin{enumerate}
-\item caracterizar as fontes e as relações entre sensores, espaços, pessoas e atividades;
-\item estabelecer formas de preservar mensagens originais e representar medições padronizadas;
-\item implementar comunicação por Hypertext Transfer Protocol (HTTP), por requisição e resposta, e por MQTT \AP{sigla aqui também}, com publicação e assinatura de mensagens, tratando repetição e conflito;
-\item permitir a configuração de formatos e modelos de sensores por perfis de integração;
-\item integrar fontes ambientais compartilhadas e informações acadêmicas à interpretação das medições;
-\item oferecer interfaces de consulta e administração, agregação temporal e avaliação de missões e regras de ambiente;
-\item relacionar evidências, atividades e pontos com mecanismos de idempotência e recuperação;
-\item examinar as decisões por inspeção do artefato, cenários de testes e análise crítica das evidências de execução disponíveis.
+\item \rev{Projetar um modelo de dados que relacione grandezas ambientais, espaços, contexto acadêmico e participação individual em missões.}
+\item \rev{Desenvolver um mecanismo configurável de integração que preserve as mensagens de sensores e interprete os campos de diferentes dispositivos como medições comuns.}
+\item \rev{Projetar e implementar interfaces de configuração e consulta que disponibilizem medições, agregados por período e referências ambientais compartilhadas para a avaliação das salas.}
+\item \rev{Representar o vínculo entre a evidência de uma condição, o progresso de uma atividade e os lançamentos de pontos, de modo que seja possível explicar o resultado e reconhecer repetições do processamento.}
+
 \end{enumerate}
 
 \section{Escopo, contribuição e organização}
@@ -152,11 +176,11 @@ O problema investigado reúne três necessidades: interpretar observações de o
 
 \emph{Internet of Things} (IoT), ou Internet das Coisas, relaciona objetos físicos, sensoriamento e comunicação para disponibilizar observações e serviços. Gubbi et al. \cite{gubbi2013} e Al-Fuqaha et al. \cite{alfuqaha2015} discutem seus elementos arquiteturais e tecnologias de comunicação. Para este TCC, o ponto relevante é a separação entre a grandeza observada e a maneira como cada dispositivo a transmite.
 
-Telemetria é a obtenção e transmissão remota de medições para registro e análise \cite{lozanoTelemetry2017}. Neste trabalho, o termo designa o fluxo de observações produzidas pelos sensores, como temperatura, presença e estado de equipamentos, desde os dispositivos até o serviço de coleta. HTTP e MQTT \AP{Os protocolos X e Y - por extenso se for a 1a aparição no texto - definidos na seção 2.2... precisa explicar ou dizer onde são explicados os protocolos} são os meios de comunicação utilizados nesse fluxo. A expressão coleta e integração de dados descreve a arquitetura como um todo, que também relaciona fontes ambientais externas, contexto acadêmico e registros de participação humana.
+Telemetria é a obtenção e transmissão remota de medições para registro e análise \cite{lozanoTelemetry2017}. Neste trabalho, o termo designa o fluxo de observações produzidas pelos sensores, como temperatura, presença e estado de equipamentos, desde os dispositivos até o serviço de coleta. \rev{Os protocolos HTTP e MQTT transportam essas observações por requisição e resposta ou por publicação e assinatura, respectivamente, conforme a Seção~\ref{sec:protocolos}.} A expressão coleta e integração de dados descreve a arquitetura como um todo, que também relaciona fontes ambientais externas, contexto acadêmico e registros de participação humana.
 
 O valor de uma observação depende de contexto espacial, temporal e de sua origem. Sagl, Resch e Blaschke \cite{sagl2015} discutem a integração de informações produzidas por sensores técnicos e por pessoas. Essa perspectiva sustenta a inclusão de registros humanos como fonte complementar, preservando sua natureza: uma pessoa declarar participação não equivale a um sensor medir energia. Na infraestrutura desenvolvida, a distinção orienta a modelagem de presença, adesão, atividade e medição.
 
-\section{Comunicação e interpretação de formatos}
+\section{Comunicação e interpretação de formatos}\label{sec:protocolos}
 \emph{Hypertext Transfer Protocol} (HTTP) é um protocolo de aplicação baseado em requisições e respostas. Ele permite que clientes submetam dados e consultem recursos em um servidor \cite{http2022}. \emph{Application Programming Interface} (API) é a interface por meio da qual uma aplicação disponibiliza operações a outras. No trabalho, a API oferece os serviços de recebimento, configuração e consulta.
 
 \emph{Representational State Transfer} (REST) é um estilo arquitetural definido por restrições como separação entre cliente e servidor, comunicação sem estado de sessão no servidor e interface uniforme \cite{fielding2000}. Assim, HTTP é o protocolo empregado e REST descreve uma orientação de organização das interfaces. O emprego de rotas HTTP, por si só, não demonstra atendimento integral a todas as restrições REST.
@@ -165,16 +189,14 @@ MQTT é um protocolo de mensageria baseado em publicação e assinatura. Um prod
 
 O formato dos dados constitui uma dimensão diferente do protocolo. \emph{JavaScript Object Notation} (JSON) é um formato textual de representação de dados \cite{json2017}. Dois produtores podem usar JSON e ainda assim representar temperatura em campos diferentes. A transformação para uma representação comum, denominada modelo canônico neste trabalho, procura estabilizar a interpretação usada pelas etapas seguintes. Sua realização depende de identificadores, tipos, unidades e mapeamentos explícitos, e não apenas da adoção do mesmo protocolo.
 
-\section{Persistência poliglota e integridade}
+\section{Persistência poliglota e integridade}\label{sec:modelos}
 Armazenar uma observação envolve decidir qual representação conservar, por quanto tempo e sob quais vínculos ela será utilizada. A mensagem recebida precisa sustentar a inspeção de sua origem; a medição interpretada precisa estabelecer relações com sensores, espaços e atividades. A persistência poliglota articula essas necessidades por meio de mecanismos complementares, enquanto a integridade assegura que a passagem entre representações preserve identidade e significado. A escolha do armazenamento deve, portanto, considerar conjuntamente a estrutura dos dados, as operações esperadas e seu ciclo de vida.
 
 \subsection{Modelos de dados e critérios de escolha}
 
-\AP{nesta subseção achei que faltou dar nomes aos modelos de dados adequados aos dados trabalhados. Acho importante que definas quais paradigmas foram usados e por que. Falar sobre o paradigma relacional e o não relacional.} 
-
 \emph{Polyglot persistence}, ou persistência poliglota, designa o uso de diferentes mecanismos de armazenamento para diferentes finalidades em uma mesma aplicação. \citet{grolinger2013} apresentam o conceito ao discutir a diversidade de bancos e modelos de dados. A escolha não se resume a combinar produtos: é necessário identificar quais representações, consultas e garantias cada parte da aplicação demanda.
 
-No modelo documental, uma observação pode ser representada por um documento com campos e estruturas aninhadas. \citet{grolinger2013} relacionam esse modelo a entradas cuja organização pode variar entre documentos. No modelo relacional, a informação é organizada em relações, com identificadores e restrições que expressam vínculos entre registros. Essas organizações favorecem formas distintas de representar a informação; nenhuma delas elimina a necessidade de definir significado, identidade e regras de validade.
+\rev{O modelo documental pertence à família dos modelos não relacionais. Ele permite reunir em um documento campos e estruturas aninhadas, cuja composição pode variar entre mensagens \cite{grolinger2013}. No MongoDB, essa característica permite guardar o conteúdo enviado por diferentes sensores junto do produtor e do instante de recebimento. No modelo relacional, tabelas organizam registros, chaves primárias identificam cada registro e chaves estrangeiras explicitam o vínculo com outro. No PostgreSQL, por exemplo, o valor de temperatura referencia tanto a medição quanto a definição da grandeza, o que permite consultar temperaturas de dispositivos diferentes sob o mesmo significado \cite{postgresConstraints2026}.}
 
 \citet{gessert2017} propõem relacionar requisitos funcionais e não funcionais às características dos mecanismos de armazenamento. \citet{royhubara2022} também tratam a seleção de modelos como uma decisão orientada por requisitos dos dados e da aplicação. Esses trabalhos sustentam uma análise que parte das operações necessárias, em vez de atribuir superioridade geral a uma família de bancos.
 
@@ -188,7 +210,7 @@ No modelo relacional adotado, chaves estrangeiras relacionam medições a sensor
 A combinação introduz uma fronteira de coordenação. A gravação de uma medição no banco relacional e a atualização do estado da mensagem no banco documental não pertencem à mesma transação local. Se a primeira terminar e a confirmação se perder, a entrada poderá ser entregue novamente. A arquitetura precisa reconhecer o resultado persistido e reconciliar o processamento, em vez de interpretar a retransmissão como uma nova observação. A integridade interna de cada banco e a continuidade entre bancos são, portanto, problemas relacionados, mas distintos.
 
 \subsection{Complementaridade, retenção e crescimento dos dados}
-A combinação entre MongoDB e PostgreSQL \AP{Mongo? PostgreSQL? o que são? de onde vem? ... ficou no ar - precisa dizer do que consistem e relacionar eles com os paradigmas de modelagem de dados falados em subseção anterior} responde a dois perfis de informação presentes no problema. As mensagens de sensores formam um fluxo contínuo, com frequência e estrutura dependentes dos dispositivos, e seu conteúdo original tem utilidade imediata para inspeção e interpretação. As medições padronizadas, os vínculos acadêmicos e os registros de participação precisam sustentar consultas e relações que permanecem relevantes após o recebimento. Associar cada representação a seu ciclo de vida concretiza a seleção de armazenamento orientada pelos requisitos discutida por \citet{gessert2017} e \citet{royhubara2022}.
+\rev{O uso conjunto do gerenciador documental MongoDB e do gerenciador objeto-relacional PostgreSQL} responde a dois perfis de informação presentes no problema. As mensagens de sensores formam um fluxo contínuo, com frequência e estrutura dependentes dos dispositivos, e seu conteúdo original tem utilidade imediata para inspeção e interpretação. As medições padronizadas, os vínculos acadêmicos e os registros de participação precisam sustentar consultas e relações que permanecem relevantes após o recebimento. Associar cada representação a seu ciclo de vida concretiza a seleção de armazenamento orientada pelos requisitos discutida por \citet{gessert2017} e \citet{royhubara2022}.
 
 A retenção é uma razão central para essa divisão. No MongoDB, índices de \emph{Time to Live} (TTL), ou tempo de vida, permitem remover automaticamente documentos segundo um prazo ou instante de expiração \cite{mongoTtl2026}. A política pode acompanhar a utilidade do conteúdo bruto para inspeção e reinterpretação, enquanto as medições e os registros relacionados seguem seu próprio ciclo de conservação no PostgreSQL. A administração passa a tratar explicitamente duas necessidades: manter uma janela de mensagens originais e conservar as informações utilizadas pelo domínio.
 
@@ -198,79 +220,77 @@ O modelo documental oferece ainda recursos adequados à exploração das entrada
 
 O PostgreSQL atende à necessidade complementar de preservar relações estáveis. Chaves estrangeiras e restrições de unicidade permitem expressar vínculos e identidades no próprio esquema \cite{postgresConstraints2026}. Na solução desenvolvida, esses mecanismos relacionam sensores, medições, pessoas, atividades e lançamentos de pontos. Preservar tais relações permite consultar resultados e explicar seus efeitos mesmo depois de encerrada a retenção da mensagem original. O histórico de interesse do domínio ganha, portanto, uma organização própria, coerente com as consultas e com a integridade exigida pelas atividades.
 
-A adoção conjunta \AP{dos dois sistemas gerenciadores} faz sentido porque articula flexibilidade de entrada, administração da retenção, exploração documental e integridade relacional em responsabilidades distintas. A coordenação entre bancos integra essa escolha e é tratada por identidades persistidas, referências de origem e recuperação do processamento. A persistência poliglota organiza, desse modo, tanto a diversidade dos dados quanto sua evolução temporal: cada representação permanece no mecanismo e pelo período compatíveis com sua função no percurso da informação.
+\rev{A adoção conjunta dos dois sistemas gerenciadores se justifica} porque articula flexibilidade de entrada, administração da retenção, exploração documental e integridade relacional em responsabilidades distintas. A coordenação entre bancos integra essa escolha e é tratada por identidades persistidas, referências de origem e recuperação do processamento. A persistência poliglota organiza, desse modo, tanto a diversidade dos dados quanto sua evolução temporal: cada representação permanece no mecanismo e pelo período compatíveis com sua função no percurso da informação.
 
 \section{Software configurável e adaptação entre contextos}\label{sec:configurabilidade}
 A implantação de uma mesma base de software em organizações distintas exige representar diferenças de dados, processos e políticas. A expressão \emph{off-the-shelf software} designa software previamente desenvolvido e disponibilizado para utilização; em produtos comerciais, utiliza-se \emph{Commercial Off-The-Shelf} (COTS). A configurabilidade descreve outra dimensão: a possibilidade de adaptar o comportamento pelas opções e mecanismos previstos no produto. Essa distinção permite relacionar a experiência de sistemas padronizados à arquitetura estudada, cujo interesse é preservar uma base comum e expressar as diferenças entre contextos por configuração \cite{gsaConfiguracao2026}.
 
-Neste texto, configuração significa selecionar e preencher opções já previstas, como parâmetros, vínculos, mapeamentos e condições. Customização por código designa a introdução ou alteração de lógica programada para atender a uma necessidade específica. Essa convenção distingue mudanças nos dados de configuração de mudanças no mecanismo que os interpreta. O guia técnico da 18F apresenta essa separação para produtos COTS, enquanto \citet{rosemann2007} mostram a importância de representar explicitamente as alternativas de configuração de sistemas empresariais \cite{gsaConfiguracao2026}. \AP{Dá uma olhada na norma, se essas referências de site não tens ainda que colocar a data de acesso.}
+Neste texto, configuração significa selecionar e preencher opções já previstas, como parâmetros, vínculos, mapeamentos e condições. Customização por código designa a introdução ou alteração de lógica programada para atender a uma necessidade específica. Essa convenção distingue mudanças nos dados de configuração de mudanças no mecanismo que os interpreta. O guia técnico da 18F apresenta essa separação para produtos COTS, enquanto \citet{rosemann2007} mostram a importância de representar explicitamente as alternativas de configuração de sistemas empresariais \cite{gsaConfiguracao2026}.
 
 Uma aplicação dessa perspectiva aparece nos \emph{Laboratory Information Management Systems} (LIMS), sistemas de gerenciamento de informações laboratoriais. \citet{russom2012} relatam a implantação de um LIMS configurável para desenvolvimento de processos e produção celular. A seleção considerou flexibilidade, necessidade contínua de programação e integração com equipamentos. O estudo exemplifica como uma base de software pode ser ajustada às necessidades de um laboratório e manter possibilidades de adaptação a ambientes semelhantes.
 
 Para esta pesquisa, a propriedade relevante é tornar explícito o que pode variar sem alterar o núcleo de processamento. Formatos de mensagens, fontes externas e condições de avaliação constituem pontos de adaptação. O núcleo conserva as operações de identificação, persistência e tratamento dos resultados, enquanto configurações descrevem diferenças admitidas entre dispositivos e ambientes. Essa organização favorece a reutilização porque desloca decisões locais para elementos administráveis e verificáveis, preservando uma implementação comum para o percurso dos dados.
 
-\section{Tempo, repetição e recuperação do processamento}
+\section{\rev{Gamificação e uso consciente da energia}}\label{sec:jogo}
+Gamificação utiliza elementos de projeto de jogos em contextos que não são jogos \cite{deterding2011}. No domínio energético, ela pode combinar metas, retorno sobre comportamento e participação. Morschheuser et al. \cite{morschheuser2018} propõem um método de desenvolvimento que considera análise do contexto e avaliação iterativa. Oppong-Tawiah et al. \cite{oppong2020} exemplificam essa relação em uma aplicação voltada a práticas sustentáveis no escritório.
 
-\AP{ Essa questão do tempo, repetição e recuperação para ti é ciente de aplicação? Sera que nao seria o caso de trazer a gamificação para antes? Ou criar uma seção 2.5 Gamificação e uso consciente de energia com duas subseções: 2.5.1 Requisitos de processamento de dados (ou mantém o titulo); e 2.5.2 Conforto térmico adaptativo. Essas seções são mais ligadas ao jogo? A tua seção de conforto térmico está carecendo de alguma referencia mais nova}
+\rev{No projeto associado ao PROBEN, uma missão define um objetivo e a recompensa prevista. Uma atividade registra a participação de uma pessoa nessa missão durante um ciclo. Para explicar a pontuação ao participante, a aplicação precisa conhecer a condição verificada, o intervalo em que ela ocorreu e o vínculo da pessoa com a sala. Quando a condição envolve temperatura, precisa conhecer também a referência ambiental usada na comparação.}
+
+\subsection{\rev{Requisitos temporais das atividades e recuperação do processamento}}
+\rev{Uma leitura retransmitida pode se referir ao mesmo instante e à mesma condição já avaliados. Em uma missão de duração, o progresso depende ainda de saber por quanto tempo a condição permaneceu satisfeita. Esses requisitos orientam o tratamento do tempo e da repetição.}
 
 O instante em que uma observação ocorre pode diferir daquele em que é recebida ou processada. Akidau et al. \cite{akidau2015} mostram a importância dessa distinção para fluxos não limitados e fora de ordem, relacionando tempo do evento, janelas e resultados. Neste trabalho, essas ideias fundamentam a necessidade de explicitar intervalos e políticas de atraso; não implicam adoção integral do modelo Dataflow.
 
-Idempotência significa que repetir uma operação não multiplica seu efeito esperado. A semântica de métodos idempotentes é descrita para HTTP em sua especificação \cite{http2022}; no PROBEN, a propriedade também é implementada no domínio por identidades e restrições de unicidade. Uma tentativa repetida com o mesmo conteúdo pode ser reconhecida; conteúdo diferente sob a mesma identidade deve ser tratado como conflito.
+Idempotência significa que repetir uma operação não multiplica seu efeito esperado. A semântica de métodos idempotentes é descrita para HTTP em sua especificação \cite{http2022}. \rev{Na infraestrutura desenvolvida, identidades e restrições de unicidade permitem reconhecer resultados já registrados.} Uma tentativa repetida com o mesmo conteúdo pode ser reconhecida; conteúdo diferente sob a mesma identidade deve ser tratado como conflito.
 
 Um processamento assíncrono também precisa distinguir trabalho reservado de trabalho concluído. Neste texto, \emph{claim} designa a reserva atômica de um item e \emph{lease}, a concessão temporária dessa reserva. Ao expirar, ela permite a retomada por outro executor. São mecanismos concretos do artefato, cuja implementação e cenários de verificação serão discutidos adiante; sua presença não garante recuperação sob qualquer falha distribuída.
 
-\section{Gamificação e uso consciente da energia}
-Gamificação utiliza elementos de projeto de jogos em contextos que não são jogos \cite{deterding2011}. No domínio energético, ela pode combinar metas, retorno sobre comportamento e participação. Morschheuser et al. \cite{morschheuser2018} propõem um método de desenvolvimento que considera análise do contexto e avaliação iterativa. Oppong-Tawiah et al. \cite{oppong2020} exemplificam essa relação em uma aplicação voltada a práticas sustentáveis no escritório.
-
-Para o PROBEN, a relevância está em permitir que uma atividade seja contextualizada e que o participante compreenda o retorno recebido. Pontos são uma representação de progresso, não uma medida física de energia. O projeto institucional pretende favorecer mudanças voluntárias de conduta; o presente artefato fornece os serviços e registros para essa intervenção, mantendo separadas as condições de avaliação técnica e as de avaliação comportamental.
-
-\section{Conforto térmico adaptativo como requisito de contexto}
+\subsection{\rev{Conforto térmico adaptativo como requisito de contexto}}
 O conforto térmico adaptativo relaciona condições internas às expectativas e à experiência térmica dos ocupantes. De Dear e Brager \cite{deDear2002} apresentam resultados e uma proposta para ambientes naturalmente ventilados, ressaltando o papel das condições externas. Esse fundamento explica por que a temperatura externa pode ser relevante para interpretar uma sala, além da medição interna.
 
-O conceito não autoriza aplicar uma mesma equação indistintamente a qualquer ambiente climatizado. Para o TCC, importa distinguir a hipótese de domínio, a regra calculada no software e a avaliação real do conforto. O primeiro aspecto é fundamentado na literatura; o segundo depende da implementação e dos dados; o terceiro requer critérios de aplicabilidade e estudo de campo. A infraestrutura desenvolvida atua principalmente no segundo aspecto.
+\rev{Em 28 salas universitárias de Joinville e São José, \citet{custodio2024} combinaram medições ambientais com questionários respondidos pelos estudantes ao longo das quatro estações. Em Joinville, a temperatura média de neutralidade obtida foi de $19{,}8\,^{\circ}\mathrm{C}$ sob ventilação natural e de $21{,}8\,^{\circ}\mathrm{C}$ com ar-condicionado. A diferença entre os modos de operação ajuda a delimitar o uso do modelo neste trabalho. O serviço pode registrar que uma medição ficou dentro da faixa configurada. A avaliação da sensação dos ocupantes do Centro de Artes exigiria observações dessas pessoas nas condições locais.}
+
+\rev{A Seção~\ref{sec:conforto} apresenta os dados que o serviço utiliza para calcular a faixa e as condições de validade da referência externa.}
 
 \chapter{Trabalhos Relacionados}\label{cap:relacionados}
 A literatura pertinente ao trabalho pode ser organizada em duas perspectivas complementares: intervenções que utilizam dados para incentivar comportamentos e soluções que tratam a integração e o processamento desses dados. Esta comparação procura identificar o que cada perspectiva informa à construção do artefato, sem supor que estudos com objetivos diferentes devam apresentar os mesmos mecanismos técnicos.
 
 \section{Dados e participação em intervenções energéticas}
-Orland et al. \cite{orland2014} investigam uma intervenção com jogo em ambiente de escritório, conectando consumo monitorado e participação. Sua relevância para este TCC é a associação entre evidências do ambiente e retorno aos usuários. Os resultados de uma intervenção concreta dependem das cargas e dos participantes estudados, não sendo uma previsão de economia para outra plataforma.
+\rev{No jogo estudado por \citet{orland2014}, o consumo diário dos equipamentos de cada participante alterava a representação de sua fazenda virtual. O vínculo entre observação e destinatário era direto. Em uma sala universitária compartilhada, o sensor identifica o ambiente e várias pessoas podem utilizá-lo em horários diferentes. Essa diferença ajuda a explicar a decisão de modelar separadamente a medição da sala e a política que identifica os beneficiários.}
 
 Oppong-Tawiah et al. \cite{oppong2020} descrevem o desenvolvimento de uma aplicação móvel em cinco ciclos de projeto, combinando acompanhamento de uso de eletricidade e estratégias de engajamento. A relação mais direta com este trabalho é a necessidade de articular construção do sistema e avaliação. O objeto aqui delimitado, contudo, é a infraestrutura de dados que antecede a intervenção móvel.
 
-Iria et al. \cite{iria2020} apresentam uma plataforma para eficiência energética em escritórios que utiliza informação de contexto, painéis e estratégias de participação. A comparação destaca o papel da informação ambiental na comunicação com o usuário. Neste TCC, essa necessidade leva a representar explicitamente fontes locais e externas e os vínculos entre dados e decisões.
+\rev{\citet{iria2020} apresentam painéis distintos para informar consumo, acompanhar competições e comunicar oportunidades de economia. Para sustentar consultas com finalidades igualmente distintas, os serviços deste TCC disponibilizam tanto séries de medições por sensor e período quanto saldo e extrato de pontos por pessoa. O primeiro resultado descreve o ambiente. O segundo exige registros que identifiquem o beneficiário e a origem de cada lançamento.}
 
-Esses trabalhos fundamentam a relevância de integrar medição e participação. Eles não fornecem, apenas pela descrição desses mecanismos, evidência de que o PROBEN evita duplicatas ou recupera uma tarefa interrompida. Essas propriedades precisam ser examinadas no artefato desenvolvido.
+\rev{Assim, o que se aproveita desses estudos é o requisito de transformar observações em retorno compreensível para um participante. Neste TCC, pode-se examinar essa ligação consultando os registros de atividade e pontuação. A adesão das pessoas à intervenção exigirá uma avaliação posterior com o cliente móvel.}
 
 \section{Representação e processamento dos dados}
-\citet{grolinger2013} fornecem uma visão das possibilidades e desafios de bancos com diferentes modelos. \citet{gessert2017} apresentam orientação de seleção conforme requisitos. Sua contribuição ao TCC está em deslocar a decisão de armazenamento do nome da tecnologia para as operações necessárias. O artefato utiliza essa perspectiva para separar preservação documental e relações de domínio, assumindo o custo de integração entre elas.
+\citet{grolinger2013} fornecem uma visão das possibilidades e desafios de bancos com diferentes modelos. \citet{gessert2017} apresentam orientação de seleção conforme requisitos. Sua contribuição ao TCC está em deslocar a decisão de armazenamento do nome da tecnologia para as operações necessárias. O artefato utiliza essa perspectiva para separar preservação documental e relações de domínio, assumindo o custo de integração entre elas. \rev{\citet{royhubara2022} relacionam a seleção de bancos aos requisitos de cada parte da aplicação. Aqui, as duas operações que conduzem a escolhas distintas são recuperar o conteúdo enviado por um sensor e consultar os vínculos entre uma atividade e os lançamentos de pontos que ela originou.}
 
 Akidau et al. \cite{akidau2015} abordam o processamento de dados não limitados e fora de ordem, discutindo compromissos entre correção, latência e custo. A arquitetura desenvolvida emprega uma solução mais restrita: janelas persistidas, agregação de medições existentes e recomputação explícita. A comparação torna visíveis tanto a inspiração conceitual quanto a ausência de mecanismos mais amplos de atualização automática de resultados diante de atrasos.
-
-\begin{table}[htbp]\centering\small
-\caption{Relação entre a literatura e o problema investigado}\label{tab:relacionados}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.1cm}YY}\toprule
-Estudo & Contribuição utilizada & Relação com a arquitetura \\\midrule
-Orland et al.; Iria et al. & Relação entre informação ambiental e intervenção gamificada. & Relação entre observações, contexto e atividades. \\
-Oppong-Tawiah et al. & Desenvolvimento e avaliação iterativos em sustentabilidade. & Organização da infraestrutura que disponibiliza dados às aplicações. \\
-Grolinger et al.; Gessert et al. & Escolha de armazenamento conforme os requisitos. & Representações documentais e relacionais com ciclos de conservação próprios. \\
-Rosemann e van der Aalst; Russom et al. & Configuração de uma base comum para necessidades locais. & Perfis de integração, fontes e condições administráveis. \\
-Akidau et al. & Tempo do evento, janelas e dados fora de ordem. & Janelas e recuperação persistidas, com política limitada de recomputação. \\\bottomrule
-\end{tabularx}
-\caption*{Fonte: síntese do autor a partir dos estudos citados no capítulo.}
-\end{table}
 
 \section{Configuração e reutilização de uma base comum}
 \citet{rosemann2007} investigam modelos capazes de representar alternativas de configuração em sistemas empresariais. Sua contribuição ao presente trabalho é a ideia de que a adaptação precisa ter pontos de escolha explícitos. Nos serviços desenvolvidos, essa perspectiva ajuda a interpretar perfis, mapeamentos e escopos como elementos do projeto da solução, em vez de ajustes externos ao modelo.
 
 \citet{russom2012} oferecem um exemplo aplicado de configurabilidade em LIMS. A relação com este TCC está na adaptação de uma base comum a informações, equipamentos e rotinas locais. No domínio energético, os elementos variáveis são sensores, formatos de mensagens, fontes ambientais e políticas de avaliação. A correspondência entre os estudos ocorre no mecanismo de adaptação; as operações laboratoriais mantêm seu domínio específico.
 
-\section{Posicionamento da contribuição}
-A Tabela~\ref{tab:relacionados} situa a contribuição na articulação de mecanismos de integração e configuração em um problema institucional: permitir que uma observação heterogênea seja preservada, interpretada, contextualizada e relacionada a efeitos de gamificação de forma inspecionável. Trata-se de uma contribuição aplicada de projeto e desenvolvimento, cujo alcance depende da evidência apresentada para cada propriedade.
+\rev{Em uma aplicação mais recente, \citet{hemani2025} descrevem como o sistema laboratorial openBIS recebe dados de instrumentos por rotinas que extraem registros, transformam os campos e carregam o resultado. Parte dessa adaptação é programada em scripts. No TCC, a correspondência entre um campo de temperatura e uma grandeza do domínio pode ser registrada em um perfil com versão. A comparação delimita o alcance dessa escolha. Um formato coberto pelas opções do perfil pode ser integrado por configuração. Uma transformação que essas opções não expressam exige modificar o interpretador.}
 
-\AP{Esse capitulo de trabalhos relacionados não está te ajudando muito. A análise do estado da arte tem que te ajudar a embasar as tuas decisões de projeto... e estás usando os trabalhos somente para motivar o teu problema de pesquisa. Ficou fraco. Ou explicitas melhor as soluções adotadas e como ajudam na tua pesquisa ou pensa melhor em incluir ou não os trabalhos.
-Os anos também não te ajudam. A seção 3.3 traz 2 referencias, uma de 2007 e uma e 2012. Isso não é estado da arte. 
-A Tabela 1 está posicionada previamente à citação dela no trabalho. Aquela coluna Contribuição é relacionada a tua solução? E a Relação é com a tua arquitetura? Precisas ser mais objetivo na descrição da Tabela 1.}
+\section{Posicionamento da contribuição}
+\rev{A Tabela~\ref{tab:relacionados} reúne, para cada estudo, a solução ou o critério descrito pelos autores e a decisão que pode ser examinada à luz desse trabalho. Na arquitetura desenvolvida, uma medição admite inspeção desde a mensagem que a originou até a condição que a utiliza. Para explicar um efeito individual, é preciso ainda recuperar a atividade ou a execução de regra que deu origem aos pontos.}
+
+\begin{table}[H]\centering\small\tintarevisao
+\caption{\rev{Soluções descritas na literatura e decisões correspondentes neste TCC.}}\label{tab:relacionados}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.0cm}YY}\toprule
+Estudos & Solução ou critério do estudo & Decisão na arquitetura desenvolvida \\\midrule
+Orland et al. e Iria et al. & Consumo associado ao participante e painéis de acompanhamento. & Relacionar medições da sala a beneficiários e oferecer consultas distintas de medições e pontos. \\
+Gessert et al. e Roy-Hubara et al. & Escolha do armazenamento a partir das operações e dos requisitos dos dados. & Conservar mensagens variáveis em documentos e vincular medições e atividades por chaves. \\
+Russom et al. e Hemani et al. & Adaptação de sistemas laboratoriais aos instrumentos e aos dados locais. & Configurar campos de origem e grandezas de destino em perfis de interpretação. \\
+Akidau et al. & Distinção entre o instante do evento e o do processamento. & Delimitar agregados por intervalo da observação e permitir recomputação. \\\bottomrule
+\end{tabularx}
+\caption*{Fonte: elaboração do autor.}
+\end{table}
 
 \chapter{Metodologia}\label{cap:metodo}
 A pesquisa parte de uma necessidade institucional e a transforma em um problema de organização e integração de dados. O método articula a compreensão desse problema, a construção de uma solução e a análise de suas contribuições. O interesse está na relação entre as decisões de arquitetura e as possibilidades de uso da informação que elas estabelecem.
@@ -325,23 +345,21 @@ A avaliação articula a análise do artefato e um ensaio controlado de seu flux
 \section{Protocolo de avaliação do fluxo integrado}\label{sec:protocolo-integrado}
 O ensaio investiga como uma observação recebida se torna informação utilizável pela gamificação. Para isso, relaciona três conjuntos de evidências: mensagens produzidas com conteúdo conhecido, medições e qualificações consultadas no serviço de dados e registros de ocorrências, atividades e pontos. A conferência entre essas etapas permite examinar a continuidade da informação e distinguir a aceitação de uma publicação da conclusão de seus efeitos no domínio.
 
-O cenário compreende dez salas e dez sensores virtuais, com vinte estudantes de teste vinculados ao contexto acadêmico configurado. A infraestrutura foi executada em uma máquina virtual privada, \emph{Virtual Private Server} (VPS), do plano Hostinger KVM~2, conforme identificação fornecida pelo autor \AP{não entendi esse conforme identificação fornecida pelo autor - que autor?}. Cada repetição publica sessenta mensagens, distribuídas entre os dez sensores, à taxa alvo de duas mensagens por segundo no conjunto. São quatro condições de avaliação, com três repetições por condição, totalizando 720 mensagens. As repetições são sequenciais, com sementes de geração distintas e missões próprias; essa organização conserva resultados individuais sem supor que o estado compartilhado do ambiente seja reinicializado entre execuções.
+O cenário compreende dez salas e dez sensores virtuais, com vinte estudantes de teste vinculados ao contexto acadêmico configurado. A infraestrutura foi executada em uma máquina virtual privada, \emph{Virtual Private Server} (VPS), \rev{do plano Hostinger KVM~2, utilizado pelo autor deste TCC na execução do ensaio.} Cada repetição publica sessenta mensagens, distribuídas entre os dez sensores, à taxa alvo de duas mensagens por segundo no conjunto. São quatro condições de avaliação, com três repetições por condição, totalizando 720 mensagens. As repetições são sequenciais, com sementes de geração distintas e missões próprias; essa organização conserva resultados individuais sem supor que o estado compartilhado do ambiente seja reinicializado entre execuções.
 
-Cada mensagem contém treze parâmetros: temperatura, presença, iluminação, estado do ar-condicionado, quatro valores de energia, temperatura de ajuste do equipamento, umidade, ruído, concentração de dióxido de carbono e abertura de janela. Os valores internos são sintéticos. Os valores de energia são incrementos calculados a partir de potências assumidas, e não leituras de consumo físico. Como contexto externo fixo, reutilizam-se uma observação de temperatura de $25{,}6\,^{\circ}\mathrm{C}$ e uma média de sete dias de $18{,}23\,^{\circ}\mathrm{C}$ previamente obtidas pela integração com a WeatherAPI \AP{não seria o caso de incluir footnote para essa api?}. A fixação dessas referências permite interpretar as execuções sob o mesmo contexto externo.
+Cada mensagem contém treze parâmetros: temperatura, presença, iluminação, estado do ar-condicionado, quatro valores de energia, temperatura de ajuste do equipamento, umidade, ruído, concentração de dióxido de carbono e abertura de janela. Os valores internos são sintéticos. Os valores de energia são incrementos calculados a partir de potências assumidas, e não leituras de consumo físico. Como contexto externo fixo, reutilizam-se uma observação de temperatura de $25{,}6\,^{\circ}\mathrm{C}$ e uma média de sete dias de $18{,}23\,^{\circ}\mathrm{C}$ previamente obtidas pela integração com a WeatherAPI.\footnote{\rev{Documentação do serviço meteorológico WeatherAPI, disponível em \url{https://www.weatherapi.com/docs/}. Acesso em 24 nov. 2026.}} A fixação dessas referências permite interpretar as execuções sob o mesmo contexto externo.
 
 A qualificação utiliza faixas sintéticas cadastradas para os parâmetros. Em cada repetição, seis mensagens recebem um valor deliberadamente fora de faixa: duas para temperatura, duas para umidade, uma para ruído e uma para dióxido de carbono. Assim, são esperadas 780 avaliações e seis resultados de alerta por repetição. O alerta é uma interpretação do valor recebido; a medição continua a fazer parte do conjunto cuja persistência deve ser conferida.
 
 As missões utilizam condições que representam diferentes relações com o tempo. A avaliação instantânea compara a temperatura com o limite de $25\,^{\circ}\mathrm{C}$; a transição observa a mudança para presença verdadeira; a duração requer a manutenção dessa presença por dez segundos, com lacuna máxima configurada de dez segundos; e a avaliação no encerramento de uma janela de dez segundos considera o último valor de presença. Cada missão é de ciclo único, requer um progresso para conclusão automática e concede cinco pontos por atividade concluída. Os vinte estudantes de teste são vinculados a cada missão; sua elegibilidade decorre da configuração acadêmica, não de identificação física realizada pelo sensor.
 
-
 A confirmação do intermediário MQTT é medida no publicador, enquanto medições e efeitos das missões são conferidos por consultas autenticadas ao serviço de dados. O atraso até a representação canônica corresponde à diferença entre o horário de origem e o horário de recebimento da medição; depende, portanto, dos relógios envolvidos. Os tempos são resumidos pela média e pelo desvio padrão amostral das três médias de repetição em cada modo. As contagens são apresentadas por repetição, preservando resultados divergentes. A taxa configurada caracteriza uma carga controlada de integração, e não um ensaio de saturação. O protocolo e os artefatos de reprodução estão identificados na Seção~\ref{ap:campanha-integrada}.
 
-\chapter{Da Origem dos Dados ao Apoio à Gamificação}\label{cap:desenvolvimento}
+\chapter{\rev{Modelo de Dados para Apoio à Gamificação}}\label{cap:desenvolvimento}
 
-\AP{Achei o titulo muito estranho. Não poderia ser uma coisa mais simples, como Modelo de Dados para Apoio à Gamificação?}
-A arquitetura é apresentada neste capítulo pelo percurso dos dados. Primeiro são identificadas suas origens e os espaços aos quais se referem. Em seguida, são discutidos recebimento, preservação, transformação e contextualização. Finalmente, mostram-se as formas de consulta e os mecanismos pelos quais observações podem participar de regras, atividades e registros de pontos. Cada etapa explicita o desafio que motivou sua organização e os limites da solução.
+\rev{Os requisitos do capítulo anterior podem ser acompanhados a partir de uma pergunta concreta. Se um sensor informa a temperatura de uma sala, que outros dados permitem usar essa leitura em uma missão? O capítulo apresenta primeiro os serviços, as fontes e os caminhos de entrada. Em seguida, o modelo de dados mostra como identificar a grandeza, localizar a sala e vincular uma pessoa a uma atividade. Com essas relações estabelecidas, examinam-se a escolha das tecnologias, a preservação da mensagem, a interpretação de seu conteúdo e a incorporação de referências externas. O percurso termina nas consultas por período, na avaliação de condições e nos lançamentos de pontos.}
 
-\section{Visão do percurso e responsabilidades}
+\section{Visão do percurso e responsabilidades}\label{sec:entradas}
 
 A Figura~\ref{fig:arquitetura-geral} situa os componentes antes de acompanhar os dados. A visão geral da arquitetura permite distinguir quem produz informação, quais serviços a recebem e onde cada representação é mantida. As conexões indicam comunicação entre componentes, enquanto a Figura~\ref{fig:fluxo-dados} detalha os caminhos percorridos pela informação.
 
@@ -356,9 +374,7 @@ A Figura~\ref{fig:arquitetura-geral} situa os componentes antes de acompanhar os
 
 Os dois serviços distinguem preservação e interpretação: receber uma mensagem não exige que seu conteúdo já possa ser utilizado pelo domínio. A interface permite configurar essa passagem e consultar seus resultados. A futura aplicação móvel utilizará os serviços de disponibilização de dados, mantendo o acesso aos bancos mediado pelas interfaces da arquitetura.
 
-\AP{Aqui faltou explicitar quais são as fontes de dados. Abaixo colocas contexto acadêmico e registros de participação... mas quais são esses dados. Precisas ter uma figura, pipeline, não sei... ou texto mesmo, que explique quais são os dados do contexto do usuário que são capturados para análise. aqui não deixa claro quais são os dados. A Figura 2 mostra os caminhos, mas faltou uma com as naturezas dos dados}
-
-A Figura~\ref{fig:fluxo-dados} apresenta uma visão conceitual dos principais caminhos. O contexto acadêmico e os registros de participação são mantidos no PostgreSQL e relacionados às medições durante sua utilização. As setas representam transferências ou relações de uso dos dados; não representam uma única transação nem exigem que todas as fontes percorram todas as etapas. A separação é importante porque as mensagens brutas dos sensores, a coleta de uma fonte externa e a confirmação de presença têm naturezas diferentes. \AP{quais são essas naturezas?}
+\rev{A Figura~\ref{fig:fluxo-dados} acompanha quatro origens de informação. Dos sensores vêm observações físicas, como temperatura, detecção de ocupação e estado do ar-condicionado, identificadas por dispositivo e instante. Do serviço meteorológico vem a temperatura externa de uma localização, que pode servir a várias salas. Do contexto acadêmico vêm os horários de uso da sala, a disciplina, a turma e os vínculos de matrícula. Da participação individual vêm a adesão à missão e os registros de entrada e saída de uma pessoa. Um sensor de ocupação pode indicar que há alguém na sala. Para atribuir uma atividade a um participante, a política precisa resolver quem é elegível a partir da turma ou dos registros individuais de presença.}
 
 \begin{figure}[htbp]\centering
 \caption{Visão conceitual dos caminhos dos dados na arquitetura proposta. Os registros humanos incluem interações previstas para o futuro cliente móvel.}
@@ -371,17 +387,61 @@ A Figura~\ref{fig:fluxo-dados} apresenta uma visão conceitual dos principais ca
 
 O serviço de coleta e persistência de dados brutos recebe mensagens por HTTP ou MQTT e preserva sua representação original no MongoDB, independentemente de já existir um perfil de integração apto a interpretar o sensor. A persistência não implica, por si só, o reconhecimento do dispositivo no domínio ou a produção de uma medição padronizada: a interpretação é uma etapa posterior. O serviço de integração, processamento e disponibilização de dados transforma entradas compatíveis com os perfis configurados e mantém no PostgreSQL as medições padronizadas e as relações acadêmicas, analíticas e de gamificação. A interface de administração e configuração permite que usuários autorizados gerenciem e consultem esses recursos. Essas responsabilidades se articulam para sustentar aplicações de gamificação sem acoplar os produtores de dados ao modelo de domínio.
 
-O desafio arquitetural é atribuir uma responsabilidade clara a cada representação. O documento original serve à inspeção e à reinterpretação temporária; a representação comum serve a consultas e relações de domínio. A separação admite evolução independente, mas exige coordenação: não há uma transação única que inclua MongoDB e PostgreSQL. Por isso, identidade, repetição e referências entre as etapas fazem parte da solução, e não apenas detalhes de transporte.
+\rev{Há três caminhos de entrada para as observações ambientais. No primeiro, o sensor envia uma mensagem por HTTP ou MQTT e o serviço de coleta guarda o original no MongoDB antes de tentar interpretá-lo. No segundo, um produtor envia por HTTP uma medição no formato comum ou uma entrada com perfil configurado diretamente ao serviço de integração. No terceiro, o próprio serviço consulta a fonte externa por HTTP, extrai o instante e as grandezas configuradas e registra a medição de referência. Os dois últimos caminhos gravam medições no PostgreSQL. Horários, matrículas e presença individual entram como registros próprios do domínio e são consultados quando a regra precisa deles.}
 
-\AP{Não sei se concordo com essa estrutura - a 5.1.1 fala das tecnologias e responsabilidades na arquitetura sem explicar ela ainda. A 5.1 fala de Visão e responsabilidades - ok. A 5.1.1 fala de tecnologias e responsabilidades.. mas do que? Analisa a possibilidade - se der - de trazer o 5.2, que fala de sensores e origens de dados, antes do 5.1.1.. Ainda, tens muitas subseções muito curtas... Analisa explicar a cadência do capitulo 5 mais detalhadamente no preambulo... porque são muitas subseções muito curtas e fica dificil entender. Começa com o modelo geral - explica o todo - depois vais para as partes}
+\section{\rev{Modelo de sensores, espaços e participação}}
+O percurso começa pela identificação do que foi observado e do contexto ao qual a observação pertence. Um identificador de dispositivo permite reconhecer a fonte, mas sua utilidade para a gamificação depende também da grandeza informada, do espaço e das relações de participação. Separar esses elementos permite trocar formatos de entrada preservando referências compreensíveis para consultas e atividades.
 
-\subsection{Tecnologias e responsabilidades na arquitetura}
-A implementação utiliza Java com Spring Boot nos dois serviços. Essa base reúne os pontos de entrada HTTP, as rotinas de processamento e os mecanismos de autenticação. Spring Security controla o acesso às operações, com tokens no formato \emph{JSON Web Token} (JWT). O acesso relacional utiliza Spring Data JPA, baseado em \emph{Jakarta Persistence API} (JPA), especificação que relaciona objetos da aplicação às entidades persistidas. Na coleta bruta, Spring Data MongoDB faz a integração com o armazenamento documental. A divisão mantém o código de recebimento e preservação separado das operações que dependem das relações do domínio.
+O primeiro desafio é representar modelos de sensores sem construir uma tabela diferente para cada fabricante. A solução separa o tipo de sensor, os parâmetros que ele pode informar, o dispositivo concreto e as medições produzidas. Uma medição reúne valores numéricos, booleanos ou textuais associados a definições de parâmetro. Assim, temperatura, presença e estado de um equipamento mantêm tipos próprios, embora possam participar do mesmo fluxo de integração.
 
-A comunicação MQTT é realizada pelo cliente Eclipse Paho. No ambiente descrito pelos arquivos de composição, Eclipse Mosquitto exerce a função de intermediário de mensagens. A interface de administração utiliza React e TypeScript: React organiza a interface em componentes, enquanto TypeScript permite declarar tipos no código do cliente. Material UI fornece componentes visuais e Vite organiza a construção da aplicação web. A Tabela~\ref{tab:tecnologias} relaciona essas escolhas às responsabilidades que viabilizam.
+O identificador externo permite relacionar o dispositivo ao produtor que o conhece. O tipo descreve as grandezas esperadas; a configuração da integração estabelece onde encontrá-las na mensagem. Substituir um modelo exige verificar esses vínculos e sua semântica, e não apenas cadastrar um nome novo. A flexibilidade do esquema não resolve, sozinha, incompatibilidades de unidade ou calibração.
+
+Considere, como exemplo hipotético, dois sensores de temperatura: um envia o campo \texttt{temp} e outro envia \texttt{ambient.temperature}. Se ambos expressarem graus Celsius, mapeamentos distintos podem conduzir ao mesmo parâmetro do domínio. Se uma das fontes informar outra unidade, será necessária uma transformação explicitamente suportada e validada; mudar o nome do campo não constitui conversão física. O exemplo acompanhará as etapas seguintes, sem representar uma medição de campo realizada no Centro de Artes.
+
+\rev{Na Figura~\ref{fig:der-medicoes}, o tipo de sensor identifica as grandezas que seus dispositivos podem informar. Cada valor aponta para uma medição e para a definição de um parâmetro. É esse segundo vínculo que permite procurar temperatura sem conhecer o nome do campo usado pelo fabricante. Nos recortes do diagrama de entidade-relacionamento (DER), cada caixa contém a chave primária (CP) e atributos selecionados. As chaves estrangeiras (CE) identificam os vínculos, e as linhas nomeiam a relação e indicam suas cardinalidades máximas. Por exemplo, uma medição reúne vários valores, mas cada valor pertence a uma única medição.}
+
+\begin{figure}[!htb]\centering
+\caption{\rev{Modelo relacional de dispositivos, grandezas e medições.}}\label{fig:der-medicoes}
+\par\vspace{5mm}
+\input{imagens/diagramas/der-medicoes.tex}
+\par\vspace{3mm}
+\caption*{\rev{Fonte: elaboração do autor. CP e CE indicam chaves primárias e estrangeiras. As linhas mostram as cardinalidades máximas das relações selecionadas.}}
+\end{figure}
+
+\subsection{\rev{Contexto acadêmico e participação nas missões}}
+Uma observação também precisa de referência espacial. A estrutura institucional relaciona campus, prédio, unidade e compartimento, enquanto horários de aula e vínculos de estudantes permitem resolver o uso acadêmico de uma sala em determinado instante. O sistema consulta esse contexto por data e intervalo de horário e rejeita ambiguidades, em vez de escolher silenciosamente uma aula entre sobreposições.
+
+O problema aqui é distinguir vínculo previsto de presença efetiva. Um estudante matriculado na turma pode ser elegível a uma atividade, mas isso não comprova que esteja fisicamente na sala. A modelagem distingue políticas diferentes para alunos vinculados ao uso agendado e para presença confirmada por registro de entrada e saída. Essa distinção permite que a política de beneficiários seja uma decisão explícita do domínio.
+
+Os dados de participação não são convertidos artificialmente em leituras de sensor. Eles permanecem relacionados a pessoas, presenças, missões e atividades. A integração ocorre na interpretação: uma condição ambiental e um registro humano podem contribuir para a mesma decisão, mantendo origens identificáveis. A infraestrutura implementada dá suporte a essa relação, enquanto a experiência de interação da futura aplicação móvel permanece uma etapa separada.
+
+A Figura~\ref{fig:der-academico} mostra como o espaço conecta essas fontes. O compartimento pertence à estrutura de prédios e unidades e se relaciona tanto a períodos de aula quanto a registros de presença. A disciplina participa do agendamento e dos vínculos de estudantes. Turma, período letivo e instante são necessários para utilizar essas relações na resolução do contexto; compartilhar uma referência à disciplina não torna matrícula e presença equivalentes.
+
+\begin{figure}[!htb]\centering
+\caption{\rev{Modelo relacional de espaços, vínculos acadêmicos e presença.}}\label{fig:der-academico}
+\par\vspace{5mm}
+\input{imagens/diagramas/der-contexto-academico.tex}
+\par\vspace{3mm}
+\caption*{\rev{Fonte: elaboração do autor. CP e CE indicam chaves primárias e estrangeiras. As linhas mostram as cardinalidades máximas das relações selecionadas.}}
+\end{figure}
+
+\rev{Uma missão define um objetivo de participação, seus critérios de progresso e a recompensa em pontos. A atividade é o registro de uma pessoa naquela missão e naquele ciclo. Duas pessoas podem participar da mesma missão e ter progressos distintos. Na Figura~\ref{fig:der-pontos}, a atividade liga a missão à pessoa. Uma ocorrência gerada a partir das medições pode fazer essa atividade avançar. Há ainda uma segunda origem para a pontuação. Quando uma regra de ambiente contempla os ocupantes elegíveis de uma sala, o lançamento referencia a execução dessa regra diretamente. O extrato conserva a origem em ambos os casos.}
+
+\begin{figure}[!htb]\centering
+\caption{\rev{Modelo relacional da participação e das origens dos pontos.}}\label{fig:der-pontos}
+\par\vspace{5mm}
+\input{imagens/diagramas/der-participacao-pontos.tex}
+\par\vspace{3mm}
+\caption*{\rev{Fonte: elaboração do autor. CP e CE indicam chaves primárias e estrangeiras. As linhas mostram as cardinalidades máximas das relações selecionadas.}}
+\end{figure}
+
+\section{\rev{Tecnologias que sustentam o modelo}}\label{sec:tecnologias}
+\rev{Nos dois serviços, Java e Spring Boot reúnem o recebimento de requisições e a execução das rotinas de processamento.\footnote{\rev{Documentação em \href{https://dev.java/learn/}{\nolinkurl{dev.java/learn}} e \href{https://docs.spring.io/spring-boot/}{\nolinkurl{docs.spring.io/spring-boot}}.}} O serviço de coleta usa Spring Data MongoDB para persistir o conteúdo variável de cada mensagem como documento. No serviço de integração, Spring Data JPA utiliza a especificação \emph{Jakarta Persistence} (JPA) para mapear sensores, medições e atividades para o esquema relacional.\footnote{\rev{Documentação em \href{https://spring.io/projects/spring-data-mongodb}{\nolinkurl{spring.io/projects/spring-data-mongodb}}, \href{https://spring.io/projects/spring-data-jpa}{\nolinkurl{spring.io/projects/spring-data-jpa}}, \href{https://jakarta.ee/specifications/persistence/}{\nolinkurl{jakarta.ee/specifications/persistence}}, \href{https://www.mongodb.com/docs/manual/}{\nolinkurl{www.mongodb.com/docs/manual}} e \href{https://www.postgresql.org/docs/}{\nolinkurl{www.postgresql.org/docs}}.}} Essa distribuição acompanha a operação que cada serviço precisa realizar. A coleta pode confirmar a preservação do original enquanto o cadastro do dispositivo está pendente. Na integração, uma transação local pode vincular a medição aos valores e verificar a unicidade de sua identidade.}
+
+\rev{O cliente Eclipse Paho assina os tópicos do intermediário Eclipse Mosquitto. Assim, os dispositivos podem publicar sem conhecer os consumidores das mensagens.\footnote{\rev{Documentação em \href{https://eclipse.dev/paho/}{\nolinkurl{eclipse.dev/paho}} e \href{https://mosquitto.org/}{\nolinkurl{mosquitto.org}}.}} Na interface de administração, React, TypeScript e Material UI compõem os formulários e as consultas usados para configurar perfis e inspecionar resultados. O Vite prepara esse cliente para distribuição.\footnote{\rev{Documentação em \href{https://react.dev/}{\nolinkurl{react.dev}}, \href{https://www.typescriptlang.org/docs/}{\nolinkurl{www.typescriptlang.org/docs}}, \href{https://mui.com/material-ui/}{\nolinkurl{mui.com/material-ui}} e \href{https://vite.dev/guide/}{\nolinkurl{vite.dev/guide}}.}} A Tabela~\ref{tab:tecnologias} relaciona os componentes às operações que sustentam.}
 
 \begin{table}[!htb]\centering\small
-\caption{Tecnologias empregadas e seu papel no percurso dos dados.}\label{tab:tecnologias}
+\caption{\rev{Tecnologias empregadas e seu papel no percurso dos dados.}}\label{tab:tecnologias}
 \renewcommand{\arraystretch}{1.2}
 \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.8cm}Y}\toprule
 Tecnologia & Responsabilidade na solução \\\midrule
@@ -398,13 +458,9 @@ Micrometer e\newline Spring Boot Actuator & Exposição de métricas e condiçõ
 \caption*{Fonte: elaboração do autor, a partir dos arquivos de dependências e configuração do sistema.}
 \end{table}
 
-Essas tecnologias materializam responsabilidades da arquitetura; a contribuição da pesquisa decorre da forma como são articuladas para preservar, interpretar e relacionar informação. O motor simples e a alternativa Drools são discutidos na etapa de avaliação de condições, em que sua função se torna necessária ao argumento. A identificação técnica das dependências encontra-se no Apêndice~\ref{ap:evidencias}.
+\rev{O histórico de alterações mantido pelo Flyway permite reconstruir as restrições que ligam registros e distinguem repetições. Spring Security controla o acesso às operações, e os tokens no formato \emph{JSON Web Token} (JWT) transportam informações de autenticação.\footnote{\rev{Documentação em \href{https://documentation.red-gate.com/flyway}{\nolinkurl{documentation.red-gate.com/flyway}}, \href{https://spring.io/projects/spring-security}{\nolinkurl{spring.io/projects/spring-security}} e \href{https://www.rfc-editor.org/rfc/rfc7519}{\nolinkurl{www.rfc-editor.org/rfc/rfc7519}}.}} O Docker Compose descreve a composição dos serviços. O Actuator e o Micrometer expõem informações de operação que ajudam a localizar em qual etapa o processamento parou.\footnote{\rev{Documentação em \href{https://docs.docker.com/compose/}{\nolinkurl{docs.docker.com/compose}}, \href{https://docs.spring.io/spring-boot/reference/actuator/}{\nolinkurl{docs.spring.io/spring-boot/reference/actuator}} e \href{https://docs.micrometer.io/micrometer/reference/}{\nolinkurl{docs.micrometer.io/micrometer/reference}}.}} Essas razões decorrem das responsabilidades observadas na implementação. Os arquivos de dependências que permitem conferi-las estão identificados no Apêndice~\ref{ap:evidencias}.}
 
-\AP{incluir notas de rodapé para acesso às fontes das tecnologias. Não é necessário citação à referencia. Nota de rodapé é suficiente.}
-
-\AP{não chegas a justificar essas soluções. a banca possivelmente te perguntará. precisas estar pronto para justificar as escolhas. Para se livrar dessa pergunta, inclui algum parágrafo que as motive.}
-
-\subsection{Distribuição das representações entre MongoDB e PostgreSQL}
+\subsection{\rev{Distribuição das representações entre MongoDB e PostgreSQL}}
 O MongoDB mantém a coleção \texttt{raw\_telemetry\_events}. Cada documento reúne o conteúdo recebido, a identidade do produtor e da mensagem, os instantes e o estado de processamento. O conteúdo pode variar entre fabricantes, mas os campos de controle permitem localizar, distinguir e retomar as entradas. A unicidade da combinação entre produtor, origem e identificador impede registrar uma retransmissão equivalente como novo evento bruto.
 
 O ciclo de vida dessa coleção é temporário. O campo de expiração permite aplicar um índice de \emph{Time to Live} (TTL), ou tempo de vida, mecanismo do MongoDB para remoção automática de documentos após sua validade \cite{mongoTtl2026}. A política atende à inspeção e à reinterpretação durante a retenção, enquanto evita tomar o armazenamento bruto como um arquivo permanente de todas as observações. Sua expiração não remove, por consequência, a medição já construída no banco relacional.
@@ -415,58 +471,9 @@ A distinção entre bancos tampouco elimina dados documentais no PostgreSQL. As 
 
 No exemplo da temperatura, o documento bruto conserva o campo externo; a medição relacional conserva o valor associado ao sensor, ao parâmetro e ao instante. A referência ao identificador da medição no documento e os metadados da ingestão no PostgreSQL conectam essas representações. Trata-se de um vínculo lógico entre bancos, enquanto as relações internas do modelo relacional são verificadas por suas próprias restrições. Essa organização explica tanto a possibilidade de seguir a observação ao longo do processamento quanto a necessidade de recuperação diante de falhas parciais.
 
-\section{Identificar a origem: sensores, espaços e pessoas}
-O percurso começa pela identificação do que foi observado e do contexto ao qual a observação pertence. Um identificador de dispositivo permite reconhecer a fonte, mas sua utilidade para a gamificação depende também da grandeza informada, do espaço e das relações de participação. Separar esses elementos permite trocar formatos de entrada preservando referências compreensíveis para consultas e atividades.
-
-\subsection{Modelagem de dispositivos e grandezas}
-O primeiro desafio é representar modelos de sensores sem construir uma tabela diferente para cada fabricante. A solução separa o tipo de sensor, os parâmetros que ele pode informar, o dispositivo concreto e as medições produzidas. Uma medição reúne valores numéricos, booleanos ou textuais associados a definições de parâmetro. Assim, temperatura, presença e estado de um equipamento mantêm tipos próprios, embora possam participar do mesmo fluxo de integração.
-
-O identificador externo permite relacionar o dispositivo ao produtor que o conhece. O tipo descreve as grandezas esperadas; a configuração da integração estabelece onde encontrá-las na mensagem. Substituir um modelo exige verificar esses vínculos e sua semântica, e não apenas cadastrar um nome novo. A flexibilidade do esquema não resolve, sozinha, incompatibilidades de unidade ou calibração.
-
-Considere, como exemplo hipotético, dois sensores de temperatura: um envia o campo \texttt{temp} e outro envia \texttt{ambient.temperature}. Se ambos expressarem graus Celsius, mapeamentos distintos podem conduzir ao mesmo parâmetro do domínio. Se uma das fontes informar outra unidade, será necessária uma transformação explicitamente suportada e validada; mudar o nome do campo não constitui conversão física. O exemplo acompanhará as etapas seguintes, sem representar uma medição de campo realizada no Centro de Artes.
-
-A Figura~\ref{fig:der-medicoes} explicita o modelo que sustenta essa separação. O tipo de sensor define os parâmetros esperados, enquanto cada dispositivo pode produzir várias medições. Cada valor relaciona uma medição a uma definição de parâmetro, permitindo consultar a mesma grandeza sem depender do nome do campo externo. Os metadados acrescentam a identidade da ingestão e a interpretação utilizada. O diagrama de entidade-relacionamento (DER) foi reorganizado em recortes temáticos a partir do documento do projeto, preservando os nomes das entidades para permitir sua correspondência. Diferentemente das figuras de fluxo, suas linhas representam vínculos entre registros, \AP{esses vínculos são os relacionamentos do DER. O texto dá algumas pistas sobre os atributos, mas o DER não está completo} e não deslocamento de mensagens.
-
-\AP{Sendo um DER, usa a representação completa dele, com relacionamentos. O traço é usado em diagrama UML, mas dai a representação seria diferente também. Como DER, constrói ele completo. Nao precisa colocar cardinalidade mínima, mas dos relacionamentos precisa. Ainda, não tens atributos... podes optar por uma representação em UML para simplificar, mas tenta deixar explicitas as chaves estrangeiras. Podes permanecer no DER, mas inclui relacionamentos e atributos.}
-
-\begin{figure}[!htb]\centering
-\caption{Recorte do DER: dispositivos, grandezas e medições.}\label{fig:der-medicoes}
-\par\vspace{5mm}
-\input{imagens/diagramas/der-medicoes.tex}
-\par\vspace{3mm}
-\caption*{Fonte: elaboração do autor, a partir do modelo de dados desenvolvido para o sistema. Relações e atributos selecionados; 1 e N indicam cardinalidades máximas, sem detalhar a obrigatoriedade dos vínculos.}
-\end{figure}
-
-
-\subsection{Contexto institucional e participação}
-Uma observação também precisa de referência espacial. A estrutura institucional relaciona campus, prédio, unidade e compartimento, enquanto horários de aula e vínculos de estudantes permitem resolver o uso acadêmico de uma sala em determinado instante. O sistema consulta esse contexto por data e intervalo de horário e rejeita ambiguidades, em vez de escolher silenciosamente uma aula entre sobreposições.
-
-O problema aqui é distinguir vínculo previsto de presença efetiva. Um estudante matriculado na turma pode ser elegível a uma atividade, mas isso não comprova que esteja fisicamente na sala. A modelagem distingue políticas diferentes para alunos vinculados ao uso agendado e para presença confirmada por registro de entrada e saída. Essa distinção permite que a política de beneficiários seja uma decisão explícita do domínio.
-
-Os dados de participação não são convertidos artificialmente em leituras de sensor. Eles permanecem relacionados a pessoas, presenças, missões e atividades. A integração ocorre na interpretação: uma condição ambiental e um registro humano podem contribuir para a mesma decisão, mantendo origens identificáveis. A infraestrutura implementada dá suporte a essa relação, enquanto a experiência de interação da futura aplicação móvel permanece uma etapa separada.
-
-A Figura~\ref{fig:der-academico} mostra como o espaço conecta essas fontes. O compartimento pertence à estrutura de prédios e unidades e se relaciona tanto a períodos de aula quanto a registros de presença. A disciplina participa do agendamento e dos vínculos de estudantes. Turma, período letivo e instante são necessários para utilizar essas relações na resolução do contexto; compartilhar uma referência à disciplina não torna matrícula e presença equivalentes.
-
-\begin{figure}[!htb]\centering
-\caption{Recorte do DER: espaços, contexto acadêmico e presença.}\label{fig:der-academico}
-\par\vspace{5mm}
-\input{imagens/diagramas/der-contexto-academico.tex}
-\par\vspace{3mm}
-\caption*{Fonte: elaboração do autor, a partir do modelo de dados desenvolvido para o sistema. Relações e atributos selecionados; 1 e N indicam cardinalidades máximas, sem detalhar a obrigatoriedade dos vínculos.}
-\end{figure}
-
-
-\section{Receber mensagens e preservar sua identidade}
+\section{\rev{Identidade, repetição e retenção das mensagens}}\label{sec:retencao}
 Depois de identificar as fontes, o recebimento precisa estabelecer o que constitui uma nova observação. Uma mesma mensagem pode chegar mais de uma vez, enquanto entradas distintas podem utilizar formatos semelhantes. Preservar conteúdo, origem e identidade permite distinguir esses casos e acompanhar o processamento desde a chegada, mesmo quando a interpretação ainda depende de configuração.
 
-\AP{Não acho necessário ter tantas subseções. Essa 5.3.1 é só a sequência de leitura. Em alguns momentos, me parece que usas o recurso da criação de seção para dar pausas. Isso não é necessário.}
-
-\subsection{Três caminhos de entrada}
-O sistema oferece um caminho de coleta de mensagens brutas por HTTP ou MQTT, um caminho HTTP direto para medições ou formatos configurados e um coletor HTTP para fontes externas. No primeiro, o conteúdo original é registrado no MongoDB antes da entrega ao domínio. Nos demais, a integração ocorre na API e produz medições no PostgreSQL; não se deve afirmar que todas as entradas são arquivadas no MongoDB.
-
-O caminho bruto atende ao desafio de aceitar estruturas externas antes mesmo de haver configuração para interpretá-las: a mensagem pode ser persistida com sua identidade e metadados, enquanto a produção da medição canônica depende de uma integração posteriormente configurada e válida. O caminho direto atende produtores já integrados à representação comum ou a um perfil conhecido. O coletor atende situações em que a iniciativa de consultar a fonte é do próprio sistema. A coexistência decorre dessas diferenças de interação, não de uma hierarquia em que um protocolo substitua os demais.
-
-\subsection{Repetição, conflito e retenção}
 Na coleta de mensagens brutas, a identidade combina produtor, origem e identificador de mensagem. A gravação conserva conteúdo, instantes e estado de processamento. Uma retransmissão equivalente é reconhecida; conteúdo divergente sob a mesma identidade gera conflito. No MQTT, o produtor é obtido do tópico, e a identificação da mensagem da aplicação não é substituída pelo identificador de pacote do protocolo \cite{oasisMqtt2019}.
 
 O desafio de confiabilidade é que uma confirmação de transporte encerra apenas uma etapa. O recebimento MQTT usa confirmação manual após persistência ou decisão permanente; falha transitória de armazenamento permite reentrega. Isso não significa que a interpretação, a missão ou a recompensa tenham terminado. A identidade precisa atravessar as etapas para que a repetição necessária à recuperação não multiplique efeitos de domínio.
@@ -492,13 +499,12 @@ A Figura~\ref{fig:transformacao-dado} retoma o exemplo dos dois sensores para to
 \caption*{Fonte: elaboração do autor. O exemplo pressupõe unidades compatíveis; o mapeamento de campos não realiza, por si só, uma conversão de unidade.}
 \end{figure}
 
-
 Versões e vínculos também precisam continuar válidos no momento da gravação. O serviço de integração revalida o perfil, a versão ativa e o vínculo do dispositivo dentro da operação de ingestão. Esse cuidado procura tratar a alteração concorrente de uma configuração entre sua consulta e seu uso. A versão utilizada fica associada aos metadados da ingestão, apoiando a explicação posterior do resultado.
 
 \subsection{Configuração como mecanismo de adaptação}
 A configuração dos perfis transforma a variação de formatos em uma parte administrável do percurso. No exemplo dos dois sensores, a diferença entre os campos externos é expressa pelo mapeamento; consultas e condições continuam relacionadas à definição comum de temperatura. Uma nova instalação pode cadastrar seus dispositivos e vínculos e definir as interpretações compatíveis com as entradas recebidas, reutilizando o núcleo que valida e persiste as medições.
 
-Esse princípio também orienta fontes externas e regras de ambiente. Uma coleta informa endereço, parâmetros, interpretação do tempo e mapeamentos da resposta; uma regra descreve condições e o escopo em que se aplica. \AP{analisa se esses detalhamentos sobre coleta, natureza dos dados, entradas e saídas, nao precisam vir antes no capítulo} A Tabela~\ref{tab:configurabilidade} relaciona diferenças de contexto aos elementos que as representam. O papel da configuração é conservar as responsabilidades do processamento ao adaptar os dados e as políticas usados em cada ambiente.
+Esse princípio também orienta fontes externas e regras de ambiente. Uma coleta informa endereço, parâmetros, interpretação do tempo e mapeamentos da resposta; uma regra descreve condições e o escopo em que se aplica. A Tabela~\ref{tab:configurabilidade} relaciona diferenças de contexto aos elementos que as representam. O papel da configuração é conservar as responsabilidades do processamento ao adaptar os dados e as políticas usados em cada ambiente.
 
 \begin{table}[!htb]\centering\small
 \caption{Variações de contexto e mecanismos de configuração.}\label{tab:configurabilidade}
@@ -515,12 +521,11 @@ Política de avaliação & Condições, escopo e regras específicas ou padrões
 
 As escolhas ficam sujeitas a verificações de estrutura, tipos e vínculos. Ativação e identificação da versão permitem determinar qual interpretação participa do processamento. Configurabilidade implica, assim, delimitar as variações admitidas e controlar sua aplicação. Esse controle torna a adaptação compreensível para a administração e preserva referências necessárias à explicação dos resultados.
 
-\subsection{Idempotência na fronteira relacional}
+\subsection{\rev{Identidade e retomada da integração}}
 A medição e os metadados são persistidos em uma transação local. O orquestrador distingue ingestão direta, por perfil e originada no serviço de coleta, com restrições próprias para as respectivas identidades. A comparação de uma impressão do conteúdo, ou \emph{fingerprint}, permite distinguir repetição equivalente de conflito.
 
 Esse mecanismo responde a um caso concreto: a API pode concluir a gravação e a resposta não chegar ao serviço de coleta e persistência de dados brutos. Repetir a entrega é necessário, mas criar uma nova medição seria incorreto. A solução combina identidade persistida e leitura do resultado já existente. O desenho trata essa fronteira por repetição segura; a identidade persistida permite reconhecer a retransmissão sem atribuir-lhe o significado de uma nova observação.
 
-\subsection{Retomada e reinterpretação}
 O processamento assíncrono registra trabalho pendente, reservado, concluído ou falho. Reservas temporárias permitem recuperar itens interrompidos; tentativas e espera crescente reduzem a repetição imediata de falhas transitórias. No reprocessamento administrativo, o conteúdo original e a identidade são preservados, com registro do pedido e do estado anterior.
 
 Reprocessar não é necessariamente reproduzir a interpretação original: a seleção pode usar a configuração ativa no novo processamento. Registrar essa diferença permite compreender por que uma mesma mensagem pode receber outra interpretação após uma mudança de configuração. O resultado pode ser equivalente, conflitante ou falho, mas não deve sobrescrever silenciosamente uma medição anterior. A flexibilidade obtida pela preservação documental exige, em contrapartida, governança das versões e das decisões de reinterpretação.
@@ -528,7 +533,6 @@ Reprocessar não é necessariamente reproduzir a interpretação original: a sel
 \section{Acrescentar contexto externo sem replicar observações}
 A interpretação de uma condição interna pode depender de uma observação que se refere a uma área mais ampla que a sala. Incorporar essa fonte exige representar tanto sua cobertura espacial quanto o período em que pode sustentar uma decisão. O compartilhamento permite utilizar a mesma referência em diferentes ambientes, mantendo sua origem e distinguindo a disponibilidade do dado de sua aplicação em cada avaliação.
 
-\subsection{Fontes compartilhadas e localização}
 A temperatura externa não pertence exclusivamente a uma sala. Replicá-la como leitura independente de cada compartimento criaria dados redundantes e obscureceria sua origem. A solução atual representa um contexto compartilhado, com vínculos explícitos às salas e uma seleção de fonte por compartimento e parâmetro. O sensor pertence a um compartimento ou a um contexto compartilhado, sem criar salas fictícias para acomodar uma fonte externa.
 
 O coletor consulta um serviço externo por HTTP, interpreta a resposta e utiliza o mesmo núcleo de ingestão das medições. Método, parâmetros, cabeçalhos, mapeamentos e interpretação do tempo são configuráveis. As credenciais administradas são armazenadas de forma cifrada, e a interface oferece teste de configuração. A flexibilidade do coletor amplia as possibilidades de integração, mas cada serviço ainda exige configuração e validação de seu contrato.
@@ -547,7 +551,6 @@ A Figura~\ref{fig:contexto-compartilhado} distingue o local ao qual uma observa�
 \par\vspace{3mm}
 \caption*{Fonte: elaboração do autor. As salas consultam a referência compartilhada; não são criadas cópias da medição externa para cada uma.}
 \end{figure}
-
 
 \subsection{Validade e cobertura temporal}
 Uma ausência de resposta não representa temperatura zero. A consulta de uma fonte compartilhada distingue informação disponível, desatualizada e ausente. Regras que dependem de dados sem validade suficiente recebem um motivo de não avaliação. Esse tratamento protege a interpretação: atribuir um valor numérico à ausência alteraria médias e decisões sem que houvesse uma observação correspondente.
@@ -571,31 +574,24 @@ As janelas de agregação também usam estados, reserva temporária e repetiçã
 A Figura~\ref{fig:der-analitico} relaciona a solicitação de análise ao resultado disponibilizado. Um trabalho de agregação organiza várias janelas, e o agregado numérico identifica o sensor e a grandeza resumida. A média, os extremos e a quantidade de amostras são propriedades desse resultado, enquanto estado e tentativas pertencem ao processamento da janela. Essa distinção permite explicar o que foi calculado e acompanhar como a análise foi conduzida. Os nomes \texttt{AggregationJob}, \texttt{AggregationWindow} e \texttt{NumericBucket} correspondem, respectivamente, às tabelas de trabalho, janela e agregado numérico do esquema analítico.
 
 \begin{figure}[!htb]\centering
-\caption{Recorte do DER: trabalhos de agregação, janelas e resultados numéricos.}\label{fig:der-analitico}
+\caption{\rev{Modelo relacional de solicitações, janelas e resultados de agregação.}}\label{fig:der-analitico}
 \par\vspace{5mm}
 \input{imagens/diagramas/der-analise-temporal.tex}
 \par\vspace{3mm}
-\caption*{Fonte: elaboração do autor, a partir do modelo de dados desenvolvido para o sistema. Relações e atributos selecionados; 1 e N indicam cardinalidades máximas, sem detalhar a obrigatoriedade dos vínculos.}
+\caption*{\rev{Fonte: elaboração do autor. CP e CE indicam chaves primárias e estrangeiras. As linhas mostram as cardinalidades máximas das relações selecionadas.}}
 \end{figure}
 
-
-\section{Interpretar condições e relacioná-las às atividades}
-
-\AP{Já explicasses explicitamente o que é uma missão? Missão é o mesmo que Atividade? Eu ora penso que são tratados como sinonimos. Esse conceito pode ter vindo aos pontos no projeto, mas agora ja podes definir que toda Atividade do usuário sensorada é ligada a uma missão. A explicação no DER vem depois, mas para entender precisas talvez trazer para cá a explicação.}
+\section{Interpretar condições e relacioná-las às atividades}\label{sec:regras}
 
 Medições e contexto passam a apoiar decisões quando são relacionados às condições definidas para o ambiente e para as atividades. O significado da avaliação depende dos valores disponíveis, de sua validade temporal e da política aplicável à sala e aos participantes. Manter esses elementos associados permite explicar como uma observação contribui para um evento, para o progresso de uma missão ou para o resultado de uma regra de ambiente.
-
-\subsection{Qualificação de valores e eventos de missão}
-
-\AP{esses detalhamentos precisam vir depois da modelagem do todo}
 
 O dado padronizado permite expressar condições sem depender do formato do fabricante. Uma regra de qualificação pode comparar uma temperatura a limites e registrar o resultado associado ao valor. Uma condição de evento de missão pode utilizar o valor diretamente ou uma avaliação de regra. Assim, a interpretação pode ser reutilizada, desde que a política aplicável permaneça identificável.
 
 As avaliações elementares não precisam ser mutuamente exclusivas. Uma temperatura pode satisfazer simultaneamente um limiar de alerta e outro mais severo. O avaliador de condições não deve ser descrito como escolhendo automaticamente um único resultado apenas pela existência de uma coluna de prioridade. Consolidar resultados exige uma política explícita, diferente de registrar cada regra satisfeita.
 
-Missões relacionam condições, ocorrências, atividades e beneficiários. \AP{exemplo - aqui tem texto explicativo que vai apontar para o DER que está la adiante} Algumas condições são instantâneas; outras dependem de duração, transição ou encerramento de uma janela. Nesses casos, tempo e lacunas fazem parte da interpretação. Estados e evidências persistidos permitem explicar o progresso e retomar uma janela, sem reduzir uma condição temporal à comparação da última leitura.
+\rev{No modelo de participação da Figura~\ref{fig:der-pontos}, uma condição satisfeita pode produzir uma ocorrência associada ao progresso da atividade.} Algumas condições são instantâneas; outras dependem de duração, transição ou encerramento de uma janela. Nesses casos, tempo e lacunas fazem parte da interpretação. Estados e evidências persistidos permitem explicar o progresso e retomar uma janela, sem reduzir uma condição temporal à comparação da última leitura.
 
-\AP{No} O motor simples permanece a opção padrão para as regras instantâneas. A avaliação por duração utiliza Drools quando esse processamento está habilitado; no encerramento de uma janela, uma avaliação direta compara o último valor disponível de cada parâmetro dentro do intervalo. Essas estratégias preservam a diferença entre manter uma condição ao longo do tempo e verificá-la ao final de um período. A lógica de comparação fica separada dos efeitos persistentes, evitando que a avaliação de uma regra execute diretamente operações de recompensa. O experimento histórico que fundamenta a discussão sobre o custo dos motores é analisado no Capítulo~\ref{cap:avaliacao}.
+\rev{No serviço de integração, o motor simples é a opção padrão para avaliar regras instantâneas.} A avaliação por duração utiliza \rev{Drools\footnote{\rev{Documentação do motor de regras em \url{https://www.drools.org/}.}}} quando esse processamento está habilitado; no encerramento de uma janela, uma avaliação direta compara o último valor disponível de cada parâmetro dentro do intervalo. Essas estratégias preservam a diferença entre manter uma condição ao longo do tempo e verificá-la ao final de um período. A lógica de comparação fica separada dos efeitos persistentes, evitando que a avaliação de uma regra execute diretamente operações de recompensa. O experimento histórico que fundamenta a discussão sobre o custo dos motores é analisado no Capítulo~\ref{cap:avaliacao}.
 
 \subsection{Regras de ambiente e precedência de escopo}
 A arquitetura incorpora um fluxo próprio de regras de ambiente. Ele reutiliza medições locais, fontes compartilhadas, contexto acadêmico e registro de pontos, mas não exige transformar cada verificação agendada em uma missão ou atividade. As categorias iniciais incluem ar-condicionado, iluminação e equipamentos; a configuração aceita operadores declarativos, sem código arbitrário fornecido pelo usuário.
@@ -633,18 +629,6 @@ O último desafio do percurso é relacionar uma decisão a pessoas sem perder su
 A Figura~\ref{fig:rastreabilidade} mostra que missões e regras de ambiente mantêm caminhos próprios até o registro dos efeitos. Um ponto deve estar relacionado à decisão que o produziu, e a decisão aos dados que a sustentaram. A convergência no registro de pontos permite consultar o saldo e o extrato sem apagar essa diferença de origem. Na coleta de mensagens, identificadores relacionam documento bruto e medição; no domínio relacional, referências conectam valores, evidências, ocorrências e atividades. As regras de ambiente acrescentam cópia da configuração de execução e referências aos seus lançamentos.
 
 Essa rastreabilidade tem limites diferentes. O conteúdo bruto desaparece após a retenção; a ligação entre bancos é lógica, não uma chave estrangeira distribuída; e regras elementares de qualificação não necessariamente preservam todos os limiares históricos dentro de cada avaliação. O \emph{snapshot} das regras de ambiente melhora a explicação nesse fluxo, mas não autoriza afirmar que todas as políticas históricas de todo o sistema são integralmente reconstruíveis.
-
-
-
-A Figura~\ref{fig:der-pontos} explicita as relações persistidas que sustentam esses efeitos. A atividade vincula uma pessoa a uma missão, enquanto a execução de regra de ambiente preserva outra origem possível para a pontuação. O lançamento identifica a pessoa beneficiada e a origem aplicável. As duas origens são alternativas: a restrição do registro exige os vínculos próprios de missão ou os vínculos de execução de regra de ambiente, conforme o caso. A modelagem permite consultar os pontos conjuntamente sem tornar equivalentes os processos que os produziram.
-
-\begin{figure}[!htb]\centering
-\caption{Recorte do DER: participação e origens dos lançamentos de pontos.}\label{fig:der-pontos}
-\par\vspace{5mm}
-\input{imagens/diagramas/der-participacao-pontos.tex}
-\par\vspace{3mm}
-\caption*{Fonte: elaboração do autor, a partir do modelo de dados desenvolvido para o sistema. Relações e atributos selecionados; 1 e N indicam cardinalidades máximas, sem detalhar a obrigatoriedade dos vínculos.}
-\end{figure}
 
 \section{Operação e proteção ao longo do percurso}
 O console permite configurar sensores, integrações, fontes compartilhadas, missões e regras, além de consultar medições e agregados. Esse suporte operacional é relevante porque a adaptação de fontes precisa ser realizável sem alterar o código a cada configuração. As capturas do Apêndice~\ref{ap:console} relacionam essas operações aos conceitos apresentados: espaços e sensores, regras de qualificação, fontes compartilhadas e consultas analíticas. Elas documentam exemplos de configuração e uso da interface, enquanto os resultados experimentais são sustentados pelos registros da campanha.
@@ -738,7 +722,6 @@ Os alertas corresponderam às alterações previstas nas faixas sintéticas: em 
 
 A etapa de agregação também produziu informação consultável. O processamento das dezoito janelas, com duração nominal de um minuto e último intervalo parcial, foi concluído, e a consulta filtrada pelo modelo de sensor e pelo intervalo da campanha informou 540 registros de agregação. Cada registro relaciona sensor, parâmetro, intervalo e quantidade de amostras a seus valores médio, mínimo e máximo. Desse modo, uma sequência de observações passa a oferecer uma representação resumida para análise, conservando os critérios de agrupamento.
 
-
 \subsection{Da condição avaliada às atividades e aos pontos}
 As consequências das condições foram conferidas nos registros de ocorrências, atividades e lançamentos de pontos associados às missões. A Tabela~\ref{tab:efeitos-integrados} preserva os valores de cada repetição, na ordem de execução dentro do modo. A distinção entre ocorrência e atividade é relevante: várias condições podem ser detectadas ao longo das medições, enquanto uma atividade de ciclo único deve produzir sua recompensa uma única vez.
 
@@ -756,11 +739,9 @@ Janela encerrada & 20 / 28 / 22 & 20 / 20 / 20 & 100 / 100 / 100 \\\bottomrule
 
 Nos modos instantâneo, transição e janela encerrada, as vinte atividades foram concluídas em cada repetição, com cem pontos por missão. Em conjunto com as duas primeiras repetições de duração, foram registrados 220 lançamentos de concessão, totalizando 1.100 pontos. Cada lançamento correspondeu a cinco pontos associados à respectiva missão. A diferença entre as contagens de ocorrências e de lançamentos mostra que a detecção de condições e a recompensa da atividade são etapas distintas do fluxo.
 
-
 O modo duração apresentou um resultado divergente: as duas primeiras repetições produziram cinco e quatro ocorrências, respectivamente, enquanto a terceira não produziu ocorrências, conclusões ou pontos. Nessa terceira repetição, as 25 janelas foram invalidadas com a indicação de que a condição não permaneceu satisfeita por dez segundos. O fluxo enviado, entretanto, contém quatro amostras consecutivas de presença verdadeira por sala, espaçadas em cinco segundos e cobrindo quinze segundos entre a primeira e a última. Essa diferença exige examinar a disponibilidade das amostras no instante de avaliação, além da sequência em tempo de origem.
 
 A divergência evidencia um desafio central da integração temporal: preservar as medições não equivale a torná-las disponíveis para uma decisão no mesmo instante. Os resultados de reconciliação sustentam a continuidade até a representação canônica; o modo duração acrescenta a necessidade de relacionar o horário da observação, sua chegada e o momento da decisão. A causa da invalidação não foi estabelecida pela campanha. Por isso, o resultado permanece individualizado e orienta uma investigação das janelas e de suas evidências.
-
 
 \subsection{Tempos observados e significado da carga}
 A confirmação da publicação e a disponibilidade canônica correspondem a fronteiras diferentes da arquitetura. A primeira acompanha a interação do publicador com o intermediário MQTT. A segunda acrescenta a espera e o processamento até o recebimento da medição no serviço de dados. A Tabela~\ref{tab:tempos-integrados} apresenta a média e o desvio padrão entre as três médias de repetição de cada modo, evitando reunir todas as mensagens como se fossem repetições independentes do experimento.
@@ -809,11 +790,21 @@ A principal implicação da arquitetura é permitir que o significado utilizado 
 Como continuidade, a aplicação em diferentes espaços poderá investigar a adequação dos perfis de integração e das políticas de contexto. A participação dos ocupantes permitirá examinar como as informações disponibilizadas e as atividades propostas se relacionam à construção de hábitos. A arquitetura estabelece a base computacional para essa investigação, articulando dados ambientais, contexto institucional e efeitos de gamificação.
 
 \bibliographystyle{abnt}
+% A cor da referência acompanha a chave, inclusive se a ordenação mudar.
+\ifemrevisao
+  \forcsvlist{\listadd{\referenciasrevistas}}{mqttHistorico2010,capesQualis2023,oasisMqtt2019,probenUfpel2026,probenReadme2026,probenCatalogo2026,probenMongo2026,probenMqtt2026,probenSeguranca2026,probenObservabilidade2026,probenDrools2026,probenSmoke2026,deDear2002,http2022,fielding2000,json2017,jsonpointer2013,jwt2015,capes2026,probenAtual2026,postgresJson2026,mongoTtl2026,probenDer2026,mongoAggregation2026,postgresConstraints2026,lozanoTelemetry2017,gsaConfiguracao2026,custodio2024,hemani2025}
+  \let\itemoriginal\bibitem
+  \renewcommand{\bibitem}[2][]{\itemoriginal[#1]{#2}%
+    \ifinlist{#2}{\referenciasrevistas}{\color{correvisao}}{\color{black}}}
+\fi
 \bibliography{bibliografia}
+\ifemrevisao\let\bibitem\itemoriginal\fi
 
 \appendix
 \chapter{Fontes Técnicas e Evidências de Avaliação}\label{ap:evidencias}\label{ap:avaliacao-tecnica}
 Este apêndice identifica o material de implementação utilizado para fundamentar a descrição do sistema. Os caminhos são relativos ao repositório técnico e pertencem ao commit \path{b7192907eeb602a02cc3413f033bd2c4a7256397}. O repositório é identificado em sua referência de software \cite{probenAtual2026}. A lista organiza a conferência do percurso; não constitui um relatório de execução das suítes.
+
+\rev{Para a revisão do modelo e dos fluxos, foram conferidos, no commit \path{ed85d76a22625f277c9b16d9b4f4ae08a5b6cdab}, a entidade de mensagem bruta, o processamento de ingestão, a coleta de contexto externo e os vínculos de atividade e pontuação. Os atributos e as cardinalidades das figuras foram confrontados com as alterações do esquema relacional, desde a criação das tabelas até a alteração V34. A identificação da campanha e dos resultados históricos consta da Seção~\ref{ap:campanha-integrada}.}
 
 \begin{longtable}{p{3.1cm}p{9.8cm}}
 \caption{Componentes utilizados na inspeção do fluxo atual}\label{tab:fontes-codigo}\\

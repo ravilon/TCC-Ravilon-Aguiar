@@ -1,20 +1,32 @@
-\begin{tikzpicture}[tcc diagram]
-\node[tcc data,minimum width=4.4cm,minimum height=1.2cm] (campus) at (0,0) {\textbf{Campus}};
-\node[tcc data,minimum width=4.4cm,minimum height=1.2cm] (unit) at (10.8,0) {\textbf{Unidade}};
-\node[tcc data,minimum width=4.4cm,minimum height=1.2cm] (building) at (0,-2.3) {\textbf{Predio}};
-\node[tcc data,minimum width=4.4cm,minimum height=1.2cm] (room) at (5.4,-4.6) {\textbf{Compartimento}};
-\node[tcc data,minimum width=4.4cm,minimum height=1.2cm] (person) at (0,-7.1) {\textbf{Pessoa}};
-\node[tcc data,minimum width=4.4cm,minimum height=1.2cm] (presence) at (5.4,-7.1) {\textbf{Presenca}\\entrada e saída};
-\node[tcc data,minimum width=4.4cm,minimum height=1.2cm] (class) at (10.8,-7.1) {\textbf{PeriodoAula}\\data, horário e turma};
-\node[tcc data,minimum width=4.4cm,minimum height=1.2cm] (enrol) at (0,-9.6) {\textbf{AlunoDisciplina}\\turma e período letivo};
-\node[tcc data,minimum width=4.4cm,minimum height=1.2cm] (subject) at (10.8,-9.6) {\textbf{Disciplina}};
-\draw[tcc relation] (campus)--node[tcc cardinality,pos=.15,left]{1}node[tcc cardinality,pos=.85,left]{N}(building);
-\draw[tcc relation] (building.south)--node[tcc cardinality,left]{1}(0,-3.45)-|node[tcc cardinality,pos=.85,left]{N}([xshift=-1cm]room.north);
-\draw[tcc relation] (unit.south)--node[tcc cardinality,right]{1}(10.8,-3.45)-|node[tcc cardinality,pos=.85,right]{N}([xshift=1cm]room.north);
-\draw[tcc relation] (room)--node[tcc cardinality,pos=.15,left]{1}node[tcc cardinality,pos=.85,left]{N}(presence);
-\draw[tcc relation] (room.east)-|node[tcc cardinality,pos=.1,above]{1}node[tcc cardinality,pos=.9,right]{N}(class.north);
-\draw[tcc relation] (person)--node[tcc cardinality,pos=.15,above]{1}node[tcc cardinality,pos=.85,above]{N}(presence);
-\draw[tcc relation] (person)--node[tcc cardinality,pos=.15,left]{1}node[tcc cardinality,pos=.85,left]{N}(enrol);
-\draw[tcc relation] (subject)--node[tcc cardinality,pos=.15,right]{1}node[tcc cardinality,pos=.85,right]{N}(class);
-\draw[tcc relation] (subject)--node[tcc cardinality,pos=.08,above]{1}node[tcc cardinality,pos=.92,above]{N}(enrol);
+\begin{tikzpicture}[tcc diagram,
+  entidade/.style={tcc data,text width=5.4cm,minimum height=2.15cm,align=center},
+  vinculo/.style={tcc relation,-{Stealth[length=1.8mm]}},
+  papel/.style={tcc cardinality,inner sep=1.5pt}]
+\node[entidade] (campus) at (0,0)
+  {\textbf{Campus}\\CP: nome\\latitude, longitude};
+\node[entidade] (unidade) at (8.4,0)
+  {\textbf{Unidade}\\CP: nome};
+\node[entidade] (predio) at (0,-3.25)
+  {\textbf{Predio}\\CP: id · CE: \mbox{campus\_id}\\nome};
+\node[entidade] (sala) at (8.4,-3.25)
+  {\textbf{Compartimento}\\CP: id · CE: \mbox{predio\_id}, \mbox{unidade\_id}\\nome, capacidade};
+\node[entidade] (aula) at (0,-6.5)
+  {\textbf{PeriodoAula}\\CP: id\\CE: \mbox{compartimento\_id}, \mbox{disciplina\_id}\\data, \mbox{hora\_inicio}, \mbox{hora\_fim}, turma};
+\node[entidade] (pres) at (8.4,-6.5)
+  {\textbf{Presenca}\\CP: id\\CE: \mbox{compartimento\_id}, \mbox{pessoa\_id}\\\mbox{checkin\_at}, \mbox{checkout\_at}};
+\node[entidade] (disc) at (0,-9.75)
+  {\textbf{Disciplina}\\CP: id\\nome};
+\node[entidade] (pessoa) at (8.4,-9.75)
+  {\textbf{Pessoa}\\CP: id\\nome, matricula};
+\node[entidade] (vinculo) at (4.2,-13)
+  {\textbf{AlunoDisciplina}\\CP: id · CE: \mbox{pessoa\_id}, \mbox{disciplina\_id}\\turma, \mbox{periodo\_letivo}, status};
+\draw[vinculo] (campus) -- node[papel,midway,right]{agrupa (1:N)} (predio);
+\draw[vinculo] (predio) -- node[papel,midway,above]{contém (1:N)} (sala);
+\draw[vinculo] (unidade) -- node[papel,midway,left]{responde por (1:N)} (sala);
+\draw[vinculo] (sala.south west) -- node[papel,midway,above]{sedia (1:N)} (aula.north east);
+\draw[vinculo] (sala) -- node[papel,midway,right]{localiza (1:N)} (pres);
+\draw[vinculo] (disc) -- node[papel,midway,right]{integra (1:N)} (aula);
+\draw[vinculo] (pessoa) -- node[papel,midway,left]{registra (1:N)} (pres);
+\draw[vinculo] (disc.south) -- node[papel,midway,left]{é objeto de (1:N)} (vinculo.north west);
+\draw[vinculo] (pessoa.south) -- node[papel,midway,right]{mantém (1:N)} (vinculo.north east);
 \end{tikzpicture}

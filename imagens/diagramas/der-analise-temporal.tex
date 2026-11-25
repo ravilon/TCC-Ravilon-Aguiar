@@ -1,16 +1,20 @@
-\begin{tikzpicture}[tcc diagram]
-\node[tcc data,minimum width=4.4cm,minimum height=1.5cm] (job) at (0,0)
- {\textbf{AggregationJob}\\período solicitado\\e estado do trabalho};
-\node[tcc data,minimum width=4.4cm,minimum height=1.5cm] (window) at (5.4,0)
- {\textbf{AggregationWindow}\\intervalo, estado\\e tentativas};
-\node[tcc data,minimum width=4.4cm,minimum height=1.5cm] (bucket) at (10.8,0)
- {\textbf{NumericBucket}\\média, extremos\\e amostras};
-\node[tcc data,minimum width=4.4cm,minimum height=1.5cm] (param) at (5.4,-3.3)
- {\textbf{ParametroDef}\\grandeza agregada};
-\node[tcc data,minimum width=4.4cm,minimum height=1.5cm] (sensor) at (10.8,-3.3)
- {\textbf{Sensor}\\dispositivo de origem};
-\draw[tcc relation] (job)--node[tcc cardinality,pos=.15,above]{1}node[tcc cardinality,pos=.85,above]{N}(window);
-\draw[tcc relation] (window)--node[tcc cardinality,pos=.15,above]{1}node[tcc cardinality,pos=.85,above]{N}(bucket);
-\draw[tcc relation] (sensor)--node[tcc cardinality,pos=.15,right]{1}node[tcc cardinality,pos=.85,right]{N}(bucket);
-\draw[tcc relation] (param.north)--node[tcc cardinality,left]{1}(5.4,-1.65)-|node[tcc cardinality,pos=.9,left]{N}(bucket.south west);
+\begin{tikzpicture}[tcc diagram,
+  entidade/.style={tcc data,text width=5.4cm,minimum height=2.15cm,align=center},
+  vinculo/.style={tcc relation,-{Stealth[length=1.8mm]}},
+  papel/.style={tcc cardinality,inner sep=1.5pt}]
+\node[entidade] (job) at (0,0)
+  {\textbf{AggregationJob}\\CP: id\\\mbox{requested\_from}, \mbox{requested\_to}, status};
+\node[entidade] (janela) at (8.4,0)
+  {\textbf{AggregationWindow}\\CP: id · CE: \mbox{job\_id}\\\mbox{window\_from}, \mbox{window\_to}, attempts};
+\node[entidade] (sensor) at (0,-4.2)
+  {\textbf{Sensor}\\CP: \mbox{external\_id}\\nome};
+\node[entidade] (bucket) at (8.4,-4.2)
+  {\textbf{NumericBucket}\\CP: id\\CE: \mbox{source\_job\_id}, \mbox{source\_window\_id},\\\mbox{sensor\_external\_id}, \mbox{parametro\_def\_id}\\\mbox{average\_value}, \mbox{sample\_count}};
+\node[entidade] (param) at (8.4,-8.4)
+  {\textbf{ParametroDef}\\CP: id\\nome, \mbox{numeric\_unit}};
+\draw[vinculo] (job) -- node[papel,midway,above]{delimita (1:N)} (janela);
+\draw[vinculo] (job.south east) -- node[papel,midway,above]{solicita (1:N)} (bucket.north west);
+\draw[vinculo] (janela) -- node[papel,midway,right]{gera (1:N)} (bucket);
+\draw[vinculo] (sensor) -- node[papel,midway,above]{origina (1:N)} (bucket);
+\draw[vinculo] (param) -- node[papel,midway,left]{identifica a grandeza (1:N)} (bucket);
 \end{tikzpicture}
