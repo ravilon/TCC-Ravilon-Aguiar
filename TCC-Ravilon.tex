@@ -88,6 +88,8 @@ The gamification project of the energy-use program at the Federal University of 
 
 Os números abaixo seguem a ordem das observações na versão anotada. As remissões levam ao trecho correspondente.
 
+\rev{A Seção~\ref{sec:ia-desenvolvimento} apresenta a declaração de uso de inteligência artificial no desenvolvimento e na documentação do sistema.}
+
 \begin{center}\small
 \renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\linewidth}{@{}p{2.5cm}Y@{}}
@@ -354,6 +356,9 @@ A qualificação utiliza faixas sintéticas cadastradas para os parâmetros. Em 
 As missões utilizam condições que representam diferentes relações com o tempo. A avaliação instantânea compara a temperatura com o limite de $25\,^{\circ}\mathrm{C}$; a transição observa a mudança para presença verdadeira; a duração requer a manutenção dessa presença por dez segundos, com lacuna máxima configurada de dez segundos; e a avaliação no encerramento de uma janela de dez segundos considera o último valor de presença. Cada missão é de ciclo único, requer um progresso para conclusão automática e concede cinco pontos por atividade concluída. Os vinte estudantes de teste são vinculados a cada missão; sua elegibilidade decorre da configuração acadêmica, não de identificação física realizada pelo sensor.
 
 A confirmação do intermediário MQTT é medida no publicador, enquanto medições e efeitos das missões são conferidos por consultas autenticadas ao serviço de dados. O atraso até a representação canônica corresponde à diferença entre o horário de origem e o horário de recebimento da medição; depende, portanto, dos relógios envolvidos. Os tempos são resumidos pela média e pelo desvio padrão amostral das três médias de repetição em cada modo. As contagens são apresentadas por repetição, preservando resultados divergentes. A taxa configurada caracteriza uma carga controlada de integração, e não um ensaio de saturação. O protocolo e os artefatos de reprodução estão identificados na Seção~\ref{ap:campanha-integrada}.
+
+\section{\rev{Declaração de uso de inteligência artificial no desenvolvimento do sistema}}\label{sec:ia-desenvolvimento}
+\rev{Utilizei ferramentas de inteligência artificial para agilizar a implementação dos serviços e da interface de administração e para auxiliar na redação da documentação técnica dessas aplicações. Concebi a arquitetura geral do sistema e defini as entidades e os vínculos representados nos diagramas de entidade-relacionamento.}
 
 \chapter{\rev{Modelo de Dados para Apoio à Gamificação}}\label{cap:desenvolvimento}
 
